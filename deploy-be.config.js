@@ -5,7 +5,7 @@ module.exports = {
       script: './packages/server/src/index.js',
       env: {
         NODE_ENV: 'production',
-        PORT: 8401, //format groupnumber and batch ex: 8401
+        PORT: 8401, //format groupnumber and batch, ex: 8401
       },
       time: true,
     },
