@@ -23,7 +23,15 @@ export default function Navbar() {
 
   return (
     <>
-      <Box bg="#FFFFFF" px={4} pos="relative">
+      <Box
+        bg="#FFFFFF"
+        px={4}
+        pos="sticky"
+        left="0"
+        right="0"
+        top="0"
+        zIndex="sticky"
+      >
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
             <Box>
@@ -45,6 +53,18 @@ export default function Navbar() {
                 href={'#'}
               >
                 Beranda
+              </Link>
+              <Link
+                px={2}
+                py={1}
+                rounded={'md'}
+                _hover={{
+                  textDecoration: 'none',
+                  bg: 'gray.200',
+                }}
+                href={'#'}
+              >
+                Toko Obat
               </Link>
 
               <Link
@@ -80,7 +100,7 @@ export default function Navbar() {
                   />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>Ubah Profile</MenuItem>
+                  <MenuItem>Profile</MenuItem>
                   <MenuItem>Ganti Password</MenuItem>
                   <MenuDivider />
                   <MenuItem>Logout</MenuItem>
@@ -98,7 +118,7 @@ export default function Navbar() {
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
+          <Box bg="#FFFFFF" pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               <Link
                 py={1}
@@ -110,6 +130,17 @@ export default function Navbar() {
                 href={'#'}
               >
                 Beranda
+              </Link>
+              <Link
+                py={1}
+                rounded={'md'}
+                _hover={{
+                  textDecoration: 'none',
+                  bg: 'gray.200',
+                }}
+                href={'#'}
+              >
+                Toko Obat
               </Link>
 
               <Link

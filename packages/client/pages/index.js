@@ -1,25 +1,23 @@
 import Head from 'next/head';
-import styles from '../styles/Home.module.css';
 import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
   Flex,
   Text,
-  Hide,
   Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
   Show,
-  Heading,
-  Image,
+  Hide,
+  Link,
+  Button,
+  IconButton,
 } from '@chakra-ui/react';
 import Navbar from '../components/Navbar';
-import { SearchIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { BsFileText } from 'react-icons/bs';
 import Category from '../components/Category';
+import Product from '../components/Product';
+import Banner from '../components/Banner';
 
 export default function Home() {
   // this is just testing api connection, possibly could be remove
@@ -50,59 +48,168 @@ export default function Home() {
       {/* End Navbar */}
 
       {/* Start Banner */}
-      <Show breakpoint="(max-width: 576px)">
-        <Box bgColor={'blue.500'} height={'5vh'}></Box>
-
-        <InputGroup
-          w={'50%'}
-          mx="auto"
-          top={'-2vh'}
-          backgroundColor="white"
-          rounded={10}
-        >
-          <Input type="text" placeholder="Cari Obat" />
-          <InputRightElement h={'full'}>
-            <Button variant={'ghost'}>
-              <SearchIcon />
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </Show>
-
+      <Banner />
       {/* End Banner */}
 
       {/* Start Upload Resep */}
-      <Flex bg="#F2F8FC" mx="4" height={'10vh'} marginBottom="4">
-        <Icon
-          as={BsFileText}
-          width="15%"
-          height="100%"
-          color={'#005E9D'}
-          p="2"
-        />
-        <Box p="2" flex="1">
-          <Text fontWeight={'semibold'}>Punya Resep Dokter?</Text>
-          <Text fontWeight={'light'}>
-            klik disini untuk kirim foto resep dokter
+      <Box mx={{ base: '5', md: '56' }}>
+        <Show above="md">
+          <Text mt="9" fontSize={'xl'} fontWeight="medium" lineHeight={'7'}>
+            Punya Resep dari Dokter?
           </Text>
-        </Box>
-        <ArrowForwardIcon
-          p="2"
-          width="15%"
-          height="100%"
-          textColor={'#005E9D'}
-        />
-      </Flex>
+        </Show>
+        <Flex
+          bg="#F2F8FC"
+          height={'10vh'}
+          marginBottom="4"
+          justifyContent={'space-between'}
+          alignItems="center"
+          mt="4"
+        >
+          <Icon
+            as={BsFileText}
+            width="15%"
+            height="100%"
+            color={'twitter.500'}
+            p="2"
+          />
+          <Box p="4" width={'60%'}>
+            <Show below="md">
+              <Text fontWeight={'medium'} fontSize="sm" color="#262626">
+                Punya Resep Dokter?
+              </Text>
+            </Show>
+            <Hide below="md">
+              <Text fontWeight={'normal'} fontSize="lg" color="#262626">
+                Unggah Resep
+              </Text>
+            </Hide>
+            <Show below="md">
+              <Text
+                fontWeight={'normal'}
+                fontSize="xs"
+                lineHeight="4"
+                color={'#6E6E6E'}
+              >
+                klik disini untuk kirim foto resep dokter
+              </Text>
+            </Show>
+            <Hide below="md">
+              <Text
+                fontWeight={'normal'}
+                fontSize="sm"
+                lineHeight="4"
+                color={'#6E6E6E'}
+              >
+                klik tombol unggah untuk kirim foto resep dokter
+              </Text>
+            </Hide>
+          </Box>
+          <Show below="md">
+            <IconButton
+              fontSize={'5xl'}
+              variant="link"
+              color="twitter.500"
+              icon={<ArrowForwardIcon />}
+              onClick={() => {
+                alert('Testing doang gaes');
+              }}
+            />
+          </Show>
+          <Hide below="md">
+            <Button
+              variant={'outline'}
+              colorScheme="twitter"
+              marginEnd={'4'}
+              p="6"
+            >
+              Unggah Resep
+            </Button>
+          </Hide>
+        </Flex>
+      </Box>
       {/* End Upload Resep */}
 
       {/* Start Category */}
-      <Box mx="4" maxHeight={'20vh'}>
-        <Text fontSize="xl" fontWeight={'semibold'}>
+      <Box mx={{ base: '5', md: '56' }} marginTop="46px">
+        <Text mt="9" fontSize={'xl'} fontWeight="medium" lineHeight={'7'}>
           Jelajahi Kategori Obat
         </Text>
-        <Category />
+        <Flex
+          marginTop={'16px'}
+          justifyContent={'space-between'}
+          maxHeight="100%"
+          width="100%"
+          overflow={{ base: 'scroll', md: 'unset' }}
+          marginEnd="5"
+          flexWrap={{ base: 'nowrap', md: 'wrap' }}
+          sx={{
+            // for Chrome, Safari and Opera
+            '&::-webkit-scrollbar': {
+              display: 'none',
+            },
+            // for IE, Edge and Firefox
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none',
+          }}
+        >
+          {/* Render Category Here */}
+          <Category />
+          <Category />
+          <Category />
+          <Category />
+          <Category />
+          <Category />
+          <Category />
+          <Category />
+          <Category />
+        </Flex>
       </Box>
       {/* End Category */}
+
+      {/* Start Rekomendasi Obat */}
+      <Box mx={{ base: '5', md: '56' }} marginTop="2vh">
+        <Flex mt="9" justifyContent={'space-between'}>
+          <Text
+            fontSize={{ base: 'md', md: 'xl' }}
+            fontWeight={{ base: 'normal', md: 'semibold' }}
+            lineHeight={'7'}
+          >
+            Rekomendasi Obat & Vitamin
+          </Text>
+          <Link
+            color={'twitter.500'}
+            _hover={{
+              textDecoration: 'none',
+            }}
+            href={'#'}
+          >
+            Lihat Semua
+          </Link>
+        </Flex>
+        <Flex
+          justifyContent={'space-between'}
+          overflow={{ base: 'scroll', md: 'unset' }}
+          sx={{
+            // for Chrome, Safari and Opera
+            '&::-webkit-scrollbar': {
+              display: 'none',
+            },
+            // for IE, Edge and Firefox
+            msOverflowStyle: 'none',
+            scrollbarWidth: 'none',
+          }}
+        >
+          {/* Render Product Here */}
+          {/* Max 5 */}
+          <Product />
+          <Product />
+          <Product />
+          <Product />
+          <Product />
+        </Flex>
+      </Box>
+      {/* End Rekomendasi Obat */}
     </Box>
   );
 }
