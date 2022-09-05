@@ -2,7 +2,6 @@ import { SearchIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
-  Image,
   Input,
   InputGroup,
   InputRightElement,
