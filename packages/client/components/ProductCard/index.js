@@ -10,7 +10,7 @@ export default function ProductCard() {
     >
       <Image src="/vitaminb1.jpg" alt="vitamin" />
       <Text mx="4" mb="1" noOfLines={1} fontSize={['sm', 'md']} lineHeight={4}>
-        Ok google, gimana cara cepet kaya tanpa usaha
+        Ok google, gimana cara cepet kaya tanpa usaha.
       </Text>
       <Text
         mx="4"
