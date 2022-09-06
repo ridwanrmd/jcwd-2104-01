@@ -19,5 +19,11 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.9",
+    "i": "^0.3.7",
+    "npm": "^8.19.1",
+    "react-icons": "^4.4.0"
+  }
 }
