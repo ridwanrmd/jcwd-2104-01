@@ -42,7 +42,7 @@ export default function Banner() {
             lineHeight={'5xl'}
             color="#FFFFFF"
           >
-            Your Pharmacy, <br /> EveryWhere
+            Your Pharmacy, <br /> Everywhere
           </Text>
           <InputGroup w={'30%'} ms="20vw" backgroundColor="white" mb="4">
             <Input type="text" placeholder="Cari Obat" />

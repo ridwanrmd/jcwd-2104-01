@@ -3,7 +3,6 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { SessionProvider } from 'next-auth/react';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import '@fontsource/poppins';
 import theme from '../theme';
 
 function MyApp({ Component, pageProps }) {
