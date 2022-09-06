@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
+
 import {
   Box,
   Flex,
@@ -11,6 +12,7 @@ import {
   Button,
   Spacer,
 } from '@chakra-ui/react';
+
 import Navbar from '../components/Navbar';
 
 import Category from '../components/Category';

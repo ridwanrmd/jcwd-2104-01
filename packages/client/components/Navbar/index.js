@@ -37,7 +37,7 @@ export default function Navbar() {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
             <Box>
-              <Image src="/medbox.svg" />
+              <Image src="/medbox.svg" alt="medbox" />
             </Box>
             <HStack
               as={'nav'}
@@ -85,9 +85,6 @@ export default function Navbar() {
           </HStack>
 
           <Flex alignItems={'center'} justifyContent="space-between">
-            {/* <Box bg="orange" padding={2} rounded="md">
-              Unverified
-            </Box> */}
             <Link href="google.com" paddingTop={'2'}>
               <Icon as={HiShoppingCart} h="50%" w="70%" marginInlineEnd={'5'} />
             </Link>
