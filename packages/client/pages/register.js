@@ -122,7 +122,7 @@ function Register() {
             />
           </FormControl>
           <FormControl>
-            <FormLabel>Confirm Password</FormLabel>
+            <FormLabel>Confirmm Password</FormLabel>
             <Input
               type="password"
               value={confirmPassword}
