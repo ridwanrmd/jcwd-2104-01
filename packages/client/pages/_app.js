@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-import '../styles/globals.css'
-import { ChakraProvider } from '@chakra-ui/react'
-import { SessionProvider } from "next-auth/react";
-
-
-function MyApp({ Component, pageProps }) {
-  return (
-    <SessionProvider session={pageProps.session}>
-  <ChakraProvider>
-  <Component {...pageProps} />
-  </ChakraProvider>
-  </SessionProvider>
-)
-=======
 import '../styles/globals.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import { SessionProvider } from 'next-auth/react';
@@ -45,7 +30,6 @@ function MyApp({ Component, pageProps }) {
       </SessionProvider>
     );
   }
->>>>>>> e29119b79b2a80b08b1dce981098ed03ef273349
 }
 
 export default MyApp;

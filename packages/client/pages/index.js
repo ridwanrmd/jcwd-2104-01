@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
-import NextLink from "next/link";
-import {Button} from "@chakra-ui/react";
-import { useSession, signOut } from "next-auth/react";
+import NextLink from 'next/link';
+
+import { useSession, signOut } from 'next-auth/react';
 
 import {
   Box,
@@ -72,20 +72,7 @@ export default function Home() {
 
       <Banner />
 
-<<<<<<< HEAD
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-        <NextLink href="/login">
-                <Button onClick={onLogoutClick} variant="ghost" my={5} w="100%">
-                  Logout
-                </Button>
-              </NextLink>
-        
-=======
       <Prescription />
->>>>>>> e29119b79b2a80b08b1dce981098ed03ef273349
 
       <Category />
 
