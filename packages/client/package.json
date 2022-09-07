@@ -10,12 +10,19 @@
     "pm2": "pm2"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@chakra-ui/icons": "^2.0.9",
+=======
+>>>>>>> e29119b79b2a80b08b1dce981098ed03ef273349
     "@chakra-ui/react": "^2.3.1",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "axios": "^0.27.2",
+<<<<<<< HEAD
     "framer-motion": "^6.5.1",
+=======
+    "framer-motion": "^7.2.1",
+>>>>>>> e29119b79b2a80b08b1dce981098ed03ef273349
     "next": "12.2.5",
     "next-auth": "^4.10.3",
     "react": "18.2.0",

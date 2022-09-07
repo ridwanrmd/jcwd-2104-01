@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const e = require('cors');
 const express = require('express');
 const router = express.Router();
@@ -46,4 +47,13 @@ const changePassController = async (req, res, next) => {
 };
 
 router.patch('/updatePassword/', changePassController);
+=======
+const express = require('express');
+const router = express.Router();
+
+router.patch('/', async (req, res) => {
+  res.send('lohe');
+});
+
+>>>>>>> e29119b79b2a80b08b1dce981098ed03ef273349
 module.exports = router;

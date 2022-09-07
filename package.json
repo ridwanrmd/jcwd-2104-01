@@ -20,6 +20,7 @@
   "workspaces": [
     "packages/*"
   ],
+<<<<<<< HEAD
   "version": "1.0.0",
   "main": "deploy-be.config.js",
   "dependencies": {
@@ -632,4 +633,13 @@
   },
   "homepage": "https://github.com/purwadhikafullstack/jcwd-2104-01#readme",
   "description": ""
+=======
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.9",
+    "@fontsource/poppins": "^4.5.9",
+    "i": "^0.3.7",
+    "npm": "^8.19.1",
+    "react-icons": "^4.4.0"
+  }
+>>>>>>> e29119b79b2a80b08b1dce981098ed03ef273349
 }
