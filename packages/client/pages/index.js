@@ -3,6 +3,9 @@ import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
+import NextLink from "next/link";
+import {Button} from "@chakra-ui/react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Home() {
   // this is just testing api connection, possibly could be remove
@@ -20,6 +23,11 @@ export default function Home() {
   }, []);
   console.log(checkApi);
   // end of testing api
+  const { data: session } = useSession();
+
+  const onLogoutClick = async () => {
+    await signOut();
+  };
 
   return (
     <div className={styles.container}>
@@ -38,6 +46,12 @@ export default function Home() {
           Get started by editing{' '}
           <code className={styles.code}>pages/index.js</code>
         </p>
+        <NextLink href="/login">
+                <Button onClick={onLogoutClick} variant="ghost" my={5} w="100%">
+                  Logout
+                </Button>
+              </NextLink>
+        
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
