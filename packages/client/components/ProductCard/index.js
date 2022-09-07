@@ -8,7 +8,7 @@ export default function ProductCard() {
       width={{ base: '40vw', md: '14vw' }}
       flexShrink={'0'}
     >
-      <Image src="/vitaminb1.jpg" />
+      <Image src="/vitaminb1.jpg" alt="vitamin" />
       <Text mx="4" mb="1" noOfLines={1} fontSize={['sm', 'md']} lineHeight={4}>
         Ok google, gimana cara cepet kaya tanpa usaha
       </Text>

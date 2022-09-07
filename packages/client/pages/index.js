@@ -1,7 +1,18 @@
 import Head from 'next/head';
 import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
-import { Box, Flex, Text, Link } from '@chakra-ui/react';
+
+import {
+  Box,
+  Flex,
+  Text,
+  Link,
+  Alert,
+  AlertIcon,
+  Button,
+  Spacer,
+} from '@chakra-ui/react';
+
 import Navbar from '../components/Navbar';
 
 import Category from '../components/Category';
@@ -33,7 +44,22 @@ export default function Home() {
         <meta name="description" content="Best Medical Store in da world" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <Alert
+        status="warning"
+        position={'sticky'}
+        zIndex="overlay"
+        top="0"
+        left="0"
+        right="0"
+      >
+        <AlertIcon />
+        Akun belum terverifikasi, klik tombol kirim untuk verifikasi lalu check
+        email anda
+        <Spacer />
+        <Button variant={'solid'} colorScheme="twitter">
+          Kirim
+        </Button>
+      </Alert>
       <Navbar />
 
       <Banner />

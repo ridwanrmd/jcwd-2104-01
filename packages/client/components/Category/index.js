@@ -42,7 +42,12 @@ export default function Category() {
             padding="2"
             shadow={{ base: 'unset', md: 'base' }}
           >
-            <Image src="/pusing.svg" height={'6vh'} width={['unset', '6vw']} />
+            <Image
+              src="/pusing.svg"
+              height={'6vh'}
+              width={['unset', '6vw']}
+              alt="Demam"
+            />
             <Text
               fontSize={['xs', 'sm']}
               lineHeight="4"
@@ -62,7 +67,12 @@ export default function Category() {
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
         >
-          <Image src="/p3k.svg" height={'6vh'} width={['unset', '6vw']} />
+          <Image
+            src="/p3k.svg"
+            height={'6vh'}
+            width={['unset', '6vw']}
+            alt="p3k"
+          />
           <Text
             fontSize={['xs', 'sm']}
             lineHeight="4"
@@ -81,7 +91,12 @@ export default function Category() {
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
         >
-          <Image src="/asthma.svg" height={'6vh'} width={['unset', '6vw']} />
+          <Image
+            src="/asthma.svg"
+            height={'6vh'}
+            width={['unset', '6vw']}
+            alt="ashtma"
+          />
           <Text
             fontSize={['xs', 'sm']}
             lineHeight="4"
@@ -100,7 +115,12 @@ export default function Category() {
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
         >
-          <Image src="/batuk.svg" height={'6vh'} width={['unset', '6vw']} />
+          <Image
+            src="/batuk.svg"
+            height={'6vh'}
+            width={['unset', '6vw']}
+            alt="Batuk"
+          />
           <Text
             fontSize={['xs', 'sm']}
             lineHeight="4"
@@ -119,7 +139,12 @@ export default function Category() {
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
         >
-          <Image src="/vitamin.svg" height={'6vh'} width={['unset', '6vw']} />
+          <Image
+            src="/vitamin.svg"
+            height={'6vh'}
+            width={['unset', '6vw']}
+            alt="vitamin"
+          />
           <Text
             fontSize={['xs', 'sm']}
             lineHeight="4"
@@ -142,6 +167,7 @@ export default function Category() {
             src="/pencernaan.svg"
             height={'6vh'}
             width={['unset', '6vw']}
+            alt="Pencernaan"
           />
           <Text
             fontSize={['xs', 'sm']}
@@ -161,7 +187,12 @@ export default function Category() {
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
         >
-          <Image src="/mata.svg" height={'6vh'} width={['unset', '6vw']} />
+          <Image
+            src="/mata.svg"
+            height={'6vh'}
+            width={['unset', '6vw']}
+            alt="mata"
+          />
           <Text
             fontSize={['xs', 'sm']}
             lineHeight="4"
@@ -184,6 +215,7 @@ export default function Category() {
             src="/anti-biotik.svg"
             height={'6vh'}
             width={['unset', '6vw']}
+            alt="antibiotik"
           />
           <Text
             fontSize={['xs', 'sm']}
@@ -203,7 +235,12 @@ export default function Category() {
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
         >
-          <Image src="/balsam.svg" height={'6vh'} width={['unset', '6vw']} />
+          <Image
+            src="/balsam.svg"
+            height={'6vh'}
+            width={['unset', '6vw']}
+            alt="Minyak Angin"
+          />
           <Text
             fontSize={['xs', 'sm']}
             lineHeight="4"
