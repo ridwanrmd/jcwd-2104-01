@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const getRouter = require('./get.user');
-const postRouter = require('./post.user');
-const patchRouter = require('./patch.user');
+const patchUserRouter = require('./patch.user');
+const postUserRouter = require('./post.user');
+const getUserRouter = require('./get.user');
+
+router.use(patchUserRouter);
+router.use(postUserRouter);
+router.use(getUserRouter);
 
 router.use(getRouter);
 router.use(postRouter);

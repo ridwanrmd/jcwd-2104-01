@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 const express = require("express")
 
@@ -6,6 +7,46 @@ const router = express.Router()
 const {user} = require("../../../models")
 const {auth} = require("../../helpers/auth")
 const {verifyToken} = require("../../lib/token")
+=======
+const express = require('express');
+const router = express.Router();
+const { verifyToken } = require('../../lib/token');
+const { user } = require('../../../models');
+const {auth} = require("../../helpers/auth")
+
+const verifyUserController = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+
+    const getUserToken = await user.findOne({
+      where: { token },
+    });
+
+    if (!getUserToken)
+      return res.send(
+        '<h2>your token has expired, please use the new token</h2>',
+      );
+
+    const verifiedToken = verifyToken(token);
+
+    const [resUpdateIsVerifiedStatus] = await user.update(
+      { isVerified: true },
+      {
+        where: {
+          userId: verifiedToken.userId,
+        },
+      },
+    );
+
+    if (!resUpdateIsVerifiedStatus)
+      throw { message: 'Failed verification user' };
+
+    res.send('<h1>Verification success</h1>');
+  } catch (error) {
+    next(error);
+  }
+};
+>>>>>>> 56e23774636431cdddb6b69487b68208f7ef6997
 
 const getUser = async (req,res,next) => {
     try {
@@ -42,4 +83,10 @@ const getUserWithToken = async (req,res,next) => {
 
 router.get("/userToken", getUserWithToken)
 router.get("/:userId",getUser)
+<<<<<<< HEAD
 module.exports = router
+=======
+router.get('/verification/:token', verifyUserController);
+
+module.exports = router
+>>>>>>> 56e23774636431cdddb6b69487b68208f7ef6997
