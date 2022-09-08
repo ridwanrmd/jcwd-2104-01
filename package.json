@@ -20,11 +20,28 @@
   "workspaces": [
     "packages/*"
   ],
+  "version": "1.0.0",
+  "main": "deploy-be.config.js",
   "dependencies": {
+    "@chakra-ui/react": "^2.3.1",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@chakra-ui/icons": "^2.0.9",
     "@fontsource/poppins": "^4.5.9",
     "i": "^0.3.7",
     "npm": "^8.19.1",
     "react-icons": "^4.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/purwadhikafullstack/jcwd-2104-01.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/purwadhikafullstack/jcwd-2104-01/issues"
+  },
+  "homepage": "https://github.com/purwadhikafullstack/jcwd-2104-01#readme",
+  "description": ""
 }
