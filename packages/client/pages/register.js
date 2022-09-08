@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axiosInstance from '../src/config/api';
 import NextLink from 'next/link';
-// import NextLink from "next/link"
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import {
   Button,
   Flex,
@@ -16,6 +16,8 @@ import {
   Text,
   Link,
   useToast,
+  InputGroup,
+  InputRightElement,
 } from '@chakra-ui/react';
 
 function Register() {
@@ -27,6 +29,8 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isRegisterProcess, setisRegisterProcess] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [sawPassword, setSawPassword] = useState(false);
+  const [sawConfirmPassword, setSawConfirmPassword] = useState(false);
 
   const router = useRouter();
   const toast = useToast();
@@ -46,7 +50,7 @@ function Register() {
         password,
         confirmPassword,
       };
-      console.log(body);
+      // console.log(body);
       const res = await axiosInstance.post('/users/register', body);
       toast({
         title: 'Account created.',
@@ -129,23 +133,47 @@ function Register() {
           </FormControl>
           <FormControl>
             <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              value={password}
-              placeholder="Password"
-              variant="filled"
-              onChange={(event) => setPassword(event.target.value)}
-            />
+            <InputGroup>
+              <Input
+                type={sawPassword ? 'text' : 'password'}
+                value={password}
+                placeholder="Password"
+                variant="filled"
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <InputRightElement h={'full'}>
+                <Button
+                  variant={'ghost'}
+                  onClick={() => setSawPassword((sawPassword) => !sawPassword)}
+                >
+                  {sawPassword ? <ViewIcon /> : <ViewOffIcon />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
           <FormControl>
             <FormLabel>Confirm Password</FormLabel>
-            <Input
-              type="password"
-              value={confirmPassword}
-              placeholder="Confirm Password"
-              variant="filled"
-              onChange={(event) => setConfirmPassword(event.target.value)}
-            />
+            <InputGroup>
+              <Input
+                type={sawConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                placeholder="Confirm password"
+                variant="filled"
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              />
+              <InputRightElement h={'full'}>
+                <Button
+                  variant={'ghost'}
+                  onClick={() =>
+                    setSawConfirmPassword(
+                      (sawConfirmPassword) => !sawConfirmPassword,
+                    )
+                  }
+                >
+                  {sawConfirmPassword ? <ViewIcon /> : <ViewOffIcon />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
           <Stack spacing={1}>
             <Stack
@@ -162,7 +190,7 @@ function Register() {
               </Text>
             </Stack>
             <Button
-              colorScheme={'blue'}
+              colorScheme={'twitter'}
               variant={'solid'}
               disabled={disabled}
               onClick={() => {
