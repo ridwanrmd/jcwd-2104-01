@@ -23,7 +23,7 @@ import ProductCard from '../components/ProductCard';
 import Banner from '../components/Banner';
 import Prescription from '../components/Prescription';
 
-export default function Home() {
+export default function Home(props) {
   // this is just testing api connection, possibly could be remove
   const [checkApi, setCheckApi] = useState('');
   const fetchApi = async () => {
@@ -52,22 +52,7 @@ export default function Home() {
         <meta name="description" content="Best Medical Store in da world" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Alert
-        status="warning"
-        position={'sticky'}
-        zIndex="overlay"
-        top="0"
-        left="0"
-        right="0"
-      >
-        <AlertIcon />
-        Akun belum terverifikasi, klik tombol kirim untuk verifikasi lalu check
-        email anda
-        <Spacer />
-        <Button variant={'solid'} colorScheme="twitter">
-          Kirim
-        </Button>
-      </Alert>
+
       <Navbar />
 
       <Banner />
