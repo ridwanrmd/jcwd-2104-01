@@ -1,9 +1,7 @@
-const jwt = require("jsonwebtoken")
-const secret_jwt= "FINPRO"
+const jsonToken = require('jsonwebtoken');
+const secretWord = 'ehe_ehe';
 
-//bikin token
-const createToken = (payload) => jwt.sign(payload, secret_jwt)
-// checking token dari mana
-const verifyToken =(token) => jwt.verify(token,secret_jwt)
+const createToken = (payload) => jsonToken.sign(payload, secretWord);
+const verifyToken = (token) => jsonToken.verify(token, secretWord);
 
-module.exports = {createToken,verifyToken}
+module.exports = { createToken, verifyToken };
