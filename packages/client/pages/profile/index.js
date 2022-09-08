@@ -8,28 +8,64 @@ import {
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
+import { api_origin } from '../../constraint';
+import { getSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
-export default function lohe() {
-  let user = {
-    first_name: 'lohe',
-    last_name: 'jamal',
-    birthDate: '2022-09-05',
-    phone: '081212',
-    email: 'lalala@mail.com',
-  };
+export default function lohe(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { first_name, last_name, birthDate, phone, email } = user;
-  const [first, setfirst] = useState(user);
-  const onChangeHandler = (e) => {
-    setfirst({ ...first, [e.target.name]: e.target.value });
-  };
+  const [user, setUser] = useState(props.user);
+
   const onSaveProfile = async (body) => {
     try {
-      const res = await axiosInstance.patch('/users', body);
-      alert(res.data.message);
+      console.log(body);
+
+      const session = await getSession();
+      const { accessToken } = session.user;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+
+      const updateProfile = {
+        email: body.email,
+        first_name: body.first_name,
+        last_name: body.last_name,
+        phone: body.phone,
+        gender: body.gender,
+        birthDate: body.birthDate,
+      };
+
+      if (body.profileImages) {
+        const gambar = body.profileImages;
+        console.log(gambar.name);
+        const data = new FormData();
+        const fileName = Date.now() + gambar.name;
+        data.append('name', fileName);
+        data.append('gambar', gambar);
+
+        updateProfile.image = `/public/user/${fileName}`;
+        try {
+          const lohe = await axiosInstance.post('/users/upload', data, config);
+          console.log(lohe);
+        } catch (error) {
+          return alert(error.response.data.message);
+        }
+      }
+
+      try {
+        const res = await axiosInstance.patch('/users', updateProfile);
+        alert(res.data.message);
+      } catch (error) {
+        return alert(error.response.data.message);
+      }
+
+      const resGetUser = await axiosInstance.get(
+        `/users/${user.userId}`,
+        config,
+      );
+      setUser(resGetUser.data.data);
       onClose();
     } catch (error) {
       console.log({ error });
@@ -55,11 +91,12 @@ export default function lohe() {
           </Text>
           <HStack mt="4" mb="6">
             <Image
+              objectFit={'cover'}
               rounded={'full'}
-              width="20%"
-              src={
-                'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-              }
+              width="80px"
+              height="80px"
+              alt="gambar profile"
+              src={api_origin + user.image}
             />
             <VStack align={'start'} paddingStart="4">
               <Text
@@ -67,14 +104,14 @@ export default function lohe() {
                 fontWeight="medium"
                 lineHeight={'6'}
               >
-                Jamal
+                {`${user.first_name} ${user.last_name}`}
               </Text>
               <Text
                 fontSize={{ base: 'md', md: 'md' }}
                 fontWeight="medium"
                 lineHeight={'6'}
               >
-                081219449920
+                {user.phone}
               </Text>
             </VStack>
           </HStack>
@@ -105,39 +142,27 @@ export default function lohe() {
       <EditProfile
         isOpen={isOpen}
         onClose={onClose}
-        userProfile={first}
+        userProfile={user}
         onSaveProfile={onSaveProfile}
       />
-      {/* <Box>
-        <Input
-          name="first_name"
-          value={first.first_name}
-          onChange={onChangeHandler}
-        ></Input>
-        <Input
-          name="last_name"
-          value={first.last_name}
-          onChange={onChangeHandler}
-        ></Input>
-        <Input
-          name="birthDate"
-          value={first.birthDate}
-          onChange={onChangeHandler}
-          type="date"
-          max="2017-01-01"
-        ></Input>
-        <Input
-          name="phone"
-          value={first.phone}
-          onChange={onChangeHandler}
-        ></Input>
-        <Input
-          name="email"
-          value={first.email}
-          onChange={onChangeHandler}
-        ></Input>
-        <Button onClick={onClickHandler}>Confirm</Button>
-      </Box> */}
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  try {
+    const session = await getSession({ req: context.req });
+    if (!session) return { redirect: { destination: '/' } };
+    const { userId, accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+    const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+    return {
+      props: { user: resGetUser.data.data },
+    };
+  } catch (error) {
+    const errorMessage = error.message;
+    return { props: { errorMessage } };
+  }
 }

@@ -13,16 +13,18 @@ import {
   Image,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { api_origin } from '../../constraint';
 
 function EditProfile(props) {
   const { isOpen, onClose, userProfile, onSaveProfile } = props;
-  // userProfile : { username, firstName, lastName, email, gender, phone, age }
   const [user, setUser] = useState(userProfile);
-  const { first_name, last_name, email, phone, birthDate } = user;
+  const [imageSource, setImageSource] = useState(api_origin + user.image);
+  const { first_name, last_name, email, phone, birthDate, image, gender } =
+    user;
+
   const onHandleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -31,14 +33,21 @@ function EditProfile(props) {
         <ModalCloseButton />
         <ModalBody>
           <Image
+            objectFit={'cover'}
             mb="4"
             rounded={'full'}
-            width="20%"
-            src={
-              'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-            }
+            w="80px"
+            h="80px"
+            src={imageSource}
           />
-          <Input
+          <input
+            type="file"
+            onChange={(e) => {
+              setUser({ ...user, profileImages: e.target.files[0] });
+              setImageSource(URL.createObjectURL(event.target.files[0]));
+            }}
+          />
+          <input
             name="first_name"
             type="text"
             value={first_name}
@@ -62,16 +71,16 @@ function EditProfile(props) {
             mb={3}
             onChange={onHandleChange}
           />
-          {/* <Select
+          <Select
             name="gender"
             value={gender}
             variant="filled"
             onChange={onHandleChange}
             mb={3}
           >
-            <option value="M">M</option>
-            <option value="F">F</option>
-          </Select> */}
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </Select>
 
           <Input
             name="phone"
@@ -83,7 +92,7 @@ function EditProfile(props) {
           />
           <Input
             name="birthDate"
-            value={birthDate}
+            value={birthDate.slice(0, 10)}
             onChange={onHandleChange}
             type="date"
             max="2017-01-01"

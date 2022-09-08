@@ -45,7 +45,8 @@ const changePassController = async (req, res, next) => {
 };
 
 router.patch('/', async (req, res, next) => {
-  const { email, first_name, last_name, birthDate, phone } = req.body;
+  const { email, first_name, last_name, birthDate, phone, gender, image } =
+    req.body;
   try {
     // Checking email and phone number
     const getUser = await user.findAll({
@@ -65,7 +66,7 @@ router.patch('/', async (req, res, next) => {
       });
     }
     const updateUser = await user.update(
-      { email, first_name, last_name, birthDate, phone },
+      { email, first_name, last_name, birthDate, phone, gender, image },
       {
         where: { userId: 1 },
       },

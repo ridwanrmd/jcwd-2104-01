@@ -39,11 +39,11 @@ export default function Home() {
   }, []);
   console.log(checkApi);
   // end of testing api
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
-  const onLogoutClick = async () => {
-    await signOut();
-  };
+  // const onLogoutClick = async () => {
+  //   await signOut();
+  // };
 
   return (
     <Box>

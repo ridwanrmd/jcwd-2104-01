@@ -6,6 +6,8 @@ const { compare, hash } = require('../../lib/bcrypt');
 const { createToken } = require('../../lib/token');
 const { sendMail } = require('../../lib/nodemailer');
 const { user } = require('../../../models');
+const { auth } = require('../../helpers/auth');
+const uploadUser = require('../../lib/multer');
 // const { compare } = require('../../lib/bycrypt');
 
 // register endpoint
@@ -177,6 +179,17 @@ const loginUserController = async (req, res, next) => {
     console.log(error);
   }
 };
+
+router.post('/upload', auth, uploadUser.single('gambar'), (req, res) => {
+  try {
+    return res.send({
+      status: 'Success',
+      message: 'Success upload user image',
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
