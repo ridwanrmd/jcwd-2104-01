@@ -8,7 +8,6 @@ const { sendMail } = require('../../lib/nodemailer');
 const { user } = require('../../../models');
 const { compare } = require('../../lib/bycrypt');
 
-
 // register endpoint
 const registerUserHandler = async (req, res, next) => {
   try {
@@ -87,15 +86,16 @@ const registerUserHandler = async (req, res, next) => {
     await sendMail({ email, token });
 
     res.send({
-      status: 'Success',
-      message: 'Succes create new user',
+      status: 'Berhasil',
+      message: 'Berhasil membuat akun baru',
       data: {
-        result: resCreateUser,  }
-      });
+        result: resCreateUser,
+      },
+    });
   } catch (error) {
     next(error);
-  } 
-}
+  }
+};
 // resend email verification endpoint
 const resendEmailVerification = async (req, res, next) => {
   try {
@@ -111,8 +111,8 @@ const resendEmailVerification = async (req, res, next) => {
     await sendMail({ email, token });
 
     res.send({
-      status: 'Success',
-      message: 'Succes send new email verification',
+      status: 'Berhasil',
+      message: 'Berhasil mengirim ulang email verifikasi',
       data: {
         result: updateToken,
       },
@@ -177,7 +177,7 @@ const loginUserController = async (req, res, next) => {
     console.log(error);
   }
 };
-      
+
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
 router.post('/login', loginUserController);
