@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
+import NextLink from 'next/link';
+
+import { useSession, signOut } from 'next-auth/react';
 
 import {
   Box,
@@ -36,6 +39,11 @@ export default function Home() {
   }, []);
   console.log(checkApi);
   // end of testing api
+  const { data: session } = useSession();
+
+  const onLogoutClick = async () => {
+    await signOut();
+  };
 
   return (
     <Box>
