@@ -1,7 +1,7 @@
 import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../services/axios';
+import axiosInstance from '../../src/config/api';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import {
   Button,

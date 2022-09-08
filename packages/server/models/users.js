@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
-      token: DataTypes.STRING(100),
+      token: DataTypes.STRING(250),
       isVerified: {
         type: DataTypes.TINYINT(1),
         allowNull: false,

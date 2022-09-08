@@ -40,8 +40,10 @@ jobs:
           script: |
             cd ${{ secrets.SSH_FOLDER }}
             npm install
-            cd /packags/server
+            cd packages/server
             npx sequelize-cli db:migrate
+            cd ../../
             pm2 start deploy-be.config.js
-            cd ../client
+            cd packages/client
             pm2 start deploy-fe.config.js
+            
