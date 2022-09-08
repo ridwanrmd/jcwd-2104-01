@@ -14,7 +14,7 @@ app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);
 });
 
-app.use('/users', userRouter);
+app.use('/user', userRouter);
 
 app.listen(PORT, (err) => {
   if (err) {
