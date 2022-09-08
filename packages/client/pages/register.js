@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axiosInstance from '../src/config/api';
+import NextLink from 'next/link';
+// import NextLink from "next/link"
 import {
   Button,
   Flex,
@@ -11,6 +13,9 @@ import {
   Input,
   Stack,
   Image,
+  Text,
+  Link,
+  useToast,
 } from '@chakra-ui/react';
 
 function Register() {
@@ -24,6 +29,7 @@ function Register() {
   const [disabled, setDisabled] = useState(false);
 
   const router = useRouter();
+  const toast = useToast();
 
   // redirect to home if already login
   const { data: session } = useSession();
@@ -41,8 +47,16 @@ function Register() {
         confirmPassword,
       };
       console.log(body);
-      await axiosInstance.post('/users/register', body);
-      console.log('');
+      const res = await axiosInstance.post('/users/register', body);
+      toast({
+        title: 'Account created.',
+        description: res.data.message,
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      // alert(res.data.message);
     } catch (error) {
       console.log(error);
       if (error.response) return alert(error.response.data.message);
@@ -70,7 +84,9 @@ function Register() {
       </Flex>
       <Flex p={8} flex={1} align={'center'} justify={'center'}>
         <Stack spacing={4} w={'full'} maxW={'md'}>
-          <Heading fontSize={'2xl'}>Sign up</Heading>
+          <Heading align={'center'} fontSize={'2xl'}>
+            Sign up
+          </Heading>
           <FormControl>
             <FormLabel>First Name</FormLabel>
             <Input
@@ -122,7 +138,7 @@ function Register() {
             />
           </FormControl>
           <FormControl>
-            <FormLabel>Confirmm Password</FormLabel>
+            <FormLabel>Confirm Password</FormLabel>
             <Input
               type="password"
               value={confirmPassword}
@@ -131,12 +147,20 @@ function Register() {
               onChange={(event) => setConfirmPassword(event.target.value)}
             />
           </FormControl>
-          <Stack spacing={6}>
+          <Stack spacing={1}>
             <Stack
               direction={{ base: 'column', sm: 'row' }}
               align={'start'}
               justify={'space-between'}
             ></Stack>
+            <Stack pt={'0.2'}>
+              <Text pb={'1'} align={'center'}>
+                Already join?{' '}
+                <NextLink href="/login">
+                  <Link color={'red.400'}>Sign In</Link>
+                </NextLink>
+              </Text>
+            </Stack>
             <Button
               colorScheme={'blue'}
               variant={'solid'}
