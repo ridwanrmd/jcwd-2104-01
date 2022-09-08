@@ -21,10 +21,7 @@
     "next-auth": "^4.10.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-<<<<<<< HEAD
-=======
     "yup": "^0.32.11",
->>>>>>> 56e23774636431cdddb6b69487b68208f7ef6997
     "react-icons": "^4.4.0"
   },
   "devDependencies": {

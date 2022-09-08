@@ -30,12 +30,9 @@
     "@fontsource/poppins": "^4.5.9",
     "i": "^0.3.7",
     "npm": "^8.19.1",
-<<<<<<< HEAD
-    "react-icons": "^4.4.0"
-=======
     "react-icons": "^4.4.0",
     "bcryptjs": "^2.4.3"
->>>>>>> 56e23774636431cdddb6b69487b68208f7ef6997
+
   },
   "repository": {
     "type": "git",
