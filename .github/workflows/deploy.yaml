@@ -44,5 +44,6 @@ jobs:
             npx sequelize-cli db:migrate
             cd ../../
             pm2 start deploy-be.config.js
+            cd packages/client
             pm2 start deploy-fe.config.js
             
