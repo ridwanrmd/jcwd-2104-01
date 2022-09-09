@@ -39,10 +39,12 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ${{ secrets.SSH_FOLDER }}
+            mkdir -p packages/client packages/server
+            mv .next packages/client
+            mv server packages/server
             npm install
             cd packages/server
             npx sequelize-cli db:migrate
             cd ../../
-            pm2 start deploy-be.config.js
-            pm2 start deploy-fe.config.js
+            npm start
             
