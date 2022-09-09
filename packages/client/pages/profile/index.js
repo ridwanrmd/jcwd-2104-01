@@ -20,8 +20,6 @@ export default function lohe(props) {
 
   const onSaveProfile = async (body) => {
     try {
-      console.log(body);
-
       const session = await getSession();
       const { accessToken } = session.user;
       const config = {
@@ -39,7 +37,6 @@ export default function lohe(props) {
 
       if (body.profileImages) {
         const gambar = body.profileImages;
-        console.log(gambar.name);
         const data = new FormData();
         const fileName = Date.now() + gambar.name;
         data.append('name', fileName);
@@ -47,8 +44,7 @@ export default function lohe(props) {
 
         updateProfile.image = `/public/user/${fileName}`;
         try {
-          const lohe = await axiosInstance.post('/users/upload', data, config);
-          console.log(lohe);
+          await axiosInstance.post('/users/upload', data, config);
         } catch (error) {
           return alert(error.response.data.message);
         }
@@ -69,7 +65,7 @@ export default function lohe(props) {
       onClose();
     } catch (error) {
       console.log({ error });
-      alert(error);
+      return alert(error.response.data.message);
     }
   };
   return (
