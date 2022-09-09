@@ -8,7 +8,7 @@ module.exports = {
     password: DB_PASSWORD,
     database: DB_NAME,
     host: DB_HOST,
-    port: 2305,
+    port: 3306,
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true,

@@ -1,14 +1,16 @@
 require('dotenv/config');
 const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 8000;
+const bearerToken = require('express-bearer-token');
 const cors = require('cors');
+const PORT = process.env.PORT || 8000;
+const app = express();
+const { join } = require('path');
 
 // Routers
 const userRouter = require('./routers/user');
 
-// Config
 app.use(cors());
+app.use(bearerToken());
 app.use('/public', express.static('public'));
 app.use(express.json());
 
