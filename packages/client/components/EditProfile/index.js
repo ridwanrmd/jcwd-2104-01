@@ -26,15 +26,13 @@ function EditProfile(props) {
   const { isOpen, onClose, userProfile, onSaveProfile } = props;
   const [user, setUser] = useState(userProfile);
   const [imageSource, setImageSource] = useState(api_origin + user.image);
-  const [isEmailError, setisEmailError] = useState('');
+  const [isEmailError, setisEmailError] = useState(true);
   const { first_name, last_name, email, phone, birthDate, image, gender } =
     user;
 
   let schema = yup.object().shape({
     email: yup.string().email(),
   });
-
-  checkValidity();
 
   const checkValidity = async () => {
     const isEmailValid = await schema.isValid({
