@@ -40,11 +40,4 @@ jobs:
           script: |
             cd ${{ secrets.SSH_FOLDER }}
             mkdir -p packages/client packages/server
-            mv .next packages/client
-            mv server packages/server
-            npm install
-            cd packages/server
-            npx sequelize-cli db:migrate
-            cd ../../
-            npm start
             
