@@ -8,6 +8,9 @@ const { sendMail } = require('../../lib/nodemailer');
 const { user } = require('../../../models');
 const { auth } = require('../../helpers/auth');
 const uploadUser = require('../../lib/multer');
+const fs = require('fs');
+const path = require('path');
+const appRoot = require('app-root-path');
 // const { compare } = require('../../lib/bycrypt');
 
 // register endpoint
@@ -180,14 +183,30 @@ const loginUserController = async (req, res, next) => {
   }
 };
 
-router.post('/upload', auth, uploadUser.single('gambar'), (req, res) => {
+router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
   try {
+    const { userId } = req.user;
+    const postPath = path.join(appRoot.path, 'packages', 'server');
+
+    const resGetUser = await user.findOne({ where: { userId } });
+
+    const { dataValues } = resGetUser;
+
+    const paths = postPath + dataValues.image;
+
+    fs.unlink(paths, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    });
+
     return res.send({
       status: 'Success',
       message: 'Success upload user image',
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 

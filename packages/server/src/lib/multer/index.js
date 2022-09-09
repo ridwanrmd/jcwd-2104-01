@@ -22,7 +22,7 @@ const storageUser = multer.diskStorage({
 const uploadUser = multer({
   storage: storageUser,
   limits: {
-    fileSize: 10485760, // Byte, 10 MB
+    fileSize: 1048576, // Byte, 10 MB
   },
   fileFilter(req, file, cb) {
     const allowedExtension = ['.png', '.jpg', '.gif'];
