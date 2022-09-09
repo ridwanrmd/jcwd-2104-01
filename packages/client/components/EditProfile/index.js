@@ -34,9 +34,7 @@ function EditProfile(props) {
     email: yup.string().email(),
   });
 
-  useEffect(() => {
-    checkValidity();
-  }, []);
+  checkValidity();
 
   const checkValidity = async () => {
     const isEmailValid = await schema.isValid({
@@ -66,6 +64,7 @@ function EditProfile(props) {
                 w="80px"
                 h="80px"
                 src={imageSource}
+                alt="profile image"
               />
             </Box>
             <Box>
