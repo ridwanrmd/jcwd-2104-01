@@ -1,16 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-
 const { user } = require('../../../models');
 const { isFieldEmpties, passwordValidator } = require('../../helpers');
 const validator = require('email-validator');
 const { hash } = require('../../lib/bcrypt');
 const { createToken } = require('../../lib/token');
-const { sendMail } = require('../../lib/nodemailer');
-const { user } = require('../../../models');
-const { compare } = require('../../lib/bycrypt');
+const { sendMail, sendForgotPasswordMail } = require('../../lib/nodemailer');
 
+const { compare } = require('../../lib/bycrypt');
 
 // register endpoint
 const registerUserHandler = async (req, res, next) => {
@@ -93,12 +91,13 @@ const registerUserHandler = async (req, res, next) => {
       status: 'Success',
       message: 'Succes create new user',
       data: {
-        result: resCreateUser,  }
-      });
+        result: resCreateUser,
+      },
+    });
   } catch (error) {
     next(error);
-  } 
-}
+  }
+};
 // resend email verification endpoint
 const resendEmailVerification = async (req, res, next) => {
   try {
@@ -153,7 +152,6 @@ const loginUserController = async (req, res, next) => {
     //kalau udh pake hashing
     const isPasswordMatch = compare(password, userPass.password);
 
-
     if (!isPasswordMatch) {
       throw {
         code: 400,
@@ -183,11 +181,11 @@ const loginUserController = async (req, res, next) => {
   }
 };
 
-
 const forgotPasswordController = async (req, res, next) => {
   try {
     const { email } = req.body;
-    const fiundUser = await user.findOne({ where: email });
+    // console.log(email);
+    const fiundUser = await user.findOne({ where: { email: email } });
 
     if (!fiundUser) return res.status(400).send('Email Tidak Terdaftar');
 
@@ -196,8 +194,7 @@ const forgotPasswordController = async (req, res, next) => {
       first_name: fiundUser.dataValues.first_name,
     });
 
-    // bikin nodemailer nama import nya samain dibawah
-    ForgotPasswordMailer({
+    sendForgotPasswordMail({
       email,
       token,
       first_name: fiundUser.dataValues.first_name,
@@ -213,8 +210,7 @@ const forgotPasswordController = async (req, res, next) => {
   }
 };
 
-
-router.post('/ForgotPassword', forgotPasswordController);
+router.post('/forgotPassword', forgotPasswordController);
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
 router.post('/login', loginUserController);

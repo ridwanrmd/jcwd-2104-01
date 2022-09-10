@@ -1,8 +1,8 @@
-import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { getSession } from 'next-auth/react';
 import {
   Button,
   Flex,
@@ -17,48 +17,35 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-function ChangePassword(props) {
+function ForgotPassword(props) {
   // console.log({ props });
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [ConfirmPassword, setConfirmPassword] = useState('');
-  const [oldPassword, setOldPassword] = useState('');
 
   const { userId } = props;
-
-  // console.log(token);
   if (!props) {
-    return router.replace('/');
+    return router.replace(`/register`);
   }
-
-  // useEffect(() => {
-  //   if (newPassword !== ConfirmPassword) {
-  //     return setErrorMessage("Password Doesn't Match");
-  //   } else {
-  //     return;
-  //   }
-  // }, [newPassword, ConfirmPassword]);
-
   const body = {
-    oldPassword,
     newPassword,
     ConfirmPassword,
-    userId,
   };
-
   const onClick = async () => {
-    const response = await axiosInstance.patch(`/users/updatePassword/`, body);
-    console.log(response);
+    const response = await axiosInstance.patch(
+      `/users/forgotPassword/${userId}`,
+      body,
+    );
+    // console.log(response);
     if (response.data.code == 400) {
       setErrorMessage(response.data.message);
-    } else {
-      router.replace('/');
-      // console.log(response.error.message);
+    }
+    if (!response.error) {
+      router.replace('/login');
     }
   };
-
   return (
     <Flex minH={'100vh'} align={'center'} justify={'center'} bg="gray.700">
       <Stack
@@ -75,26 +62,6 @@ function ChangePassword(props) {
         <Heading lineHeight={1.1} fontSize={{ base: '2xl', md: '3xl' }}>
           Enter new password
         </Heading>
-        <FormControl id="password" isRequired>
-          <FormLabel>Current Password</FormLabel>
-          <InputGroup>
-            <Input
-              placeholder="current password"
-              _placeholder={{ color: 'gray.500' }}
-              type={showPassword ? 'text' : 'password'}
-              value={oldPassword}
-              onChange={(event) => setOldPassword(event.target.value)}
-            />
-            <InputRightElement h={'full'}>
-              <Button
-                variant={'ghost'}
-                onClick={() => setShowPassword((showPassword) => !showPassword)}
-              >
-                {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
 
         <FormControl id="password" isRequired>
           <FormLabel>New Password</FormLabel>
@@ -153,27 +120,29 @@ function ChangePassword(props) {
   );
 }
 
-export default ChangePassword;
+export default ForgotPassword;
 
 export async function getServerSideProps(context) {
   try {
     const session = await getSession({ req: context.req });
     // console.log(session);
-    if (!session) return { redirect: { destination: '/' } };
+    if (session) return { redirect: { destination: '/' } };
 
     // console.log(session);
-    const userId = session.user.userId;
-
-    const accessToken = session.user.accessToken;
+    const accessToken = context.params.token;
+    // console.log(accessToken);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
     // console.log(config);
-    const resGetUser = await axiosInstance.get(`/user/${userId}`, config);
-    // console.log(resGetUser.data.data);
+    const resGetUser = await axiosInstance.get(
+      `/users/forgot/password`,
+      config,
+    );
+    // console.log(resGetUser);
 
     return {
-      props: resGetUser.data.data,
+      props: resGetUser.data.user,
     };
   } catch (error) {
     const errorMessage = error.message;

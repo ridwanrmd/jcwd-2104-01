@@ -9,7 +9,4 @@ router.use(patchUserRouter);
 router.use(postUserRouter);
 router.use(getUserRouter);
 
-router.use(getRouter);
-router.use(postRouter);
-router.use(patchRouter);
 module.exports = router;

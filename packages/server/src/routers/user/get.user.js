@@ -1,18 +1,8 @@
-<<<<<<< HEAD
-
-const express = require("express")
-
-
-const router = express.Router()
-const {user} = require("../../../models")
-const {auth} = require("../../helpers/auth")
-const {verifyToken} = require("../../lib/token")
-=======
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../../lib/token');
 const { user } = require('../../../models');
-const {auth} = require("../../helpers/auth")
+const { auth } = require('../../helpers/auth');
 
 const verifyUserController = async (req, res, next) => {
   try {
@@ -46,47 +36,47 @@ const verifyUserController = async (req, res, next) => {
     next(error);
   }
 };
->>>>>>> 56e23774636431cdddb6b69487b68208f7ef6997
 
-const getUser = async (req,res,next) => {
-    try {
-        const {userId} = req.params
-        const resGetUser = await user.findOne({
-            where : {userId}
-        })
-        const {dataValues} = resGetUser
-        res.send({data : dataValues})
-    } catch (error) {
-        next(error)
-        console.log(error);
-    }
-}
+const getUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const resGetUser = await user.findOne({
+      where: { userId },
+    });
+    const { dataValues } = resGetUser;
+    res.send({ data: dataValues });
+  } catch (error) {
+    next(error);
+    console.log(error);
+  }
+};
 
-const getUserWithToken = async (req,res,next) => {
-    try {
-        const token = req.params
-        const verifiedToken = verifyToken(token)
-        
-        const {userId} = verifiedToken.user
-        const resGotUser= await user.findOne({where: {userId}})
-        console.log(resGotUser);
-        res.send({ 
-            status: "Success",
-            message: "Get user with token",
-            user: resGotUser,
-        })
-    } catch (error) {
-        next(error)
-        console.log(error);
-    }
-}
+const getUserWithToken = async (req, res, next) => {
+  try {
+    // console.log('asa');
+    const token = req.token;
+    // console.log(token);
+    const verifiedToken = verifyToken(token);
 
-router.get("/userToken", getUserWithToken)
-router.get("/:userId",getUser)
-<<<<<<< HEAD
-module.exports = router
-=======
+    // console.log(verifiedToken);
+    const { userId } = verifiedToken;
+
+    const resGotUser = await user.findOne({ where: { userId } });
+    const { dataValues } = resGotUser;
+    console.log(dataValues);
+    res.send({
+      status: 'Success',
+      message: 'Get user with token',
+      user: dataValues,
+    });
+  } catch (error) {
+    next(error);
+    console.log(error);
+  }
+};
+
+router.get('/forgot/password', getUserWithToken);
+router.get('/:userId', getUser);
 router.get('/verification/:token', verifyUserController);
 
-module.exports = router
->>>>>>> 56e23774636431cdddb6b69487b68208f7ef6997
+module.exports = router;

@@ -1,8 +1,7 @@
 require('dotenv/config');
 const express = require('express');
 const app = express();
-
-
+const bearerToken = require('express-bearer-token');
 const { error } = require('console');
 
 const PORT = process.env.PORT || 8000;
@@ -14,16 +13,16 @@ const userRouter = require('./routers/user');
 // Config
 
 app.use(cors());
+app.use(bearerToken());
 app.use('/public', express.static('public'));
 app.use(express.json());
 
 // router
-app.use('/user', UserRouter);
+app.use('/users', userRouter);
 
 app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);
 });
-
 
 //error handler
 app.use((error, req, res, next) => {
@@ -32,8 +31,6 @@ app.use((error, req, res, next) => {
   const httpCode = typeof error.code == 'number' ? error.code : 500;
   res.status(httpCode).send(errorObj);
 });
-
-
 
 app.listen(PORT, (error) => {
   if (error) {

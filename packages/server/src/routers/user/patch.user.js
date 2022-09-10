@@ -1,3 +1,4 @@
+const { resolveStyleConfig } = require('@chakra-ui/react');
 const e = require('cors');
 const express = require('express');
 const router = express.Router();
@@ -45,11 +46,38 @@ const changePassController = async (req, res, next) => {
   }
 };
 
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { newPassword, ConfirmPassword } = req.body;
+    const { userId } = req.params;
+
+    if (newPassword !== ConfirmPassword) {
+      res.send({
+        code: 400,
+        message: 'Password doesnt match',
+        detail: `Password: ${newPassword}, Confirm Password: ${ConfirmPassword}`,
+      });
+    }
+    const resForgotPass = await user.findOne({ where: { userId } });
+    const passwordHash = hash(newPassword);
+    await resForgotPass.update({ password: passwordHash });
+    const resUpdated = await resForgotPass.save();
+
+    res.send({
+      status: 'Success',
+      message: 'Success updated password',
+      detail: { resUpdated },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.patch('/forgotPassword/:userId', forgotPassword);
 router.patch('/updatePassword/', changePassController);
 
 router.patch('/', async (req, res) => {
   res.send('lohe');
 });
-
 
 module.exports = router;
