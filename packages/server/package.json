@@ -18,10 +18,7 @@
     "dotenv": "^16.0.1",
     "email-validator": "^2.0.4",
     "express": "^4.18.1",
-<<<<<<< HEAD
-=======
     "express-bearer-token": "^2.4.0",
->>>>>>> 252bb1485078b2c5135f5add62e9872047dbc01b
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",

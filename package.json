@@ -29,17 +29,16 @@
     "@emotion/styled": "^11.10.4",
     "@fontsource/poppins": "^4.5.9",
     "bcryptjs": "^2.4.3",
-<<<<<<< HEAD
+
     "express-bearer-token": "^2.4.0",
-    "i": "^0.3.7",
-    "npm": "^8.19.1",
-    "react-icons": "^4.4.0"
-=======
+  
+ 
+
     "i": "^0.3.7",
     "npm": "^8.19.1",
     "react-icons": "^4.4.0",
     "yup": "^0.32.11"
->>>>>>> 252bb1485078b2c5135f5add62e9872047dbc01b
+
   },
   "repository": {
     "type": "git",
