@@ -2,7 +2,7 @@ const { resolveStyleConfig } = require('@chakra-ui/react');
 const e = require('cors');
 const express = require('express');
 const router = express.Router();
-
+const { Op } = require('sequelize');
 const { user } = require('../../../models');
 const { hash, compare } = require('../../lib/bycrypt');
 
@@ -75,9 +75,40 @@ const forgotPassword = async (req, res, next) => {
 
 router.patch('/forgotPassword/:userId', forgotPassword);
 router.patch('/updatePassword/', changePassController);
+router.patch('/', async (req, res, next) => {
+  const { email, first_name, last_name, birthDate, phone, gender, image } =
+    req.body;
+  try {
+    // Checking email and phone number
+    const getUser = await user.findAll({
+      where: {
+        userId: { [Op.ne]: 1 },
+        [Op.or]: [{ email: req.body.email }, { phone: req.body.phone }],
+      },
+    });
+    if (getUser.length) {
+      getUser.map((c) => {
+        if (c.dataValues.email == req.body.email) {
+          throw { message: 'Email is already exists' };
+        }
+        if (c.dataValues.phone == req.body.phone) {
+          throw { message: 'Phone number is already exists' };
+        }
+      });
+    }
+    const updateUser = await user.update(
+      { email, first_name, last_name, birthDate, phone, gender, image },
+      {
+        where: { userId: 1 },
+      },
+    );
 
-router.patch('/', async (req, res) => {
-  res.send('lohe');
+    if (!updateUser[0]) throw { message: 'Failed to update user data' };
+    res.send({ message: 'Success Update User' });
+  } catch (error) {
+    res.status(400).send(error);
+  }
 });
+
 
 module.exports = router;

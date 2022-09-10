@@ -4,11 +4,20 @@ const router = express.Router();
 const { user } = require('../../../models');
 const { isFieldEmpties, passwordValidator } = require('../../helpers');
 const validator = require('email-validator');
-const { hash } = require('../../lib/bcrypt');
+const { compare, hash } = require('../../lib/bcrypt');
 const { createToken } = require('../../lib/token');
+
 const { sendMail, sendForgotPasswordMail } = require('../../lib/nodemailer');
 
-const { compare } = require('../../lib/bycrypt');
+
+
+const { auth } = require('../../helpers/auth');
+const uploadUser = require('../../lib/multer');
+const fs = require('fs');
+const path = require('path');
+const appRoot = require('app-root-path');
+
+
 
 // register endpoint
 const registerUserHandler = async (req, res, next) => {
@@ -209,8 +218,35 @@ const forgotPasswordController = async (req, res, next) => {
     console.log(error);
   }
 };
-
 router.post('/forgotPassword', forgotPasswordController);
+
+router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const postPath = path.join(appRoot.path, 'packages', 'server');
+
+    const resGetUser = await user.findOne({ where: { userId } });
+
+    const { dataValues } = resGetUser;
+
+    const paths = postPath + dataValues.image;
+
+    fs.unlink(paths, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    });
+
+    return res.send({
+      status: 'Success',
+      message: 'Success upload user image',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
 router.post('/login', loginUserController);

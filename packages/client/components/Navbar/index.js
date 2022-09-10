@@ -20,6 +20,7 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { HiShoppingCart } from 'react-icons/hi';
 import NextLink from 'next/link';
+import { signOut } from 'next-auth/react';
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,6 +35,7 @@ export default function Navbar() {
         right="0"
         top="0"
         zIndex="sticky"
+        shadow={'md'}
       >
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
@@ -113,7 +115,7 @@ export default function Navbar() {
                     </Link>
                   </NextLink>
                   <MenuDivider />
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem onClick={() => signOut()}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Hide>
@@ -175,7 +177,7 @@ export default function Navbar() {
               >
                 Profile
               </Link>
-              <Link
+              {/* <Link
                 py={1}
                 rounded={'md'}
                 _hover={{
@@ -185,7 +187,14 @@ export default function Navbar() {
                 href={'#'}
               >
                 Logout
-              </Link>
+              </Link> */}
+              <Button
+                colorScheme="teal"
+                variant="link"
+                onClick={() => signOut()}
+              >
+                Logout
+              </Button>
             </Stack>
           </Box>
         ) : null}
