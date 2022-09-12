@@ -6,7 +6,7 @@ const CredentialInstance = CredentialsProvider({
   async authorize(credentials) {
     try {
       const { email, password } = credentials;
-      const res = await axiosInstance.post('user/login', {
+      const res = await axiosInstance.post('users/login', {
         email,
         password,
       });

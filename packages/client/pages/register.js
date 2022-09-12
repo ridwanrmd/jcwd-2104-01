@@ -50,7 +50,7 @@ function Register() {
         password,
         confirmPassword,
       };
-      // console.log(body);
+      
       const res = await axiosInstance.post('/users/register', body);
       toast({
         title: 'Account created.',
@@ -79,7 +79,7 @@ function Register() {
         bgGradient="linear-gradient(153.41deg, #008DEB 0.81%, rgba(0, 141, 235, 0.56) 49.89%, rgba(0, 141, 235, 0.28) 95.87%)"
       >
         <Image
-          alt={'Login Image'}
+          alt={'Medbox Image'}
           objectFit={'cover'}
           position="absolute"
           width="136px"
@@ -90,7 +90,7 @@ function Register() {
         />
 
         <Image
-          alt={'Login Image'}
+          alt={'Register Image'}
           objectFit={'cover'}
           width="386.78px"
           height="430.84px"

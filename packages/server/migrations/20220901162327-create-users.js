@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      token: Sequelize.STRING(150),
+      token: Sequelize.STRING(250),
       isVerified: {
         type: Sequelize.TINYINT(1),
         allowNull: false,

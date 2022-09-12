@@ -8,6 +8,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
+<<<<<<< HEAD
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -19,6 +20,14 @@ if (config.use_env_variable) {
     config,
   );
 }
+=======
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config,
+);
+>>>>>>> 252bb1485078b2c5135f5add62e9872047dbc01b
 
 fs.readdirSync(__dirname)
   .filter((file) => {

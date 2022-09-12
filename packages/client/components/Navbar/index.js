@@ -19,7 +19,11 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { HiShoppingCart } from 'react-icons/hi';
+<<<<<<< HEAD
 import ResendEmail from '../ResendEmail';
+=======
+import { signOut } from 'next-auth/react';
+>>>>>>> 252bb1485078b2c5135f5add62e9872047dbc01b
 
 export default function Navbar(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,6 +38,7 @@ export default function Navbar(props) {
         right="0"
         top="0"
         zIndex="sticky"
+        shadow={'md'}
       >
         {/* {!props.user.isVerified && <ResendEmail />} */}
         <ResendEmail />
@@ -111,7 +116,7 @@ export default function Navbar(props) {
                   <MenuItem>Profile</MenuItem>
                   <MenuItem>Ganti Password</MenuItem>
                   <MenuDivider />
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem onClick={() => signOut()}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Hide>
@@ -173,7 +178,7 @@ export default function Navbar(props) {
               >
                 Profile
               </Link>
-              <Link
+              {/* <Link
                 py={1}
                 rounded={'md'}
                 _hover={{
@@ -183,7 +188,14 @@ export default function Navbar(props) {
                 href={'#'}
               >
                 Logout
-              </Link>
+              </Link> */}
+              <Button
+                colorScheme="teal"
+                variant="link"
+                onClick={() => signOut()}
+              >
+                Logout
+              </Button>
             </Stack>
           </Box>
         ) : null}
