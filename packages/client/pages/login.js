@@ -39,6 +39,7 @@ function Login() {
       email,
       password,
     });
+    // console.log(response);
     if (email == '') {
       setIsLoginProcess(false);
       return setErrorEmail('Email field is empty');
@@ -129,7 +130,9 @@ function Login() {
                 justify={'space-between'}
               >
                 <Checkbox>Remember me</Checkbox>
-                <Link color={'blue.500'}>Forgot password?</Link>
+                <NextLink href={'/forgot'}>
+                  <Link color={'blue.500'}>Forgot password?</Link>
+                </NextLink>
               </Stack>
               <Button
                 colorScheme={'twitter'}

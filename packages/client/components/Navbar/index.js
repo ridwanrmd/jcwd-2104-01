@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { HiShoppingCart } from 'react-icons/hi';
+import NextLink from 'next/link';
 import { signOut } from 'next-auth/react';
 
 export default function Navbar() {
@@ -108,7 +109,11 @@ export default function Navbar() {
                 </MenuButton>
                 <MenuList>
                   <MenuItem>Profile</MenuItem>
-                  <MenuItem>Ganti Password</MenuItem>
+                  <NextLink href="/change-password">
+                    <Link>
+                      <MenuItem>Ganti Password</MenuItem>
+                    </Link>
+                  </NextLink>
                   <MenuDivider />
                   <MenuItem onClick={() => signOut()}>Logout</MenuItem>
                 </MenuList>

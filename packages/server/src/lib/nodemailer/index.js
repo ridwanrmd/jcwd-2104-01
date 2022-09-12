@@ -29,4 +29,31 @@ const sendMail = async ({ email, token }) => {
   }
 };
 
-module.exports = { sendMail };
+const sendForgotPasswordMail = async ({ email, token, first_name }) => {
+  const mail = {
+    from: 'Medbox Developer <ridwan95rmd@gmail.com>',
+    to: email,
+    subject: 'Medbox Forgot Password',
+    html: `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+      </head>
+      <body>
+        <p>Hi ${first_name}</p>
+        <p>Plase click this <a href="http://localhost:3000/forgot-password/${token}">link</a> to create your new password</p>
+      </body>
+    </html>`,
+  };
+  try {
+    await courier.sendMail(mail);
+    console.log(`Email Forgot Password sent to ${email}`);
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { sendMail, sendForgotPasswordMail };
