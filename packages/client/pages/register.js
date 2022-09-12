@@ -74,22 +74,35 @@ function Register() {
     <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
       <Flex
         flex={1}
-        background={
-          'linear-gradient(153.41deg, #008DEB 0.81%, rgba(0, 141, 235, 0.56) 49.89%, rgba(0, 141, 235, 0.28) 95.87%);'
-        }
-        boxShadow={'2xl'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        bgGradient="linear-gradient(153.41deg, #008DEB 0.81%, rgba(0, 141, 235, 0.56) 49.89%, rgba(0, 141, 235, 0.28) 95.87%)"
       >
         <Image
-          alt={'Register Image'}
+          alt={'Login Image'}
           objectFit={'cover'}
-          src={'login/orang.png'}
-          zIndex={'popover'}
+          position="absolute"
+          width="136px"
+          height="32px"
+          left="56px"
+          top="56px"
+          src="/vector.svg"
+        />
+
+        <Image
+          alt={'Login Image'}
+          objectFit={'cover'}
+          width="386.78px"
+          height="430.84px"
+          left="394.57px"
+          top="253.48px"
+          src="/login.png"
         />
       </Flex>
       <Flex p={8} flex={1} align={'center'} justify={'center'}>
         <Stack spacing={4} w={'full'} maxW={'md'}>
           <Heading align={'center'} fontSize={'2xl'}>
-            Sign up
+            Daftar Medbox
           </Heading>
           <FormControl>
             <FormLabel>First Name</FormLabel>
@@ -102,7 +115,7 @@ function Register() {
             />
           </FormControl>
           <FormControl>
-            <FormLabel>Last Name Name</FormLabel>
+            <FormLabel>Last Name</FormLabel>
             <Input
               type="name"
               value={last_name}
@@ -183,7 +196,7 @@ function Register() {
             ></Stack>
             <Stack pt={'0.2'}>
               <Text pb={'1'} align={'center'}>
-                Already join?{' '}
+                Sudah memiliki akun?{' '}
                 <NextLink href="/login">
                   <Link color={'red.400'}>Sign In</Link>
                 </NextLink>
@@ -201,7 +214,7 @@ function Register() {
                 }, 5000);
               }}
             >
-              Sign up
+              Buat akun
             </Button>
           </Stack>
         </Stack>

@@ -36,6 +36,7 @@ export default function Navbar(props) {
         zIndex="sticky"
       >
         {/* {!props.user.isVerified && <ResendEmail />} */}
+        <ResendEmail />
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
             <Box>
