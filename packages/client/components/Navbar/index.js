@@ -19,11 +19,8 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { HiShoppingCart } from 'react-icons/hi';
-<<<<<<< HEAD
 import ResendEmail from '../ResendEmail';
-=======
 import { signOut } from 'next-auth/react';
->>>>>>> 252bb1485078b2c5135f5add62e9872047dbc01b
 
 export default function Navbar(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
