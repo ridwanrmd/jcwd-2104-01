@@ -50,10 +50,10 @@ function Register() {
         password,
         confirmPassword,
       };
-      
+
       const res = await axiosInstance.post('/users/register', body);
       toast({
-        title: 'Account created.',
+        title: 'Berhasil membuat akun baru',
         description: res.data.message,
         position: 'top',
         status: 'success',

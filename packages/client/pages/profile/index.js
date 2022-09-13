@@ -92,7 +92,7 @@ export default function Profile(props) {
               width="80px"
               height="80px"
               alt="gambar profile"
-              // src={api_origin + user.image}
+              src={api_origin + user.image}
             />
             <VStack align={'start'} paddingStart="4">
               <Text
