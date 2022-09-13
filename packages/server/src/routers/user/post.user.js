@@ -9,15 +9,11 @@ const { createToken } = require('../../lib/token');
 
 const { sendMail, sendForgotPasswordMail } = require('../../lib/nodemailer');
 
-
-
 const { auth } = require('../../helpers/auth');
 const uploadUser = require('../../lib/multer');
 const fs = require('fs');
 const path = require('path');
 const appRoot = require('app-root-path');
-
-
 
 // register endpoint
 const registerUserHandler = async (req, res, next) => {
@@ -218,7 +214,6 @@ const forgotPasswordController = async (req, res, next) => {
     console.log(error);
   }
 };
-router.post('/forgotPassword', forgotPasswordController);
 
 router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
   try {
@@ -250,5 +245,6 @@ router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
 router.post('/login', loginUserController);
+router.post('/forgotPassword', forgotPasswordController);
 
 module.exports = router;
