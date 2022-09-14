@@ -40,5 +40,6 @@ jobs:
           script: |
             cd ${{ secrets.SSH_FOLDER }}
             npm install
+            npm run migrate
             pm2 start deploy.config.js
             
