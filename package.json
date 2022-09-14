@@ -1,6 +1,7 @@
 {
   "name": "final-project-template-next",
   "scripts": {
+    "migrate": "lerna run migrate --stream",
     "start": "lerna run start --stream",
     "build": "lerna run build --stream",
     "serve": "lerna run serve --stream",
@@ -30,10 +31,16 @@
     "@fontsource/poppins": "^4.5.9",
     "bcryptjs": "^2.4.3",
     "formik": "^2.2.9",
+
+    "express-bearer-token": "^2.4.0",
+  
+ 
+
     "i": "^0.3.7",
     "npm": "^8.19.1",
     "react-icons": "^4.4.0",
     "yup": "^0.32.11"
+
   },
   "repository": {
     "type": "git",

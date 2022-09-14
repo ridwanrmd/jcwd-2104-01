@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const { isFieldEmpties, passwordValidator } = require('../../helpers');
 const validator = require('email-validator');
 const { compare, hash } = require('../../lib/bcrypt');
@@ -154,6 +155,7 @@ const loginUserController = async (req, res, next) => {
 
     //kalau udh pake hashing
     const isPasswordMatch = compare(password, userPass.password);
+
     if (!isPasswordMatch) {
       throw {
         code: 400,
@@ -176,6 +178,35 @@ const loginUserController = async (req, res, next) => {
           accessToken: token,
         },
       },
+    });
+  } catch (error) {
+    next(error);
+    console.log(error);
+  }
+};
+
+const forgotPasswordController = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    // console.log(email);
+    const fiundUser = await user.findOne({ where: { email: email } });
+
+    if (!fiundUser) return res.status(400).send('Email Tidak Terdaftar');
+
+    const token = createToken({
+      userId: fiundUser.dataValues.userId,
+      first_name: fiundUser.dataValues.first_name,
+    });
+
+    sendForgotPasswordMail({
+      email,
+      token,
+      first_name: fiundUser.dataValues.first_name,
+    });
+
+    res.send({
+      status: 'succsess',
+      message: 'succsess send Forgot Password Request',
     });
   } catch (error) {
     next(error);
@@ -213,4 +244,6 @@ router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
 router.post('/login', loginUserController);
+router.post('/forgotPassword', forgotPasswordController);
+
 module.exports = router;

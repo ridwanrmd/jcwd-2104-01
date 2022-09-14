@@ -54,15 +54,15 @@ router.patch('/', auth, async (req, res, next) => {
     const getUser = await user.findAll({
       where: {
         userId: { [Op.ne]: req.user.userId },
-        [Op.or]: [{ email }, { phone }],
+        [Op.or]: [{ email: req.body.email }, { phone: req.body.phone }],
       },
     });
     if (getUser.length) {
       getUser.map((c) => {
-        if (c.dataValues.email == email) {
+        if (c.dataValues.email == req.body.email) {
           throw { message: 'Email is already exists' };
         }
-        if (c.dataValues.phone == phone) {
+        if (c.dataValues.phone == req.body.phone) {
           throw { message: 'Phone number is already exists' };
         }
       });

@@ -15,6 +15,9 @@ app.use(bearerToken());
 app.use('/public', express.static('public'));
 app.use(express.json());
 
+// router
+app.use('/users', userRouter);
+
 app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);
 });
@@ -23,12 +26,8 @@ app.use('/users', userRouter);
 app.use('/product', productRouter);
 
 app.use((error, req, res, next) => {
-  const errorObj = {
-    status: 'Error',
-    message: error.message,
-    detail: error,
-  };
-
+  console.log({ error });
+  const errorObj = { status: 'ERROR', message: error.message, detail: error };
   const httpCode = typeof error.code == 'number' ? error.code : 500;
   res.status(httpCode).send(errorObj);
 });
