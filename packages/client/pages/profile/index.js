@@ -65,7 +65,7 @@ export default function Profile(props) {
       }
 
       try {
-        const res = await axiosInstance.patch('/users', updateProfile);
+        const res = await axiosInstance.patch('/users', updateProfile, config);
         alert(res.data.message);
       } catch (error) {
         return alert(error.response.data.message);
