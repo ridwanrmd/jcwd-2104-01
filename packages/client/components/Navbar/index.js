@@ -40,7 +40,11 @@ export default function Navbar() {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
             <Box>
-              <Image src="/medbox.svg" alt="medbox" />
+              <NextLink href="/">
+                <Link>
+                  <Image src="/medbox.svg" alt="medbox" />
+                </Link>
+              </NextLink>
             </Box>
             <HStack
               as={'nav'}
@@ -59,18 +63,19 @@ export default function Navbar() {
               >
                 Beranda
               </Link>
-              <Link
-                px={2}
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Toko Obat
-              </Link>
+              <NextLink href="/product">
+                <Link
+                  px={2}
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Toko Obat
+                </Link>
+              </NextLink>
 
               <Link
                 px={2}

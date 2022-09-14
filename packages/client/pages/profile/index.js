@@ -19,19 +19,6 @@ export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
 
-  // const router = useRouter();
-  // let cate = 'obat makan';
-  // useEffect(() => {
-  //   router.push(`/profile?category=${cate}&page=1`);
-  // }, []);
-  // console.log(router.asPath + `&pages=1`); hasilnya : /profile?category=obat%20makan&page=1&pages=1
-  // console.log(router.query); hasilnya {category : obat makan, page: 1}
-  // <Link href={{ pathname: '/search', query: { keyword: 'this way' } }}>
-  //   <a>path</a>
-  // </Link>;
-
-  // Hanya sekedar catatan, akan di hapus pada waktunya
-
   const onSaveProfile = async (body) => {
     try {
       const session = await getSession();

@@ -181,6 +181,9 @@ function EditProfile(props) {
               onChange={onHandleChange}
               mb={3}
             >
+              <option value="none" selected>
+                pilih jenis kelamin
+              </option>
               <option value="Male">Laki-laki</option>
               <option value="Female">Perempuan</option>
             </Select>
