@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { user } = require('../../../models');
+const { auth } = require('../../helpers/auth');
 const { hash, compare } = require('../../lib/bycrypt');
 
 const changePassController = async (req, res, next) => {
@@ -44,23 +45,24 @@ const changePassController = async (req, res, next) => {
   }
 };
 
-router.patch('/', async (req, res, next) => {
+router.patch('/', auth, async (req, res, next) => {
   const { email, first_name, last_name, birthDate, phone, gender, image } =
     req.body;
+
   try {
     // Checking email and phone number
     const getUser = await user.findAll({
       where: {
-        userId: { [Op.ne]: 1 },
-        [Op.or]: [{ email: req.body.email }, { phone: req.body.phone }],
+        userId: { [Op.ne]: req.user.userId },
+        [Op.or]: [{ email }, { phone }],
       },
     });
     if (getUser.length) {
       getUser.map((c) => {
-        if (c.dataValues.email == req.body.email) {
+        if (c.dataValues.email == email) {
           throw { message: 'Email is already exists' };
         }
-        if (c.dataValues.phone == req.body.phone) {
+        if (c.dataValues.phone == phone) {
           throw { message: 'Phone number is already exists' };
         }
       });
@@ -68,7 +70,7 @@ router.patch('/', async (req, res, next) => {
     const updateUser = await user.update(
       { email, first_name, last_name, birthDate, phone, gender, image },
       {
-        where: { userId: 1 },
+        where: { userId: req.user.userId },
       },
     );
 

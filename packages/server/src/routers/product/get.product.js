@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
   const limit = pageSize;
   const offset = (page - 1) * pageSize;
   try {
-    const result = await product.findAll({
+    const { count, rows } = await product.findAndCountAll({
       attributes: [
         'productId',
         'productName',
@@ -42,7 +42,12 @@ router.get('/', async (req, res, next) => {
       offset,
       limit,
     });
-    res.send(result);
+    res.send({
+      status: 'Success',
+      message: 'Success get product list',
+      result: rows,
+      totalPage: count,
+    });
   } catch (error) {
     console.log(error);
   }
