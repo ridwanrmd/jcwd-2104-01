@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       product.belongsTo(models.detailTransaction, { foreignKey: 'dtId' });
       product.belongsTo(models.logHistory, { foreignKey: 'historyId' });
       product.hasMany(models.detailProduct, { foreignKey: 'productId' });
-      product.belongsToMany(models.category, { through: 'productCategory' });
+      product.belongsToMany(models.Category, {
+        through: models.productCategory,
+        foreignKey: 'productId',
+      });
     }
   }
   product.init(

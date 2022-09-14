@@ -8,6 +8,7 @@ const { join } = require('path');
 
 // Routers
 const userRouter = require('./routers/user');
+const productRouter = require('./routers/product');
 
 app.use(cors());
 app.use(bearerToken());
@@ -19,6 +20,7 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/users', userRouter);
+app.use('/product', productRouter);
 
 app.use((error, req, res, next) => {
   const errorObj = {

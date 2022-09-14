@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Heading,
   Button,
   Input,
   Select,
@@ -15,8 +14,8 @@ import {
   FormControl,
   Flex,
   Box,
-  FormHelperText,
   FormErrorMessage,
+  Text,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { api_origin } from '../../constraint';
@@ -27,12 +26,38 @@ function EditProfile(props) {
   const [user, setUser] = useState(userProfile);
   const [imageSource, setImageSource] = useState(api_origin + user.image);
   const [isEmailError, setisEmailError] = useState(true);
+  const [isError, setisError] = useState(false);
+  const [isFirstNameError, setisFirstNameError] = useState(false);
   const { first_name, last_name, email, phone, birthDate, image, gender } =
     user;
 
   let schema = yup.object().shape({
     email: yup.string().email(),
   });
+
+  useEffect(() => {
+    const checkFirstName = () => {
+      if (user.profileImages?.size >= 1048576) {
+        return setisError(true);
+      }
+      if (user.first_name === '') {
+        setisError(true);
+        setisFirstNameError(true);
+        return;
+      } else {
+        setisError(false);
+        setisFirstNameError(false);
+        return;
+      }
+    };
+    checkFirstName();
+  }, [user]);
+
+  const cancelImage = () => {
+    setImageSource(api_origin + userProfile.image);
+    delete user.profileImages;
+    setisError(false);
+  };
 
   const checkValidity = async () => {
     const isEmailValid = await schema.isValid({
@@ -44,6 +69,12 @@ function EditProfile(props) {
   const onHandleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
     checkValidity();
+  };
+
+  const onCancel = () => {
+    setUser(userProfile);
+    setImageSource(api_origin + userProfile.image);
+    delete user.profileImages;
   };
 
   return (
@@ -72,6 +103,7 @@ function EditProfile(props) {
                   htmlFor="image"
                   cursor={'pointer'}
                   color="twitter.500"
+                  textAlign={'center'}
                 >
                   Ubah Foto Profile
                 </FormLabel>
@@ -79,37 +111,53 @@ function EditProfile(props) {
                   style={{ display: 'none' }}
                   type="file"
                   id="image"
+                  name="profileImage"
+                  accept=".png, .jpg, .gif"
                   onChange={(e) => {
                     setUser({ ...user, profileImages: e.target.files[0] });
                     setImageSource(URL.createObjectURL(event.target.files[0]));
                   }}
                 />
+
+                {user.profileImages?.size >= 1048576 && (
+                  <Flex direction={'column'}>
+                    <Text fontSize={'xs'} color="red">
+                      Maksimal Ukuran Gambar adalah 1 Mb
+                    </Text>
+                    <Button onClick={cancelImage} mx="auto" textColor={'red'}>
+                      cancel
+                    </Button>
+                  </Flex>
+                )}
               </FormControl>
             </Box>
           </Flex>
-          <FormControl>
+          <FormControl isInvalid={isFirstNameError} mb={3}>
             <FormLabel fontSize={'sm'}>Nama Depan :</FormLabel>
             <Input
               name="first_name"
               type="text"
               value={first_name}
               variant="filled"
-              mb={3}
               onChange={onHandleChange}
             />
+            {isFirstNameError && (
+              <FormErrorMessage fontSize={'xs'}>
+                Nama depan tidak boleh kosong
+              </FormErrorMessage>
+            )}
           </FormControl>
-          <FormControl>
+          <FormControl mb={3}>
             <FormLabel fontSize={'sm'}>Nama Belakang :</FormLabel>
             <Input
               name="last_name"
               type="text"
               value={last_name}
               variant="filled"
-              mb={3}
               onChange={onHandleChange}
             />
           </FormControl>
-          <FormControl isInvalid={!isEmailError}>
+          <FormControl isInvalid={!isEmailError} mb={3}>
             <FormLabel fontSize={'sm'}>Email :</FormLabel>
             <Input
               name="email"
@@ -119,7 +167,7 @@ function EditProfile(props) {
               onChange={onHandleChange}
             />
             {!isEmailError && (
-              <FormErrorMessage fontSize={'sm'}>
+              <FormErrorMessage fontSize={'xs'}>
                 Email tidak valid
               </FormErrorMessage>
             )}
@@ -137,14 +185,13 @@ function EditProfile(props) {
               <option value="Female">Perempuan</option>
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl mb={3}>
             <FormLabel fontSize={'sm'}>Nomor Handphone :</FormLabel>
             <Input
               name="phone"
-              type="text"
+              type="number"
               value={phone}
               variant="filled"
-              mb={3}
               onChange={onHandleChange}
             />
           </FormControl>
@@ -152,7 +199,7 @@ function EditProfile(props) {
             <FormLabel fontSize={'sm'}>Tanggal Lahir :</FormLabel>
             <Input
               name="birthDate"
-              value={birthDate.slice(0, 10)}
+              value={birthDate?.slice(0, 10)}
               onChange={onHandleChange}
               type="date"
               max="2017-01-01"
@@ -162,12 +209,20 @@ function EditProfile(props) {
 
         <ModalFooter>
           <Button
-            isDisabled={!isEmailError}
+            isDisabled={!isEmailError || isError}
             colorScheme="green"
             mr={3}
             onClick={() => onSaveProfile(user)}
           >
             Save
+          </Button>
+          <Button
+            isDisabled={!isEmailError || isError}
+            textColor={'red'}
+            mr={3}
+            onClick={onCancel}
+          >
+            Reset
           </Button>
         </ModalFooter>
       </ModalContent>
