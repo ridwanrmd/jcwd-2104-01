@@ -28,7 +28,7 @@ export default function SidebarProduct() {
 
   const onClickLink = (e) => {
     router.push(
-      `/product?page=1&category=${e.target.value}&orderBy=price&order=DESC`,
+      `/product?page=1&category=${e.target.value}&orderBy=price&order=ASC`,
     );
   };
 
