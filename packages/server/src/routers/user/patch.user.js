@@ -1,9 +1,8 @@
-const { resolveStyleConfig } = require('@chakra-ui/react');
-const e = require('cors');
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { user } = require('../../../models');
+const { auth } = require('../../helpers/auth');
 const { hash, compare } = require('../../lib/bycrypt');
 
 const changePassController = async (req, res, next) => {
@@ -73,16 +72,15 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
-router.patch('/forgotPassword/:userId', forgotPassword);
-router.patch('/updatePassword/', changePassController);
-router.patch('/', async (req, res, next) => {
+router.patch('/', auth, async (req, res, next) => {
   const { email, first_name, last_name, birthDate, phone, gender, image } =
     req.body;
+
   try {
     // Checking email and phone number
     const getUser = await user.findAll({
       where: {
-        userId: { [Op.ne]: 1 },
+        userId: { [Op.ne]: req.user.userId },
         [Op.or]: [{ email: req.body.email }, { phone: req.body.phone }],
       },
     });
@@ -99,7 +97,7 @@ router.patch('/', async (req, res, next) => {
     const updateUser = await user.update(
       { email, first_name, last_name, birthDate, phone, gender, image },
       {
-        where: { userId: 1 },
+        where: { userId: req.user.userId },
       },
     );
 
@@ -110,5 +108,7 @@ router.patch('/', async (req, res, next) => {
   }
 });
 
+router.patch('/updatePassword/', changePassController);
+router.patch('/forgotPassword/:userId', forgotPassword);
 
 module.exports = router;

@@ -10,10 +10,11 @@ import {
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
 import { getSession } from 'next-auth/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
+import { useRouter } from 'next/router';
 export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
@@ -51,7 +52,7 @@ export default function Profile(props) {
       }
 
       try {
-        const res = await axiosInstance.patch('/users', updateProfile);
+        const res = await axiosInstance.patch('/users', updateProfile, config);
         alert(res.data.message);
       } catch (error) {
         return alert(error.response.data.message);

@@ -1,23 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-const { user } = require('../../../models');
 const { isFieldEmpties, passwordValidator } = require('../../helpers');
 const validator = require('email-validator');
 const { compare, hash } = require('../../lib/bcrypt');
 const { createToken } = require('../../lib/token');
-
-const { sendMail, sendForgotPasswordMail } = require('../../lib/nodemailer');
-
-
-
+const { sendMail } = require('../../lib/nodemailer');
+const { user } = require('../../../models');
 const { auth } = require('../../helpers/auth');
 const uploadUser = require('../../lib/multer');
 const fs = require('fs');
 const path = require('path');
 const appRoot = require('app-root-path');
-
-
+// const { compare } = require('../../lib/bycrypt');
 
 // register endpoint
 const registerUserHandler = async (req, res, next) => {
@@ -218,7 +213,6 @@ const forgotPasswordController = async (req, res, next) => {
     console.log(error);
   }
 };
-router.post('/forgotPassword', forgotPasswordController);
 
 router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
   try {
@@ -231,12 +225,16 @@ router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
 
     const paths = postPath + dataValues.image;
 
-    fs.unlink(paths, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    });
+    console.log(dataValues.image.split('/')[3] != 'default-avatar.png');
+
+    if (dataValues.image.split('/')[3] != 'default-avatar.png') {
+      fs.unlink(paths, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      });
+    }
 
     return res.send({
       status: 'Success',
@@ -250,5 +248,6 @@ router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
 router.post('/login', loginUserController);
+router.post('/forgotPassword', forgotPasswordController);
 
 module.exports = router;
