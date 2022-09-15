@@ -12,12 +12,27 @@ router.get('/', async (req, res, next) => {
     orderBy = 'price',
     order = 'ASC',
   } = req.query;
-  console.log(orderBy);
-  console.log(order);
+
   const limit = Number(pageSize);
-  const offset = (page - 1) * Number(pageSize);
+  const offset = (Number(page) - 1) * Number(pageSize);
   try {
-    const { count, rows } = await product.findAndCountAll({
+    const amount = await product.count({
+      order: Sequelize.literal(`${orderBy} ${order}`),
+      where: {
+        productName: productName
+          ? { [Op.substring]: productName }
+          : { [Op.ne]: null },
+      },
+      include: [
+        {
+          model: Category,
+          attributes: ['category'],
+          where: { category: category ? category : { [Op.ne]: null } },
+        },
+      ],
+    });
+
+    const result = await product.findAll({
       attributes: [
         'productId',
         'productName',
@@ -41,15 +56,15 @@ router.get('/', async (req, res, next) => {
           where: { category: category ? category : { [Op.ne]: null } },
         },
       ],
-
       offset,
       limit,
     });
+
     res.send({
       status: 'Success',
       message: 'Success get product list',
-      result: rows,
-      totalPage: count,
+      result: result,
+      totalPage: amount,
     });
   } catch (error) {
     console.log(error);
