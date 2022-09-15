@@ -8,11 +8,14 @@ router.get('/', async (req, res, next) => {
     category,
     productName,
     page = 1,
-    pageSize = 15,
+    pageSize = 12,
+    orderBy = 'price',
     order = 'ASC',
   } = req.query;
-  const limit = pageSize;
-  const offset = (page - 1) * pageSize;
+  console.log(orderBy);
+  console.log(order);
+  const limit = Number(pageSize);
+  const offset = (page - 1) * Number(pageSize);
   try {
     const { count, rows } = await product.findAndCountAll({
       attributes: [
@@ -25,7 +28,7 @@ router.get('/', async (req, res, next) => {
         'unit',
         'url',
       ],
-      order: Sequelize.literal(`price ${order}`),
+      order: Sequelize.literal(`${orderBy} ${order}`),
       where: {
         productName: productName
           ? { [Op.substring]: productName }

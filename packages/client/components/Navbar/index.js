@@ -51,19 +51,20 @@ export default function Navbar() {
               spacing={4}
               display={{ base: 'none', md: 'flex' }}
             >
-              <Link
-                px={2}
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Beranda
-              </Link>
-              <NextLink href="/product">
+              <NextLink href={'/'}>
+                <Link
+                  px={2}
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Beranda
+                </Link>
+              </NextLink>
+              <NextLink href="/product?">
                 <Link
                   px={2}
                   py={1}
@@ -113,7 +114,11 @@ export default function Navbar() {
                   />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>Profile</MenuItem>
+                  <NextLink href="/profile">
+                    <Link>
+                      <MenuItem>Profile</MenuItem>
+                    </Link>
+                  </NextLink>
                   <NextLink href="/change-password">
                     <Link>
                       <MenuItem>Ganti Password</MenuItem>
@@ -137,28 +142,32 @@ export default function Navbar() {
         {isOpen ? (
           <Box bg="#FFFFFF" pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              <Link
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Beranda
-              </Link>
-              <Link
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Toko Obat
-              </Link>
+              <NextLink href={'/'}>
+                <Link
+                  px={2}
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Beranda
+                </Link>
+              </NextLink>
+              <NextLink href="/product?">
+                <Link
+                  px={2}
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Toko Obat
+                </Link>
+              </NextLink>
 
               <Link
                 py={1}
@@ -171,28 +180,18 @@ export default function Navbar() {
               >
                 Riwayat
               </Link>
-              <Link
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Profile
-              </Link>
-              {/* <Link
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Logout
-              </Link> */}
+              <NextLink href={'/profile'}>
+                <Link
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Profile
+                </Link>
+              </NextLink>
               <Button
                 colorScheme="teal"
                 variant="link"

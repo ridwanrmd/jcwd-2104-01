@@ -1,6 +1,6 @@
 import { Text, Image, Flex, Button } from '@chakra-ui/react';
 
-export default function ProductCard() {
+export default function ProductCard(props) {
   return (
     <Flex
       flexDir={'column'}
@@ -10,7 +10,7 @@ export default function ProductCard() {
     >
       <Image src="/vitaminb1.jpg" alt="vitamin" />
       <Text mx="4" mb="1" noOfLines={1} fontSize={['sm', 'md']} lineHeight={4}>
-        Ok google, gimana cara cepet kaya tanpa usaha
+        {props.product.productName}
       </Text>
       <Text
         mx="4"
@@ -20,10 +20,10 @@ export default function ProductCard() {
         color="#6E6E6E"
         marginBlock={'2'}
       >
-        Per Strip - Stock 12
+        {`${props.product.unit} - stock ${props.product.stock}`}
       </Text>
       <Text mx="4" fontSize={['xs', 'sm']} lineHeight={5} fontWeight="medium">
-        Rp. 12.000
+        {props.product.price}
       </Text>
       <Button
         mx="4"

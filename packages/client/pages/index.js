@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import axios from '../src/config/api';
+// import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 
@@ -17,13 +17,13 @@ import {
 } from '@chakra-ui/react';
 
 import Navbar from '../components/Navbar';
-
+import axiosInstance from '../src/config/api';
 import Category from '../components/Category';
 import ProductCard from '../components/ProductCard';
 import Banner from '../components/Banner';
 import Prescription from '../components/Prescription';
 
-export default function Home() {
+export default function Home(props) {
   // this is just testing api connection, possibly could be remove
   const [checkApi, setCheckApi] = useState('');
   const fetchApi = async () => {
@@ -39,11 +39,17 @@ export default function Home() {
   }, []);
   console.log(checkApi);
   // end of testing api
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
 
-  // const onLogoutClick = async () => {
-  //   await signOut();
-  // };
+  const onLogoutClick = async () => {
+    await signOut();
+  };
+
+  const renderCard = () => {
+    return props.product.map((products) => {
+      return <ProductCard product={products} />;
+    });
+  };
 
   return (
     <Box>
@@ -100,25 +106,33 @@ export default function Home() {
           justifyContent={'space-between'}
           overflow={{ base: 'scroll', md: 'auto' }}
           sx={{
-            // for Chrome, Safari and Opera
             '&::-webkit-scrollbar': {
               display: 'none',
             },
-            // for IE, Edge and Firefox
             msOverflowStyle: 'none',
             scrollbarWidth: 'none',
           }}
         >
-          {/* Render Product Here */}
-          {/* Max 5 */}
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          {renderCard()}
         </Flex>
       </Box>
       {/* End Rekomendasi Obat */}
     </Box>
   );
+}
+export async function getServerSideProps(context) {
+  try {
+    const resGetProduct = await axiosInstance.get(`/product`, {
+      params: { pageSize: 5 },
+    });
+    return {
+      props: {
+        product: resGetProduct.data.result,
+        totalPage: resGetProduct.data.totalPage,
+      },
+    };
+  } catch (error) {
+    const errorMessage = error.message;
+    return { props: { errorMessage } };
+  }
 }
