@@ -1,6 +1,8 @@
 import { Text, Image, Flex, Button } from '@chakra-ui/react';
+import { api_origin } from '../../constraint';
 
 export default function ProductCard(props) {
+  console.log(api_origin + props.product.productImage);
   return (
     <Flex
       flexDir={'column'}
@@ -8,7 +10,7 @@ export default function ProductCard(props) {
       width={{ base: '40vw', md: '14vw' }}
       flexShrink={'0'}
     >
-      <Image src="/vitaminb1.jpg" alt="vitamin" />
+      <Image src={api_origin + props.product.productImage} alt="vitamin" />
       <Text mx="4" mb="1" noOfLines={1} fontSize={['sm', 'md']} lineHeight={4}>
         {props.product.productName}
       </Text>

@@ -72,6 +72,7 @@ export default function Product(props) {
               previousLinkClassName={styles.pagenum}
               nextLinkClassName={styles.pagenum}
               activeLinkClassName={styles.active}
+              disabledClassName={styles.disabled}
             />
           </Flex>
         </Flex>

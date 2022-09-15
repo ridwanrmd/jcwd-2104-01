@@ -33,7 +33,7 @@ export default function Banner() {
         </InputGroup>
       </Show>
       <Hide below="md">
-        <Box bgImage="url('/banner.png')" h="40vh">
+        <Box bgImage="url('/banner.png')" h="50vh">
           <Text
             paddingStart={'20vw'}
             paddingTop="7vh"

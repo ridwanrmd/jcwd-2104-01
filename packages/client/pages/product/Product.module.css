@@ -24,3 +24,8 @@
 .pagination .active {
   background-color: #1da1f2;
 }
+
+.pagination .disabled a {
+  color: gray;
+  cursor: not-allowed;
+}
