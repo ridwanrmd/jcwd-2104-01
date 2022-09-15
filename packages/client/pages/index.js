@@ -47,7 +47,7 @@ export default function Home(props) {
 
   const renderCard = () => {
     return props.product.map((products) => {
-      return <ProductCard product={products} />;
+      return <ProductCard key={products.productId} product={products} />;
     });
   };
 
