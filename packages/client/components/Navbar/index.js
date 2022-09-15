@@ -64,7 +64,7 @@ export default function Navbar() {
                   Beranda
                 </Link>
               </NextLink>
-              <NextLink href="/product?">
+              <NextLink href="/product?page=1">
                 <Link
                   px={2}
                   py={1}
@@ -155,7 +155,7 @@ export default function Navbar() {
                   Beranda
                 </Link>
               </NextLink>
-              <NextLink href="/product?">
+              <NextLink href="/product?page=1">
                 <Link
                   px={2}
                   py={1}

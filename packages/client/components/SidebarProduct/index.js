@@ -27,12 +27,25 @@ export default function SidebarProduct() {
   const router = useRouter();
 
   const onClickLink = (e) => {
-    router.push(`/product?category=${e.target.value}`);
+    router.push(
+      `/product?page=1&category=${e.target.value}&orderBy=price&order=DESC`,
+    );
   };
 
   const onClickOrder = (e) => {
     let splitter = e.target.value.split(' ');
-    router.push(`/product?orderBy=${splitter[0]}&order=${splitter[1]}`);
+    let paths = router.asPath;
+    if (router.query.orderBy) {
+      let replaceOrder = paths.replace(
+        `orderBy=${router.query.orderBy}&order=${router.query.order}`,
+        `orderBy=${splitter[0]}&order=${splitter[1]}`,
+      );
+      router.push(replaceOrder);
+    } else {
+      router.push(
+        `/product?page=1&orderBy=${splitter[0]}&order=${splitter[1]}`,
+      );
+    }
   };
 
   const onSearchHandler = () => {
