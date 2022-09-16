@@ -2,4 +2,8 @@ node_modules/
 
 .env
 
+<<<<<<< HEAD
 /public
+=======
+public/
+>>>>>>> a09dcf5e775b7d319d9547aa106761bbaca10097

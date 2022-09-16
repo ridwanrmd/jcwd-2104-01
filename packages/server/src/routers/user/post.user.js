@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { user } = require('../../../models');
+
 const { isFieldEmpties, passwordValidator } = require('../../helpers');
 const validator = require('email-validator');
 const { compare, hash } = require('../../lib/bcrypt');
@@ -226,12 +227,16 @@ router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
 
     const paths = postPath + dataValues.image;
 
-    fs.unlink(paths, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    });
+    console.log(dataValues.image.split('/')[3] != 'default-avatar.png');
+
+    if (dataValues.image.split('/')[3] != 'default-avatar.png') {
+      fs.unlink(paths, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      });
+    }
 
     return res.send({
       status: 'Success',
