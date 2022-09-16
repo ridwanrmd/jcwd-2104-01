@@ -114,15 +114,12 @@ export default function Navbar() {
                   />
                 </MenuButton>
                 <MenuList>
-<<<<<<< HEAD
                   <MenuItem>Profile</MenuItem>
-=======
                   <NextLink href="/profile">
                     <Link>
                       <MenuItem>Profile</MenuItem>
                     </Link>
                   </NextLink>
->>>>>>> a09dcf5e775b7d319d9547aa106761bbaca10097
                   <NextLink href="/change-password">
                     <Link>
                       <MenuItem>Ganti Password</MenuItem>
