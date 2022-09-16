@@ -9,6 +9,7 @@ const editCart = async (req, res, next) => {
     const { userId } = req.user;
     // console.log(userId);
     const { quantity } = req.body;
+    console.log(req.body);
     const { cartId } = req.params;
 
     const editQuantity = await cart.update(
@@ -24,7 +25,7 @@ const editCart = async (req, res, next) => {
     );
     res.send({
       status: 'Succsess',
-      message: 'Succsess edit product to cart',
+      message: 'Succsess edit product in your cart',
       data: {
         editQuantity,
       },
