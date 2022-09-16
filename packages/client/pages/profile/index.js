@@ -7,16 +7,91 @@ import {
   Text,
   VStack,
   useDisclosure,
+  Spacer,
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
 import { getSession } from 'next-auth/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
+import AddAddress from '../../components/AddAddress';
+import EditAddress from '../../components/EditAddress';
+
 export default function Profile(props) {
+  // console.log(props.addresses);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
+  // const [userAddresses, setUserAddresses] = useState(props.addresses);
+  const [modalAdd, setModalAdd] = useState(false);
+  const [modalEdit, setModalEdit] = useState(false);
+
+  const renderAddress = () => {
+    return props.addresses.map((address) => (
+      <Box
+        mb="4"
+        paddingY={2}
+        border="2px"
+        borderColor="gray.300"
+        borderRadius="md"
+        width={440}
+        key={address.addressId}
+      >
+        <HStack>
+          <Box>
+            {address.isMain == 1 && (
+              <Text
+                ms="2"
+                fontFamily="inherit"
+                color="red"
+                fontSize={{ base: 'sm', md: 'sm' }}
+              >
+                Alamat Utama
+              </Text>
+            )}
+            <Text
+              marginStart={2}
+              fontSize={{ base: 'md', md: 'md' }}
+              fontWeight="medium"
+              lineHeight={'6'}
+              width={255}
+            >
+              {address.address}
+            </Text>
+            <Text
+              marginStart={2}
+              fontSize={{ base: 'md', md: 'md' }}
+              fontWeight="medium"
+              lineHeight={'6'}
+              width={250}
+            >
+              {address.city_name}, {address.province}
+            </Text>
+          </Box>
+          <Spacer />
+          <HStack paddingEnd={2}>
+            <Button
+              variant="ghost"
+              size="sm"
+              colorScheme={'twitter'}
+              onClick={() => setModalEdit(true)}
+            >
+              Rubah
+              <EditAddress
+                isOpen={modalEdit}
+                onClose={() => setModalEdit(false)}
+                address={address.address}
+                addressId={address.addressId}
+              />
+            </Button>
+            <Button variant="ghost" size="sm" colorScheme={'twitter'}>
+              Hapus
+            </Button>
+          </HStack>
+        </HStack>
+      </Box>
+    ));
+  };
 
   const onSaveProfile = async (body) => {
     try {
@@ -72,7 +147,9 @@ export default function Profile(props) {
     <>
       <Navbar />
       <Box
-        height={'80vh'}
+        marginBlock="6"
+        height={'83vh'}
+        width={'80vh'}
         marginInline={{ base: '2', md: '35%' }}
         shadow={{ base: 'unset', md: 'md' }}
       >
@@ -85,7 +162,7 @@ export default function Profile(props) {
           >
             Profile
           </Text>
-          <HStack mt="4" mb="6">
+          <HStack mt="4" mb="1" pb="2">
             <Image
               objectFit={'cover'}
               rounded={'full'}
@@ -113,7 +190,7 @@ export default function Profile(props) {
           </HStack>
         </Box>
         <Box mt="2" mx="6" borderBottom="1px solid #C2CED6">
-          <VStack mb="6">
+          <VStack mb="3">
             <Text
               fontSize={{ base: 'md', md: 'md' }}
               fontWeight="medium"
@@ -127,20 +204,49 @@ export default function Profile(props) {
               lineHeight={'6'}
               color="#878686"
             >
-              Isi nama, profil dan alamat rumahmu
+              Isi nama dan profilmu
             </Text>
             <Button colorScheme={'twitter'} w="full" onClick={onOpen}>
               Lengkapi Profil
+              <EditProfile
+                isOpen={isOpen}
+                onClose={onClose}
+                userProfile={user}
+                onSaveProfile={onSaveProfile}
+              />
             </Button>
           </VStack>
         </Box>
+        <Box mt="2" mx="6" borderBottom="1px solid #C2CED6">
+          <Text
+            mt="5"
+            mb="2"
+            fontSize={{ base: 'md', md: 'md' }}
+            fontWeight="medium"
+            lineHeight={'6'}
+            as="u"
+          >
+            Alamat
+          </Text>
+          <Box overflow="scroll" height="24.5vh">
+            {renderAddress()}
+          </Box>
+        </Box>
+        <Box mb="4" mt="5" mx="6">
+          <Button
+            colorScheme={'twitter'}
+            w="full"
+            onClick={() => setModalAdd(true)}
+          >
+            Tambahkan Alamat
+            <AddAddress
+              isOpen={modalAdd}
+              onClose={() => setModalAdd(false)}
+              renderAddress={renderAddress}
+            />
+          </Button>
+        </Box>
       </Box>
-      <EditProfile
-        isOpen={isOpen}
-        onClose={onClose}
-        userProfile={user}
-        onSaveProfile={onSaveProfile}
-      />
     </>
   );
 }
@@ -149,13 +255,26 @@ export async function getServerSideProps(context) {
   try {
     const session = await getSession({ req: context.req });
     if (!session) return { redirect: { destination: '/' } };
+
     const { userId, accessToken } = session.user;
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
+
     const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+
+    const resGetAddress = await axiosInstance.get(
+      `/addresses/userAddress`,
+      config,
+    );
+    // console.log(resGetAddress.data.data);
+
     return {
-      props: { user: resGetUser.data.data },
+      props: {
+        user: resGetUser.data.data,
+        addresses: resGetAddress.data.data,
+        session,
+      },
     };
   } catch (error) {
     const errorMessage = error.message;

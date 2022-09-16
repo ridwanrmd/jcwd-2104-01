@@ -212,4 +212,5 @@ router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
 router.post('/login', loginUserController);
+
 module.exports = router;

@@ -7,6 +7,8 @@ const bearerToken = require('express-bearer-token');
 
 // Routers
 const userRouter = require('./routers/user');
+const addressRouter = require('./routers/address');
+const rajaongkirRouter = require('./routers/rajaongkir');
 
 // Config
 app.use(cors());
@@ -19,6 +21,8 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/users', userRouter);
+app.use('/addresses', addressRouter);
+app.use('/rajaongkir', rajaongkirRouter);
 
 app.use((error, req, res, next) => {
   const errorObj = {

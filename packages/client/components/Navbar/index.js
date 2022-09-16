@@ -38,7 +38,7 @@ export default function Navbar(props) {
         shadow={'md'}
       >
         {/* {!props.user.isVerified && <ResendEmail />} */}
-        <ResendEmail />
+        {/* <ResendEmail /> */}
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
             <Box>

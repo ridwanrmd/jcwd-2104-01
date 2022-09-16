@@ -67,6 +67,7 @@ function Register() {
       alert(error.message);
     } finally {
       setisRegisterProcess(false);
+      setDisabled(false);
     }
   };
 
@@ -209,9 +210,9 @@ function Register() {
               onClick={() => {
                 onRegisterClick();
                 setDisabled(true);
-                setTimeout(() => {
-                  setDisabled(false);
-                }, 5000);
+                // setTimeout(() => {
+                //   setDisabled(false);
+                // }, 5000);
               }}
             >
               Buat akun
