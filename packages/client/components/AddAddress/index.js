@@ -32,7 +32,6 @@ function AddAddress(props) {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [disabled, setDisabled] = useState(false);
-  const [isProcessDone, setIsProcessDone] = useState(false);
 
   const splitProvince = selectedProvince.split(',');
   const province_id = splitProvince[0];
@@ -53,12 +52,6 @@ function AddAddress(props) {
       getAllCity();
     }
   }, [selectedProvince]);
-
-  useEffect(() => {
-    if (isProcessDone) {
-      props.renderAddress();
-    }
-  }, [isProcessDone]);
 
   const onAddAddress = async () => {
     try {
@@ -84,14 +77,13 @@ function AddAddress(props) {
         config,
       );
 
-      setIsProcessDone(true);
-
       alert(res.data.message);
+      window.location.reload();
     } catch (error) {
       console.log({ error });
       alert(error.response.data.message);
     } finally {
-      setDisabled(false), setIsProcessDone(false);
+      setDisabled(false);
     }
   };
 
@@ -100,7 +92,7 @@ function AddAddress(props) {
       const resGetProvince = await axiosInstance('/rajaongkir/provinsi');
       setGetProvince(resGetProvince.data.rajaongkir.results);
     } catch (error) {
-      next(error);
+      console.log({ error });
     }
   };
   const getAllCity = async () => {
@@ -110,7 +102,7 @@ function AddAddress(props) {
       );
       setGetCity(resGetCity.data.rajaongkir.results);
     } catch (error) {
-      next(error);
+      console.log({ error });
     }
   };
 
