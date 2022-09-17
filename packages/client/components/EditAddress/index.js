@@ -13,28 +13,24 @@ import {
   Image,
   FormLabel,
   FormControl,
-  Flex,
-  Box,
-  FormHelperText,
-  FormErrorMessage,
-  Textarea,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 import next from 'next';
-import { BsWindowSidebar } from 'react-icons/bs';
 
 function EditAddress(props) {
-  console.log(props);
-  const { isOpen, onClose, address, address_id } = props;
-  const [addressDetail, setAddressDetail] = useState(address);
+  const { isOpen, onClose, addressId, address, province_name, city } = props;
+  const [addressDetail, setAddressDetail] = useState({ address });
   const [getProvince, setGetProvince] = useState([]);
   const [getCity, setGetCity] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [disabled, setDisabled] = useState(false);
-  const [isProcessDone, setIsProcessDone] = useState(false);
+  // const [currentProvince, setCurrentProvince] = useState({ province_name });
+  // const [currentCity, setCurrentCity] = useState({ city });
+
+  console.log(addressDetail.address);
 
   const splitProvince = selectedProvince.split(',');
   const province_id = splitProvince[0];
@@ -43,8 +39,6 @@ function EditAddress(props) {
   const splitCity = selectedCity.split(',');
   const city_id = splitCity[0];
   const city_name = splitCity[1];
-
-  //   const { address } = addressDetail;
 
   useEffect(() => {
     getAllProvince();
@@ -62,7 +56,7 @@ function EditAddress(props) {
   //     }
   //   }, [isProcessDone]);
 
-  const onAddAddress = async () => {
+  const onEditAddress = async () => {
     try {
       setDisabled(true);
       const session = await getSession();
@@ -73,22 +67,21 @@ function EditAddress(props) {
       };
 
       const body = {
-        address,
+        address: addressDetail,
         province_id,
         province,
         city_id,
         city_name,
       };
 
-      const res = await axiosInstance.post(
-        '/addresses/createAddress',
+      const res = await axiosInstance.patch(
+        `/addresses/edit/${addressId}`,
         body,
         config,
       );
 
-      //   setIsProcessDone(true);
-
       alert(res.data.message);
+      window.location.reload();
     } catch (error) {
       console.log({ error });
       alert(error.response.data.message);
@@ -102,7 +95,7 @@ function EditAddress(props) {
       const resGetProvince = await axiosInstance('/rajaongkir/provinsi');
       setGetProvince(resGetProvince.data.rajaongkir.results);
     } catch (error) {
-      next(error);
+      console.log({ error });
     }
   };
   const getAllCity = async () => {
@@ -112,7 +105,7 @@ function EditAddress(props) {
       );
       setGetCity(resGetCity.data.rajaongkir.results);
     } catch (error) {
-      next(error);
+      console.log({ error });
     }
   };
 
@@ -133,15 +126,17 @@ function EditAddress(props) {
   };
 
   const onHandleChange = (e) => {
-    setAddressDetail({ ...addressDetail, [e.target.name]: e.target.value });
+    setAddressDetail(e.target.value);
   };
 
   const onHandleChangeProvince = (e) => {
     setSelectedProvince(e.target.value);
+    // setCurrentProvince(e.target.value);
   };
 
   const onHandleChangeCity = (e) => {
     setSelectedCity(e.target.value);
+    // setCurrentCity(e.target.value);
   };
 
   return (
@@ -153,22 +148,14 @@ function EditAddress(props) {
         <ModalBody>
           <FormControl>
             <FormLabel fontSize={'sm'}>Alamat</FormLabel>
-            <Textarea
-              name="address"
-              value={address}
-              variant="filled"
-              mb={3}
-              fontWeight={400}
-              onChange={onHandleChange}
-            />
             <Input
               name="address"
               type="text"
-              value={address}
+              value={addressDetail.address}
               variant="filled"
               mb={3}
               fontWeight={400}
-              placeholder="Tulis Alamat"
+              // placeholder="Tulis Alamat"
               onChange={onHandleChange}
             />
           </FormControl>
@@ -181,6 +168,7 @@ function EditAddress(props) {
               fontWeight={400}
               placeholder="Pilih Provinsi"
               variant="filled"
+              // value={currentProvince.province_name}
               onChange={onHandleChangeProvince}
             >
               {renderProvince()}
@@ -195,6 +183,7 @@ function EditAddress(props) {
               fontWeight={400}
               placeholder="Pilih Kota"
               variant="filled"
+              // value={currentCity.city}
               onChange={onHandleChangeCity}
             >
               {renderCity()}
@@ -207,7 +196,7 @@ function EditAddress(props) {
             isDisabled={disabled}
             colorScheme="twitter"
             mr={3}
-            onClick={() => onAddAddress()}
+            onClick={() => onEditAddress()}
           >
             Simpan
           </Button>
