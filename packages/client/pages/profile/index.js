@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
 import { getSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
@@ -19,22 +19,47 @@ import AddAddress from '../../components/AddAddress';
 import EditAddress from '../../components/EditAddress';
 
 export default function Profile(props) {
-  // console.log(props.addresses);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
   // const [userAddresses, setUserAddresses] = useState(props.addresses);
   const [modalAdd, setModalAdd] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState();
+
+  useEffect(() => {
+    setCurrentAddress(props.addresses[0]);
+  }, []);
+
+  const onDeleteAddress = async (addressId) => {
+    // console.log(addressId);
+    try {
+      const session = await getSession();
+      const { accessToken } = session.user;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+
+      const res = await axiosInstance.delete(
+        `/addresses/delete/${addressId}`,
+        config,
+      );
+
+      alert(res.data.message);
+      window.location.reload();
+    } catch (error) {
+      alert(errorMessage);
+    }
+  };
 
   const renderAddress = () => {
-    return props.addresses.map((address) => (
+    return props.addresses.map((address, index) => (
       <Box
         mb="4"
         paddingY={2}
         border="2px"
         borderColor="gray.300"
         borderRadius="md"
-        width={440}
+        width={452}
         key={address.addressId}
       >
         <HStack>
@@ -54,7 +79,7 @@ export default function Profile(props) {
               fontSize={{ base: 'md', md: 'md' }}
               fontWeight="medium"
               lineHeight={'6'}
-              width={255}
+              width={276}
             >
               {address.address}
             </Text>
@@ -74,17 +99,27 @@ export default function Profile(props) {
               variant="ghost"
               size="sm"
               colorScheme={'twitter'}
-              onClick={() => setModalEdit(true)}
+              onClick={() => {
+                setCurrentAddress(props.addresses[index]);
+                setModalEdit(true);
+              }}
             >
-              Rubah
+              Ubah
               <EditAddress
                 isOpen={modalEdit}
                 onClose={() => setModalEdit(false)}
-                address={address.address}
-                addressId={address.addressId}
+                addressId={currentAddress?.addressId}
+                address={currentAddress?.address}
+                province_name={currentAddress?.province}
+                city={currentAddress?.city_name}
               />
             </Button>
-            <Button variant="ghost" size="sm" colorScheme={'twitter'}>
+            <Button
+              variant="ghost"
+              size="sm"
+              colorScheme={'twitter'}
+              onClick={() => onDeleteAddress(address.addressId)}
+            >
               Hapus
             </Button>
           </HStack>
@@ -149,7 +184,7 @@ export default function Profile(props) {
       <Box
         marginBlock="6"
         height={'83vh'}
-        width={'80vh'}
+        width={'82vh'}
         marginInline={{ base: '2', md: '35%' }}
         shadow={{ base: 'unset', md: 'md' }}
       >
@@ -267,7 +302,6 @@ export async function getServerSideProps(context) {
       `/addresses/userAddress`,
       config,
     );
-    // console.log(resGetAddress.data.data);
 
     return {
       props: {
