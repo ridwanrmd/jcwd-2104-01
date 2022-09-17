@@ -60,7 +60,7 @@ export default function Profile(props) {
         borderColor="gray.300"
         borderRadius="md"
         width={452}
-        key={address.addressId}
+        key={address}
       >
         <HStack>
           <Box>

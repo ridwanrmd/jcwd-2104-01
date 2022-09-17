@@ -30,7 +30,7 @@ function EditAddress(props) {
   const [currentProvince, setCurrentProvince] = useState(province_name);
   const [currentCity, setCurrentCity] = useState(city);
 
-  console.log(addressDetail);
+  console.log(currentCity);
 
   const splitProvince = selectedProvince.split(',');
   const province_id = splitProvince[0];
@@ -112,7 +112,7 @@ function EditAddress(props) {
   const renderProvince = () => {
     return getProvince.map((province) => (
       <option
-        key={province.province_id}
+        key={province}
         value={`${province.province_id},${province.province}`}
       >
         {province.province}
@@ -122,7 +122,7 @@ function EditAddress(props) {
 
   const renderCity = () => {
     return getCity.map((city) => (
-      <option key={city.city_id} value={`${city.city_id},${city.city_name}`}>
+      <option key={city} value={`${city.city_id},${city.city_name}`}>
         {city.city_name}
       </option>
     ));
@@ -158,7 +158,7 @@ function EditAddress(props) {
               variant="filled"
               mb={3}
               fontWeight={400}
-              placeholder="Tulis Alamat"
+              // placeholder="Tulis Alamat"
               onChange={onHandleChange}
             />
           </FormControl>
