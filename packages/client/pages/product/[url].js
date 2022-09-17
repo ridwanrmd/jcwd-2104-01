@@ -23,6 +23,7 @@ export default function ProductDetail({ product }) {
     return product.Categories.map((category) => {
       return (
         <Button
+          key={category.categoryId}
           width={'max-content'}
           variant="link"
           fontSize={{ base: 'sm', md: 'md' }}
@@ -67,6 +68,7 @@ export default function ProductDetail({ product }) {
             src={api_origin + product.productImage}
             h="20vh"
             w={{ base: '50vw', md: '20vw' }}
+            alt="gambar product"
           />
         </Flex>
         <Flex direction={'column'} flexGrow={'2'}>

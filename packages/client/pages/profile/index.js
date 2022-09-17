@@ -3,25 +3,24 @@ import {
   Button,
   HStack,
   Image,
-  Input,
   Text,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
-import { getSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import { getSession, useSession } from 'next-auth/react';
+import { useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
-import { useRouter } from 'next/router';
 export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
 
+  const { data: session } = useSession();
+
   const onSaveProfile = async (body) => {
     try {
-      const session = await getSession();
       const { accessToken } = session.user;
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -71,7 +70,7 @@ export default function Profile(props) {
   };
   return (
     <>
-      <Navbar />
+      <Navbar session={session} user={user} />
       <Box
         height={'80vh'}
         marginInline={{ base: '2', md: '35%' }}

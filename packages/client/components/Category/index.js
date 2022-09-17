@@ -1,5 +1,4 @@
 import { Flex, Image, Text, Stack, Link, Box } from '@chakra-ui/react';
-import { getRouteRegex } from 'next/dist/shared/lib/router/utils/route-regex';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -159,7 +158,7 @@ export default function Category() {
           shadow={{ base: 'unset', md: 'base' }}
           cursor="pointer"
           onClick={() =>
-            getRouteRegex.push(
+            router.push(
               '/product?page=1&category=Vitamin&orderBy=price&order=ASC',
             )
           }

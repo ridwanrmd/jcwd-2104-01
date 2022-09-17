@@ -38,7 +38,7 @@ export default function Product(props) {
             h="90vh"
             w="full"
           >
-            {router.query.category == '' ? (
+            {router.query.category == '' || !router.query.category ? (
               <Text
                 fontSize={{ base: 'lg', md: '2xl' }}
                 fontWeight="semibold"
@@ -55,7 +55,7 @@ export default function Product(props) {
                 {`Obat ${router.query.category}`}
               </Text>
             )}
-            <Flex flexWrap="wrap" justify="center" flexShrink={'0'}>
+            <Flex flexWrap="wrap" flexGrow={'1'} flexShrink={'0'}>
               {renderCard()}
             </Flex>
             <ReactPaginate

@@ -70,13 +70,6 @@ export default function Home(props) {
         <Flex
           justifyContent={'space-between'}
           overflow={{ base: 'scroll', md: 'auto' }}
-          sx={{
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none',
-          }}
         >
           {renderCard()}
         </Flex>

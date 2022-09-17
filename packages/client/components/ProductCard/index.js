@@ -8,8 +8,10 @@ export default function ProductCard(props) {
     <Flex
       flexDir={'column'}
       marginTop={'4'}
-      width={{ base: '40vw', md: '12vw' }}
-      flexShrink={'0'}
+      width={{ base: '40vw', md: '220px' }}
+      maxWidth="250px"
+      flexGrow={'1'}
+      flexShrink="0"
       mx="2"
     >
       <Box
