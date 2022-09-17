@@ -21,16 +21,16 @@ import next from 'next';
 
 function EditAddress(props) {
   const { isOpen, onClose, addressId, address, province_name, city } = props;
-  const [addressDetail, setAddressDetail] = useState({ address });
+  const [addressDetail, setAddressDetail] = useState(address);
   const [getProvince, setGetProvince] = useState([]);
   const [getCity, setGetCity] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [disabled, setDisabled] = useState(false);
-  // const [currentProvince, setCurrentProvince] = useState({ province_name });
-  // const [currentCity, setCurrentCity] = useState({ city });
+  const [currentProvince, setCurrentProvince] = useState(province_name);
+  const [currentCity, setCurrentCity] = useState(city);
 
-  console.log(addressDetail.address);
+  console.log(addressDetail);
 
   const splitProvince = selectedProvince.split(',');
   const province_id = splitProvince[0];
@@ -111,7 +111,10 @@ function EditAddress(props) {
 
   const renderProvince = () => {
     return getProvince.map((province) => (
-      <option value={`${province.province_id},${province.province}`}>
+      <option
+        key={province.province_id}
+        value={`${province.province_id},${province.province}`}
+      >
         {province.province}
       </option>
     ));
@@ -119,7 +122,7 @@ function EditAddress(props) {
 
   const renderCity = () => {
     return getCity.map((city) => (
-      <option value={`${city.city_id},${city.city_name}`}>
+      <option key={city.city_id} value={`${city.city_id},${city.city_name}`}>
         {city.city_name}
       </option>
     ));
@@ -131,12 +134,12 @@ function EditAddress(props) {
 
   const onHandleChangeProvince = (e) => {
     setSelectedProvince(e.target.value);
-    // setCurrentProvince(e.target.value);
+    setCurrentProvince(e.target.value);
   };
 
   const onHandleChangeCity = (e) => {
     setSelectedCity(e.target.value);
-    // setCurrentCity(e.target.value);
+    setCurrentCity(e.target.value);
   };
 
   return (
@@ -151,11 +154,11 @@ function EditAddress(props) {
             <Input
               name="address"
               type="text"
-              value={addressDetail.address}
+              value={addressDetail}
               variant="filled"
               mb={3}
               fontWeight={400}
-              // placeholder="Tulis Alamat"
+              placeholder="Tulis Alamat"
               onChange={onHandleChange}
             />
           </FormControl>
@@ -168,7 +171,7 @@ function EditAddress(props) {
               fontWeight={400}
               placeholder="Pilih Provinsi"
               variant="filled"
-              // value={currentProvince.province_name}
+              value={currentProvince}
               onChange={onHandleChangeProvince}
             >
               {renderProvince()}
@@ -183,7 +186,7 @@ function EditAddress(props) {
               fontWeight={400}
               placeholder="Pilih Kota"
               variant="filled"
-              // value={currentCity.city}
+              value={currentCity}
               onChange={onHandleChangeCity}
             >
               {renderCity()}

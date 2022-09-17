@@ -108,7 +108,10 @@ function AddAddress(props) {
 
   const renderProvince = () => {
     return getProvince.map((province) => (
-      <option value={`${province.province_id},${province.province}`}>
+      <option
+        key={province}
+        value={`${province.province_id},${province.province}`}
+      >
         {province.province}
       </option>
     ));
@@ -116,7 +119,7 @@ function AddAddress(props) {
 
   const renderCity = () => {
     return getCity.map((city) => (
-      <option value={`${city.city_id},${city.city_name}`}>
+      <option key={city} value={`${city.city_id},${city.city_name}`}>
         {city.city_name}
       </option>
     ));
