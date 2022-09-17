@@ -1,8 +1,129 @@
-import React from 'react';
 import axiosInstance from '../../src/config/api';
+import Navbar from '../../components/Navbar';
+import { api_origin } from '../../constraint';
+import {
+  Box,
+  Button,
+  Collapse,
+  Flex,
+  Image,
+  Show,
+  Text,
+} from '@chakra-ui/react';
+import { useState } from 'react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import { useRouter } from 'next/router';
 
-export default function ProductDetail() {
-  return <div>ProductDetail</div>;
+export default function ProductDetail({ product }) {
+  const router = useRouter();
+  const [show, setShow] = useState(false);
+
+  const handleToggle = () => setShow(!show);
+  const renderCategory = () => {
+    return product.Categories.map((category) => {
+      return (
+        <Button
+          width={'max-content'}
+          variant="link"
+          fontSize={{ base: 'sm', md: 'md' }}
+          color="#039177"
+          onClick={() =>
+            router.push(
+              `/product?page=1&category=${category.category}&orderBy=price&order=ASC`,
+            )
+          }
+        >
+          {category.category}
+        </Button>
+      );
+    });
+  };
+  return (
+    <>
+      <Navbar />
+      <Show below="md">
+        <Box
+          marginBlock={'5'}
+          marginInline="3"
+          onClick={() => router.push('/product?page=1')}
+        >
+          <ArrowBackIcon fontSize={'4xl'} />
+        </Box>
+      </Show>
+      <Flex
+        direction={{ base: 'column', md: 'row' }}
+        maxWidth="100vw"
+        mx={{ base: 'unseet', md: '20' }}
+        marginBlock="5"
+        marginInline="5"
+      >
+        <Flex
+          flexGrow={'1'}
+          justifyContent={'center'}
+          flexShrink="0"
+          paddingInline={'20'}
+        >
+          <Image
+            src={api_origin + product.productImage}
+            h="20vh"
+            w={{ base: '50vw', md: '20vw' }}
+          />
+        </Flex>
+        <Flex direction={'column'} flexGrow={'2'}>
+          <Text fontSize={{ base: '2xl', md: '4xl' }} fontWeight="medium">
+            {product.productName}
+          </Text>
+          <Text
+            fontSize="sm"
+            fontWeight="normal"
+          >{`Per ${product.unit} - Stock ${product.stock}`}</Text>
+          <Text fontSize={{ base: 'md', md: 'xl' }}>Kategori : </Text>
+          {renderCategory()}
+          <Text
+            fontSize={{ base: 'xl', md: '2xl' }}
+            fontWeight="medium"
+          >{`Rp. ${product.price.toLocaleString('id')}`}</Text>
+          {product.stock != 0 ? (
+            <Button
+              w="max-content"
+              variant={'solid'}
+              colorScheme="twitter"
+              marginBlock={'2'}
+            >
+              Tambah
+            </Button>
+          ) : (
+            <Button
+              w="max-content"
+              variant={'solid'}
+              isDisabled={true}
+              marginBlock={'2'}
+            >
+              Tambah
+            </Button>
+          )}
+          <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeigh="medium">
+            Deskripsi :{' '}
+          </Text>
+          <Collapse startingHeight={22} in={show}>
+            {product.desc}
+          </Collapse>
+          {product.desc.length > 40 && (
+            <Box
+              as="button"
+              width={'fit-content'}
+              size="sm"
+              color={'#008DEB'}
+              onClick={handleToggle}
+              mt="1rem"
+            >
+              Show {show ? 'Less' : 'More'}
+            </Box>
+          )}
+        </Flex>
+      </Flex>
+    </>
+  );
 }
 
 export async function getServerSideProps(context) {
@@ -10,7 +131,6 @@ export async function getServerSideProps(context) {
     const resGetProduct = await axiosInstance.get(
       `/product/${context.params.url}`,
     );
-    console.log(resGetProduct.data.result);
     return {
       props: {
         product: resGetProduct.data.result,

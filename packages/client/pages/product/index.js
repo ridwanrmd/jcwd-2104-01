@@ -55,7 +55,7 @@ export default function Product(props) {
                 {`Obat ${router.query.category}`}
               </Text>
             )}
-            <Flex flexWrap="wrap" justify="center">
+            <Flex flexWrap="wrap" justify="center" flexShrink={'0'}>
               {renderCard()}
             </Flex>
             <ReactPaginate
