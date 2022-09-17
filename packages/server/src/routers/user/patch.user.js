@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { user } = require('../../../models');
+const { auth } = require('../../helpers/auth');
 const { hash, compare } = require('../../lib/bycrypt');
 
 const changePassController = async (req, res, next) => {
@@ -44,14 +45,42 @@ const changePassController = async (req, res, next) => {
   }
 };
 
-router.patch('/', async (req, res, next) => {
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { newPassword, ConfirmPassword } = req.body;
+    const { userId } = req.params;
+
+    if (newPassword !== ConfirmPassword) {
+      res.send({
+        code: 400,
+        message: 'Password doesnt match',
+        detail: `Password: ${newPassword}, Confirm Password: ${ConfirmPassword}`,
+      });
+    }
+    const resForgotPass = await user.findOne({ where: { userId } });
+    const passwordHash = hash(newPassword);
+    await resForgotPass.update({ password: passwordHash });
+    const resUpdated = await resForgotPass.save();
+
+    res.send({
+      status: 'Success',
+      message: 'Success updated password',
+      detail: { resUpdated },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.patch('/', auth, async (req, res, next) => {
   const { email, first_name, last_name, birthDate, phone, gender, image } =
     req.body;
+
   try {
     // Checking email and phone number
     const getUser = await user.findAll({
       where: {
-        userId: { [Op.ne]: 1 },
+        userId: { [Op.ne]: req.user.userId },
         [Op.or]: [{ email: req.body.email }, { phone: req.body.phone }],
       },
     });
@@ -68,7 +97,7 @@ router.patch('/', async (req, res, next) => {
     const updateUser = await user.update(
       { email, first_name, last_name, birthDate, phone, gender, image },
       {
-        where: { userId: 1 },
+        where: { userId: req.user.userId },
       },
     );
 
@@ -80,5 +109,6 @@ router.patch('/', async (req, res, next) => {
 });
 
 router.patch('/updatePassword/', changePassController);
+router.patch('/forgotPassword/:userId', forgotPassword);
 
 module.exports = router;

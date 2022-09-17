@@ -20,6 +20,7 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { HiShoppingCart } from 'react-icons/hi';
 import ResendEmail from '../ResendEmail';
+import NextLink from 'next/link';
 import { signOut } from 'next-auth/react';
 
 export default function Navbar(props) {
@@ -42,37 +43,43 @@ export default function Navbar(props) {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
             <Box>
-              <Image src="/medbox.svg" alt="medbox" />
+              <NextLink href="/">
+                <Link>
+                  <Image src="/medbox.svg" alt="medbox" />
+                </Link>
+              </NextLink>
             </Box>
             <HStack
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}
             >
-              <Link
-                px={2}
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Beranda
-              </Link>
-              <Link
-                px={2}
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Toko Obat
-              </Link>
+              <NextLink href={'/'}>
+                <Link
+                  px={2}
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Beranda
+                </Link>
+              </NextLink>
+              <NextLink href="/product?page=1">
+                <Link
+                  px={2}
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Toko Obat
+                </Link>
+              </NextLink>
 
               <Link
                 px={2}
@@ -110,8 +117,16 @@ export default function Navbar(props) {
                   />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>Profile</MenuItem>
-                  <MenuItem>Ganti Password</MenuItem>
+                  <NextLink href="/profile">
+                    <Link>
+                      <MenuItem>Profile</MenuItem>
+                    </Link>
+                  </NextLink>
+                  <NextLink href="/change-password">
+                    <Link>
+                      <MenuItem>Ganti Password</MenuItem>
+                    </Link>
+                  </NextLink>
                   <MenuDivider />
                   <MenuItem onClick={() => signOut()}>Logout</MenuItem>
                 </MenuList>
@@ -130,28 +145,32 @@ export default function Navbar(props) {
         {isOpen ? (
           <Box bg="#FFFFFF" pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              <Link
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Beranda
-              </Link>
-              <Link
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Toko Obat
-              </Link>
+              <NextLink href={'/'}>
+                <Link
+                  px={2}
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Beranda
+                </Link>
+              </NextLink>
+              <NextLink href="/product?page=1">
+                <Link
+                  px={2}
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Toko Obat
+                </Link>
+              </NextLink>
 
               <Link
                 py={1}
@@ -164,28 +183,18 @@ export default function Navbar(props) {
               >
                 Riwayat
               </Link>
-              <Link
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Profile
-              </Link>
-              {/* <Link
-                py={1}
-                rounded={'md'}
-                _hover={{
-                  textDecoration: 'none',
-                  bg: 'gray.200',
-                }}
-                href={'#'}
-              >
-                Logout
-              </Link> */}
+              <NextLink href={'/profile'}>
+                <Link
+                  py={1}
+                  rounded={'md'}
+                  _hover={{
+                    textDecoration: 'none',
+                    bg: 'gray.200',
+                  }}
+                >
+                  Profile
+                </Link>
+              </NextLink>
               <Button
                 colorScheme="teal"
                 variant="link"
