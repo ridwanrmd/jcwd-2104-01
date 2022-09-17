@@ -6,8 +6,7 @@ const { Address } = require('../../../models');
 const editUserAddress = async (req, res, next) => {
   try {
     const { addressId } = req.params;
-    const { provinceId, province, cityId, city, detailAddress, isMain } =
-      req.body;
+    const { province_id, province, city_id, city_name, address } = req.body;
 
     const getAddress = await Address.findOne({
       where: { addressId },
@@ -15,12 +14,11 @@ const editUserAddress = async (req, res, next) => {
     if (getAddress.dataValues.userId === req.user.userId) {
       const data = await Address.update(
         {
-          provinceId,
+          province_id,
           province,
-          cityId,
-          city,
-          detailAddress,
-          isMain,
+          city_id,
+          city_name,
+          address,
         },
         { where: { addressId } },
       );
@@ -41,6 +39,6 @@ const editUserAddress = async (req, res, next) => {
   }
 };
 
-router.patch('/:addressId', auth, editUserAddress);
+router.patch('/edit/:addressId', auth, editUserAddress);
 
 module.exports = router;

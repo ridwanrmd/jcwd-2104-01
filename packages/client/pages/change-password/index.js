@@ -50,7 +50,6 @@ function ChangePassword(props) {
 
   const onClick = async () => {
     const response = await axiosInstance.patch(`/user/updatePassword/`, body);
-    console.log(response);
     if (response.data.code == 400) {
       setErrorMessage(response.data.message);
     } else {
@@ -65,7 +64,6 @@ function ChangePassword(props) {
         spacing={4}
         w={'full'}
         maxW={'md'}
-        // bg="white.700"
         bg={'white'}
         rounded={'xl'}
         boxShadow={'lg'}

@@ -21,6 +21,6 @@ const deleteUserAddress = async (req, res, next) => {
   }
 };
 
-router.delete('/:addressId', auth, deleteUserAddress);
+router.delete('/delete/:addressId', auth, deleteUserAddress);
 
 module.exports = router;

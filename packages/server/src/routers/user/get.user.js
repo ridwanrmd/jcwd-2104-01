@@ -58,7 +58,7 @@ const getUserWithToken = async (req,res,next) => {
         
         const {userId} = verifiedToken.user
         const resGotUser= await user.findOne({where: {userId}})
-        console.log(resGotUser);
+        // console.log(resGotUser);
         res.send({ 
             status: "Success",
             message: "Get user with token",
