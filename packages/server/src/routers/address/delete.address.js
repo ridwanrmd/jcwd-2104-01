@@ -10,7 +10,7 @@ const deleteUserAddress = async (req, res, next) => {
     const resDeleteAddress = await Address.destroy({ where: { addressId } });
     res.send({
       status: 'Success',
-      message: 'Success delete address',
+      message: 'Berhasil menghapus alamat',
       detail: {
         addressId,
         resDeleteAddress,

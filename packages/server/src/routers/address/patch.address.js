@@ -39,6 +39,36 @@ const editUserAddress = async (req, res, next) => {
   }
 };
 
+const updateMainAddress = async (req, res, next) => {
+  try {
+    const { addressId } = req.params;
+
+    const getAllAddress = await Address.findAll({
+      where: { isMain: true },
+    });
+
+    if (getAllAddress.length) {
+      await Address.update(
+        { isMain: false },
+        { where: { addressId: getAllAddress[0].dataValues.addressId } },
+      );
+    }
+
+    const updateAddress = await Address.update(
+      { isMain: true },
+      { where: { addressId } },
+    );
+
+    res.send({
+      status: 'Berhasil',
+      message: 'Berhasil ubah status alamat utama',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 router.patch('/edit/:addressId', auth, editUserAddress);
+router.patch('/isMain/:addressId', updateMainAddress);
 
 module.exports = router;

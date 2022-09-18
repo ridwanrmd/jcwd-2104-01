@@ -17,7 +17,7 @@ const addUserAddress = async (req, res, next) => {
 
     res.send({
       status: 'Success',
-      message: 'Success add new address',
+      message: 'Berhasil menambahkan alamat',
     });
   } catch (error) {
     next(error);
