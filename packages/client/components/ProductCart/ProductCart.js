@@ -41,6 +41,7 @@ const Cartlist = ({
   const [selected, setSelected] = useState(false);
   const [input, setInput] = useState(quantity);
   const [render, setRender] = useState(props.render);
+
   // console.log(input);
 
   const formik = useFormik({
@@ -84,7 +85,9 @@ const Cartlist = ({
         { quantity: input },
         config,
       );
-      console.log(respon);
+      fetchCartList();
+      totalPrice();
+      // console.log(respon);
     } catch (error) {
       console.log(error);
     }
@@ -104,8 +107,8 @@ const Cartlist = ({
       );
 
       window.location.reload();
-      // fetchCartList();
-      console.log('test');
+      fetchCartList();
+      totalPrice();
     } catch (error) {
       console.log(error);
     }

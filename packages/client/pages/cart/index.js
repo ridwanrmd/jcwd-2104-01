@@ -23,7 +23,7 @@ function Cart(props) {
   // 0: {cartId: 1, productId: 2, quantity: 2, product: {…}}
   //1: {cartId: 2, productId: 3, quantity: 1, product: {…}}
   const { getCart } = props.cart.data;
-  const [cartList, setCartList] = useState(props.cart);
+  const [cartList, setCartList] = useState([]);
   const [changes, setChanges] = useState(0);
   const [harga, setHarga] = useState(0);
 
@@ -38,29 +38,30 @@ function Cart(props) {
       const get = await axiosInstance.get('/carts/getCart', config);
       // console.log(get);
       setCartList(get.data.data.getCart);
-      console.log('kesini');
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    fetchCartList();
-  }, []);
 
   const totalPrice = () => {
-    const tempPrice = getCart.map((data) => {
+    const tempPrice = cartList.map((data) => {
       // console.log(data);
       return data.product.price * data.quantity;
     });
     const grandTotal = tempPrice.reduce((x, y) => x + y, 0);
-    setHarga(grandTotal);
-    console.log('totalPrice');
+    // setHarga(grandTotal);
+    return grandTotal;
   };
+
+  useEffect(() => {
+    fetchCartList();
+  }, []);
 
   // console.log(getCart);
   const renderCartList = () => {
     return getCart.map((data) => {
       // console.log(data.cartId);
+
       return (
         <ProductCart
           key={data.cartId}
@@ -152,7 +153,8 @@ function Cart(props) {
                     Grand total
                   </Text>
                   <Text variant="subtitle-bold" color="#737A8D">
-                    Rp. {harga?.toLocaleString('id')}
+                    {/* Rp. {harga?.toLocaleString('id')} */}
+                    Rp. {totalPrice()}
                   </Text>
                 </Box>
                 <Divider />
@@ -163,7 +165,8 @@ function Cart(props) {
                 >
                   <Text variant="subtitle-bold">Total</Text>
                   <Text variant="subtitle-bold">
-                    Rp. {harga?.toLocaleString('id')}
+                    {/* Rp. {harga?.toLocaleString('id')} */}
+                    Rp. {totalPrice()}
                   </Text>
                 </Box>
                 <Button
