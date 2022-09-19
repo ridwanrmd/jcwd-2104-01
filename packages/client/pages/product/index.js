@@ -6,10 +6,11 @@ import ProductCard from '../../components/ProductCard';
 import SidebarProduct from '../../components/SidebarProduct';
 import styles from './Product.module.css';
 import ReactPaginate from 'react-paginate';
-import { useState } from 'react';
+import { getSession, useSession } from 'next-auth/react';
 
 export default function Product(props) {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handlePageClick = (e) => {
     let pages = e.selected + 1;
@@ -25,7 +26,7 @@ export default function Product(props) {
   };
   return (
     <>
-      <Navbar />
+      <Navbar session={session} user={props.user} />
       <Flex direction={{ md: 'row', base: 'column' }} marginTop="6">
         <SidebarProduct />
         <Flex
@@ -86,6 +87,29 @@ export async function getServerSideProps(context) {
     const resGetProduct = await axiosInstance.get(`/product`, {
       params: context.query,
     });
+
+    const session = await getSession({ req: context.req });
+    if (session) {
+      try {
+        const { userId, accessToken } = session.user;
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+        const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+
+        return {
+          props: {
+            product: resGetProduct.data.result,
+            totalPage: resGetProduct.data.totalPage,
+            user: resGetUser.data.data,
+          },
+        };
+      } catch (error) {
+        const errorMessage = error.message;
+        return { props: { errorMessage } };
+      }
+    }
+
     return {
       props: {
         product: resGetProduct.data.result,

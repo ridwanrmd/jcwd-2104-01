@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       logHistory.belongsTo(models.user, { foreignKey: 'userId' });
-      logHistory.hasOne(models.product, { foreignKey: 'historyId' });
+      logHistory.belongsTo(models.product, { foreignKey: 'productId' });
     }
   }
   logHistory.init(

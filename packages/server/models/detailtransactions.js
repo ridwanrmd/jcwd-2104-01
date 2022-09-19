@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       detailTransaction.belongsTo(models.transaction, {
         foreignKey: 'transactionId',
       });
-      detailTransaction.hasOne(models.product, { foreignKey: 'dtId' });
+      detailTransaction.belongsTo(models.product, { foreignKey: 'productId' });
     }
   }
   detailTransaction.init(

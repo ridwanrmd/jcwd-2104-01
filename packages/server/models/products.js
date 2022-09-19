@@ -9,10 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      product.belongsTo(models.cart, { foreignKey: 'cartId' });
-      product.belongsTo(models.transaction, { foreignKey: 'transactionId' });
-      product.belongsTo(models.detailTransaction, { foreignKey: 'dtId' });
-      product.belongsTo(models.logHistory, { foreignKey: 'historyId' });
+      product.hasMany(models.cart, { foreignKey: 'productId' });
+      product.hasMany(models.transaction, { foreignKey: 'productId' });
+      product.hasMany(models.detailTransaction, { foreignKey: 'productId' });
+      product.hasMany(models.logHistory, { foreignKey: 'productId' });
       product.hasMany(models.detailProduct, { foreignKey: 'productId' });
       product.belongsToMany(models.Category, {
         through: models.productCategory,
@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
+
       productName: {
         allowNull: false,
         type: DataTypes.STRING(50),

@@ -16,12 +16,10 @@ import {
   Hide,
   Image,
   Icon,
-  Alert,
-  AlertIcon,
-  Spacer,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { HiShoppingCart } from 'react-icons/hi';
+import ResendEmail from '../ResendEmail';
 import NextLink from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -43,17 +41,8 @@ export default function Navbar({ session, user }) {
         zIndex="sticky"
         shadow={'md'}
       >
-        {session && !user.isVerified ? (
-          <Alert status="warning">
-            <AlertIcon />
-            Akun belum terverifikasi, klik tombol kirim untuk verifikasi lalu
-            check email anda
-            <Spacer />
-            <Button variant={'solid'} colorScheme="twitter">
-              Kirim
-            </Button>
-          </Alert>
-        ) : null}
+        {session && !user.isVerified ? <ResendEmail user={user} /> : null}
+
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
             <Box>
@@ -111,7 +100,7 @@ export default function Navbar({ session, user }) {
           </HStack>
 
           <Flex alignItems={'center'} justifyContent="space-between">
-            <Link href="google.com" paddingTop={'2'}>
+            <Link href="/cart" paddingTop={'2'}>
               <Icon as={HiShoppingCart} h="50%" w="70%" marginInlineEnd={'5'} />
             </Link>
             {user ? (

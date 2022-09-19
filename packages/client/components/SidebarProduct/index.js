@@ -15,7 +15,6 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
-  Hide,
   Show,
 } from '@chakra-ui/react';
 import { AiOutlineSetting } from 'react-icons/ai';

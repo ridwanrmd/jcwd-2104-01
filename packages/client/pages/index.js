@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
 import { useSession, signOut, getSession } from 'next-auth/react';
 import { Box, Flex, Text, Button } from '@chakra-ui/react';
