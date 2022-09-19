@@ -11,7 +11,6 @@ import {
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
 import { getSession, useSession } from 'next-auth/react';
-import { useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
