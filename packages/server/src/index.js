@@ -1,5 +1,7 @@
 require('dotenv/config');
 const express = require('express');
+const { error } = require('console');
+
 const app = express();
 const PORT = process.env.PORT || 8000;
 const cors = require('cors');
@@ -9,6 +11,7 @@ const bearerToken = require('express-bearer-token');
 const userRouter = require('./routers/user');
 const addressRouter = require('./routers/address');
 const rajaongkirRouter = require('./routers/rajaongkir');
+const cartRouter = require('./routers/cart');
 const productRouter = require('./routers/product');
 
 // Config
@@ -19,6 +22,8 @@ app.use(express.json());
 
 // router
 app.use('/users', userRouter);
+
+app.use('/carts', cartRouter);
 
 app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);

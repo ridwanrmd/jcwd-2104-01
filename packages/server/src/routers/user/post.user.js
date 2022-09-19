@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
+const { user } = require('../../../models');
+
 const { isFieldEmpties, passwordValidator } = require('../../helpers');
 const validator = require('email-validator');
 const { compare, hash } = require('../../lib/bcrypt');
 const { createToken } = require('../../lib/token');
-const { sendMail } = require('../../lib/nodemailer');
-const { user } = require('../../../models');
+
+const { sendMail, sendForgotPasswordMail } = require('../../lib/nodemailer');
+
 const { auth } = require('../../helpers/auth');
 const uploadUser = require('../../lib/multer');
 const fs = require('fs');
