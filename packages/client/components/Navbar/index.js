@@ -94,7 +94,7 @@ export default function Navbar() {
           </HStack>
 
           <Flex alignItems={'center'} justifyContent="space-between">
-            <Link href="google.com" paddingTop={'2'}>
+            <Link href="/cart" paddingTop={'2'}>
               <Icon as={HiShoppingCart} h="50%" w="70%" marginInlineEnd={'5'} />
             </Link>
             <Hide below="md">
@@ -114,6 +114,7 @@ export default function Navbar() {
                   />
                 </MenuButton>
                 <MenuList>
+                  <MenuItem>Profile</MenuItem>
                   <NextLink href="/profile">
                     <Link>
                       <MenuItem>Profile</MenuItem>

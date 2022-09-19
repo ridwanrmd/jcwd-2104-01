@@ -1,18 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
+const { user } = require('../../../models');
+
 const { isFieldEmpties, passwordValidator } = require('../../helpers');
 const validator = require('email-validator');
 const { compare, hash } = require('../../lib/bcrypt');
 const { createToken } = require('../../lib/token');
-const { sendMail } = require('../../lib/nodemailer');
-const { user } = require('../../../models');
+
+const { sendMail, sendForgotPasswordMail } = require('../../lib/nodemailer');
+
 const { auth } = require('../../helpers/auth');
 const uploadUser = require('../../lib/multer');
 const fs = require('fs');
 const path = require('path');
 const appRoot = require('app-root-path');
-// const { compare } = require('../../lib/bycrypt');
 
 // register endpoint
 const registerUserHandler = async (req, res, next) => {
