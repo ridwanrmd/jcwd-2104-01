@@ -58,22 +58,7 @@ export default function Home(props) {
         <meta name="description" content="Best Medical Store in da world" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Alert
-        status="warning"
-        position={'sticky'}
-        zIndex="overlay"
-        top="0"
-        left="0"
-        right="0"
-      >
-        <AlertIcon />
-        Akun belum terverifikasi, klik tombol kirim untuk verifikasi lalu check
-        email anda
-        <Spacer />
-        <Button variant={'solid'} colorScheme="twitter">
-          Kirim
-        </Button>
-      </Alert>
+
       <Navbar />
 
       <Banner />

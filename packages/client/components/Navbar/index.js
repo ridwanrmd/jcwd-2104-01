@@ -19,10 +19,11 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { HiShoppingCart } from 'react-icons/hi';
+import ResendEmail from '../ResendEmail';
 import NextLink from 'next/link';
 import { signOut } from 'next-auth/react';
 
-export default function Navbar() {
+export default function Navbar(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -37,6 +38,8 @@ export default function Navbar() {
         zIndex="sticky"
         shadow={'md'}
       >
+        {/* {!props.user.isVerified && <ResendEmail />} */}
+        {/* <ResendEmail /> */}
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
             <Box>

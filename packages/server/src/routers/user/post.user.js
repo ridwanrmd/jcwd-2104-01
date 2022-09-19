@@ -94,8 +94,8 @@ const registerUserHandler = async (req, res, next) => {
     await sendMail({ email, token });
 
     res.send({
-      status: 'Success',
-      message: 'Succes create new user',
+      status: 'Berhasil',
+      message: 'Periksa email anda untuk verifikasi akun',
       data: {
         result: resCreateUser,
       },
@@ -119,8 +119,8 @@ const resendEmailVerification = async (req, res, next) => {
     await sendMail({ email, token });
 
     res.send({
-      status: 'Success',
-      message: 'Succes send new email verification',
+      status: 'Berhasil',
+      message: 'Berhasil mengirim ulang email verifikasi',
       data: {
         result: updateToken,
       },
