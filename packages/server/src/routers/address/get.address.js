@@ -9,6 +9,7 @@ const getUserAddresses = async (req, res, next) => {
 
     const resGetUserAddress = await Address.findAll({
       where: { userId },
+      order: [['isMain', 'DESC']],
     });
     if (!resGetUserAddress) throw { message: 'Alamat tidak ditemukan' };
 
