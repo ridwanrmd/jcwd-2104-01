@@ -6,21 +6,27 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Heading,
   Button,
   Input,
   Select,
-  Image,
   FormLabel,
   FormControl,
+  useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
-import next from 'next';
 
 function EditAddress(props) {
-  const { isOpen, onClose, addressId, address, province_name, city } = props;
+  const {
+    isOpen,
+    onClose,
+    addressId,
+    address,
+    province_name,
+    city,
+    fetchUserAddresses,
+  } = props;
   const [addressDetail, setAddressDetail] = useState(address);
   const [getProvince, setGetProvince] = useState([]);
   const [getCity, setGetCity] = useState([]);
@@ -30,7 +36,7 @@ function EditAddress(props) {
   const [currentProvince, setCurrentProvince] = useState(province_name);
   const [currentCity, setCurrentCity] = useState(city);
 
-  console.log(currentCity);
+  const toast = useToast();
 
   const splitProvince = selectedProvince.split(',');
   const province_id = splitProvince[0];
@@ -49,12 +55,6 @@ function EditAddress(props) {
       getAllCity();
     }
   }, [selectedProvince]);
-
-  //   useEffect(() => {
-  //     if (isProcessDone) {
-  //       props.renderAddress();
-  //     }
-  //   }, [isProcessDone]);
 
   const onEditAddress = async () => {
     try {
@@ -79,9 +79,19 @@ function EditAddress(props) {
         body,
         config,
       );
+      toast({
+        description: res.data.message,
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
 
-      alert(res.data.message);
-      window.location.reload();
+      onClose();
+      setAddressDetail();
+      setCurrentProvince();
+      setCurrentCity();
+      fetchUserAddresses();
     } catch (error) {
       console.log({ error });
       alert(error.response.data.message);
@@ -112,7 +122,7 @@ function EditAddress(props) {
   const renderProvince = () => {
     return getProvince.map((province) => (
       <option
-        key={province}
+        key={province.province_id}
         value={`${province.province_id},${province.province}`}
       >
         {province.province}
@@ -122,7 +132,7 @@ function EditAddress(props) {
 
   const renderCity = () => {
     return getCity.map((city) => (
-      <option key={city} value={`${city.city_id},${city.city_name}`}>
+      <option key={city.city_id} value={`${city.city_id},${city.city_name}`}>
         {city.city_name}
       </option>
     ));
@@ -158,7 +168,7 @@ function EditAddress(props) {
               variant="filled"
               mb={3}
               fontWeight={400}
-              // placeholder="Tulis Alamat"
+              placeholder="Tulis Alamat"
               onChange={onHandleChange}
             />
           </FormControl>

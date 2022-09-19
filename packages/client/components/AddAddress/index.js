@@ -10,28 +10,24 @@ import {
   Button,
   Input,
   Select,
-  Image,
   FormLabel,
   FormControl,
-  Flex,
-  Box,
-  FormHelperText,
-  FormErrorMessage,
+  useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
-import next from 'next';
-import { BsWindowSidebar } from 'react-icons/bs';
 
 function AddAddress(props) {
-  const { isOpen, onClose } = props;
-  const [addressDetail, setAddressDetail] = useState({});
+  const { isOpen, onClose, fetchUserAddresses } = props;
+  const [addressDetail, setAddressDetail] = useState();
   const [getProvince, setGetProvince] = useState([]);
   const [getCity, setGetCity] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [disabled, setDisabled] = useState(false);
+
+  const toast = useToast();
 
   const splitProvince = selectedProvince.split(',');
   const province_id = splitProvince[0];
@@ -40,8 +36,6 @@ function AddAddress(props) {
   const splitCity = selectedCity.split(',');
   const city_id = splitCity[0];
   const city_name = splitCity[1];
-
-  const { address } = addressDetail;
 
   useEffect(() => {
     getAllProvince();
@@ -76,9 +70,17 @@ function AddAddress(props) {
         body,
         config,
       );
+      toast({
+        description: res.data.message,
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
 
-      alert(res.data.message);
-      window.location.reload();
+      onClose();
+      setAddressDetail({});
+      fetchUserAddresses();
     } catch (error) {
       console.log({ error });
       alert(error.response.data.message);
@@ -109,7 +111,7 @@ function AddAddress(props) {
   const renderProvince = () => {
     return getProvince.map((province) => (
       <option
-        key={province}
+        key={province.province_id}
         value={`${province.province_id},${province.province}`}
       >
         {province.province}
@@ -119,14 +121,14 @@ function AddAddress(props) {
 
   const renderCity = () => {
     return getCity.map((city) => (
-      <option key={city} value={`${city.city_id},${city.city_name}`}>
+      <option key={city.city_id} value={`${city.city_id},${city.city_name}`}>
         {city.city_name}
       </option>
     ));
   };
 
   const onHandleChange = (e) => {
-    setAddressDetail({ ...addressDetail, [e.target.name]: e.target.value });
+    setAddressDetail({ [e.target.name]: e.target.value });
   };
 
   const onHandleChangeProvince = (e) => {
@@ -149,7 +151,7 @@ function AddAddress(props) {
             <Input
               name="address"
               type="text"
-              value={address}
+              value={addressDetail}
               variant="filled"
               mb={3}
               fontWeight={400}

@@ -41,7 +41,6 @@ function Register() {
 
   const onRegisterClick = async () => {
     try {
-      setisRegisterProcess(true);
       const body = {
         first_name,
         last_name,
@@ -60,13 +59,13 @@ function Register() {
         duration: 3000,
         isClosable: true,
       });
-      // alert(res.data.message);
+
+      router.replace('/login');
     } catch (error) {
       console.log(error);
       if (error.response) return alert(error.response.data.message);
       alert(error.message);
     } finally {
-      setisRegisterProcess(false);
       setDisabled(false);
     }
   };

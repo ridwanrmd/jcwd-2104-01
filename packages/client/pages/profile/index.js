@@ -3,11 +3,11 @@ import {
   Button,
   HStack,
   Image,
-  Input,
   Text,
   VStack,
   useDisclosure,
   Spacer,
+  useToast,
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
 import { getSession } from 'next-auth/react';
@@ -22,18 +22,41 @@ import { useRouter } from 'next/router';
 export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
-  // const [userAddresses, setUserAddresses] = useState(props.addresses);
+  const [userAddresses, setUserAddresses] = useState([]);
+  const [currentAddress, setCurrentAddress] = useState();
   const [modalAdd, setModalAdd] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
-  const [currentAddress, setCurrentAddress] = useState();
+  const [disabled, setDisabled] = useState(false);
 
+  const toast = useToast();
   useEffect(() => {
-    setCurrentAddress(props.addresses[0]);
+    fetchUserAddresses();
   }, []);
 
-  const onDeleteAddress = async (addressId) => {
-    // console.log(addressId);
+  useEffect(() => {
+    setCurrentAddress(userAddresses[0]);
+  }, []);
+
+  const fetchUserAddresses = async () => {
     try {
+      const session = await getSession();
+      const { accessToken } = session.user;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      const getUserAddresses = await axiosInstance.get(
+        `/addresses/userAddress`,
+        config,
+      );
+      setUserAddresses(getUserAddresses.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onDeleteAddress = async (addressId) => {
+    try {
+      setDisabled(true);
       const session = await getSession();
       const { accessToken } = session.user;
       const config = {
@@ -44,24 +67,41 @@ export default function Profile(props) {
         `/addresses/delete/${addressId}`,
         config,
       );
+      toast({
+        description: res.data.message,
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
 
-      alert(res.data.message);
-      window.location.reload();
+      fetchUserAddresses();
+    } catch (error) {
+      alert(errorMessage);
+    } finally {
+      setDisabled(false);
+    }
+  };
+
+  const onUpdateisMain = async (addressId) => {
+    try {
+      const res = await axiosInstance.patch(`/addresses/isMain/${addressId}`);
+
+      fetchUserAddresses();
     } catch (error) {
       alert(errorMessage);
     }
   };
 
   const renderAddress = () => {
-    return props.addresses.map((address, index) => (
+    return userAddresses.map((address, index) => (
       <Box
-        mb="4"
-        paddingY={2}
+        my="1"
         border="2px"
         borderColor="gray.300"
         borderRadius="md"
         width={452}
-        key={address}
+        key={address.addressId}
       >
         <HStack>
           <Box>
@@ -95,35 +135,53 @@ export default function Profile(props) {
             </Text>
           </Box>
           <Spacer />
-          <HStack paddingEnd={2}>
-            <Button
-              variant="ghost"
-              size="sm"
-              colorScheme={'twitter'}
-              onClick={() => {
-                setCurrentAddress(props.addresses[index]);
-                setModalEdit(true);
-              }}
-            >
-              Ubah
-              <EditAddress
-                isOpen={modalEdit}
-                onClose={() => setModalEdit(false)}
-                addressId={currentAddress?.addressId}
-                address={currentAddress?.address}
-                province_name={currentAddress?.province}
-                city={currentAddress?.city_name}
-              />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              colorScheme={'twitter'}
-              onClick={() => onDeleteAddress(address.addressId)}
-            >
-              Hapus
-            </Button>
-          </HStack>
+          <VStack>
+            {address.isMain == 0 && (
+              <Button
+                colorScheme={'twitter'}
+                mr="4"
+                mb="-2"
+                variant="ghost"
+                size="xs"
+                onClick={() => {
+                  onUpdateisMain(address.addressId);
+                }}
+              >
+                <Text size="xs">Set Utama</Text>
+              </Button>
+            )}
+            <HStack paddingEnd={2}>
+              <Button
+                variant="ghost"
+                size="sm"
+                colorScheme={'twitter'}
+                onClick={() => {
+                  setCurrentAddress(userAddresses[index]);
+                  setModalEdit(true);
+                }}
+              >
+                Ubah
+                <EditAddress
+                  isOpen={modalEdit}
+                  onClose={() => setModalEdit(false)}
+                  fetchUserAddresses={fetchUserAddresses}
+                  addressId={currentAddress?.addressId}
+                  address={currentAddress?.address}
+                  province_name={currentAddress?.province}
+                  city={currentAddress?.city_name}
+                />
+              </Button>
+              <Button
+                isDisabled={disabled}
+                variant="ghost"
+                size="sm"
+                colorScheme={'twitter'}
+                onClick={() => onDeleteAddress(address.addressId)}
+              >
+                Hapus
+              </Button>
+            </HStack>
+          </VStack>
         </HStack>
       </Box>
     ));
@@ -260,15 +318,15 @@ export default function Profile(props) {
             fontSize={{ base: 'md', md: 'md' }}
             fontWeight="medium"
             lineHeight={'6'}
-            as="u"
+            // as="u"
           >
             Alamat
           </Text>
-          <Box overflow="scroll" height="24.5vh">
+          <Box overflow="scroll" height="23vh">
             {renderAddress()}
           </Box>
         </Box>
-        <Box mb="4" mt="5" mx="6">
+        <Box mb="4" mt="3.5" mx="6">
           <Button
             colorScheme={'twitter'}
             w="full"
@@ -278,7 +336,7 @@ export default function Profile(props) {
             <AddAddress
               isOpen={modalAdd}
               onClose={() => setModalAdd(false)}
-              renderAddress={renderAddress}
+              fetchUserAddresses={fetchUserAddresses}
             />
           </Button>
         </Box>
