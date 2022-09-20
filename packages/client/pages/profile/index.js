@@ -10,7 +10,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
@@ -187,9 +187,10 @@ export default function Profile(props) {
     ));
   };
 
+  const { data: session } = useSession();
+
   const onSaveProfile = async (body) => {
     try {
-      const session = await getSession();
       const { accessToken } = session.user;
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -239,7 +240,7 @@ export default function Profile(props) {
   };
   return (
     <>
-      <Navbar />
+      <Navbar session={session} user={user} />
       <Box
         marginBlock="6"
         height={'83vh'}

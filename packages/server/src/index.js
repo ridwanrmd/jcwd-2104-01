@@ -1,11 +1,9 @@
 require('dotenv/config');
 const express = require('express');
-const { error } = require('console');
-
-const app = express();
-const PORT = process.env.PORT || 8000;
-const cors = require('cors');
 const bearerToken = require('express-bearer-token');
+const cors = require('cors');
+const PORT = process.env.PORT || 8000;
+const app = express();
 
 // Routers
 const userRouter = require('./routers/user');

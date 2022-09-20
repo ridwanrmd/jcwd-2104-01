@@ -15,7 +15,7 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
-  Hide,
+  Show,
 } from '@chakra-ui/react';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { SearchIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
@@ -50,8 +50,15 @@ export default function SidebarProduct() {
 
   const onSearchHandler = () => {
     const path = router.asPath;
-    let splitter = path.split('productName')[0];
-    router.push(`${splitter}&productName=${search}`);
+    if (router.query.productName) {
+      let replaceProduct = path.replace(
+        `productName=${router.query.productName}`,
+        `productName=${search}`,
+      );
+      router.push(replaceProduct);
+    } else {
+      router.push(`${path}&productName=${search}`);
+    }
   };
 
   const renderCategory = () => {
@@ -126,7 +133,7 @@ export default function SidebarProduct() {
             onClick={isOpen ? onClose : onOpen}
           />
         </Flex>
-        <Hide below="md">
+        <Show above="md">
           <Stack as={'nav'}>
             <Button
               marginStart="4"
@@ -140,7 +147,7 @@ export default function SidebarProduct() {
             >
               Semua Obat
             </Button>
-            <Accordion defaultIndex={[0]} allowMultiple>
+            <Accordion allowMultiple>
               <AccordionItem>
                 <h2>
                   <AccordionButton>
@@ -221,7 +228,7 @@ export default function SidebarProduct() {
               Unggah Resep
             </Button>
           </Stack>
-        </Hide>
+        </Show>
       </Flex>
       {isOpen ? (
         <Box pb={4} display={{ md: 'none' }}>

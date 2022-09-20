@@ -1,5 +1,3 @@
-const { resolveStyleConfig } = require('@chakra-ui/react');
-const e = require('cors');
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
@@ -73,9 +71,6 @@ const forgotPassword = async (req, res, next) => {
     next(error);
   }
 };
-
-router.patch('/forgotPassword/:userId', forgotPassword);
-router.patch('/updatePassword/', changePassController);
 
 router.patch('/', auth, async (req, res, next) => {
   const { email, first_name, last_name, birthDate, phone, gender, image } =

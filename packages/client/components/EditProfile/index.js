@@ -28,11 +28,12 @@ function EditProfile(props) {
   const [isEmailError, setisEmailError] = useState(true);
   const [isError, setisError] = useState(false);
   const [isFirstNameError, setisFirstNameError] = useState(false);
+  const [isPhoneError, setisPhoneError] = useState(false);
   const { first_name, last_name, email, phone, birthDate, image, gender } =
     user;
 
   let schema = yup.object().shape({
-    email: yup.string().email(),
+    email: yup.string().email().required('email tidak boleh kosong'),
   });
 
   useEffect(() => {
@@ -44,13 +45,20 @@ function EditProfile(props) {
         setisError(true);
         setisFirstNameError(true);
         return;
+      }
+      if (user.phone == '') {
+        setisError(true);
+        setisPhoneError(true);
       } else {
         setisError(false);
         setisFirstNameError(false);
+        setisPhoneError(false);
         return;
       }
     };
     checkFirstName();
+    checkValidity();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const cancelImage = () => {
@@ -188,7 +196,7 @@ function EditProfile(props) {
               <option value="Female">Perempuan</option>
             </Select>
           </FormControl>
-          <FormControl mb={3}>
+          <FormControl isInvalid={isPhoneError} mb={3}>
             <FormLabel fontSize={'sm'}>Nomor Handphone :</FormLabel>
             <Input
               name="phone"
@@ -197,12 +205,17 @@ function EditProfile(props) {
               variant="filled"
               onChange={onHandleChange}
             />
+            {isPhoneError && (
+              <FormErrorMessage fontSize={'xs'}>
+                Nomor handphone tidak boleh kosong
+              </FormErrorMessage>
+            )}
           </FormControl>
           <FormControl>
             <FormLabel fontSize={'sm'}>Tanggal Lahir :</FormLabel>
             <Input
               name="birthDate"
-              // value={birthDate.slice(0, 10)}
+              value={birthDate?.slice(0, 10)}
               onChange={onHandleChange}
               type="date"
               max="2017-01-01"
@@ -219,12 +232,7 @@ function EditProfile(props) {
           >
             Save
           </Button>
-          <Button
-            isDisabled={!isEmailError || isError}
-            textColor={'red'}
-            mr={3}
-            onClick={onCancel}
-          >
+          <Button textColor={'red'} mr={3} onClick={onCancel}>
             Reset
           </Button>
         </ModalFooter>
