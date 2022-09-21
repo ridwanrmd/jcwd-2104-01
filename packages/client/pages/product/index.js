@@ -7,13 +7,20 @@ import SidebarProduct from '../../components/SidebarProduct';
 import styles from './Product.module.css';
 import ReactPaginate from 'react-paginate';
 import { getSession, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 export default function Product(props) {
   const router = useRouter();
   const { data: session } = useSession();
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    setPage(router.query.page - 1);
+  }, [router.query.category]);
 
   const handlePageClick = (e) => {
     let pages = e.selected + 1;
+    setPage(e.selected);
     const path = router.asPath;
     let replaced = path.replace(`page=${router.query.page}`, `page=${pages}`);
     router.push(replaced);
@@ -56,11 +63,17 @@ export default function Product(props) {
                 {`Obat ${router.query.category}`}
               </Text>
             )}
-            <Flex flexWrap="wrap" flexGrow={'1'} flexShrink={'0'}>
+            <Flex
+              flexWrap="wrap"
+              flexGrow={'1'}
+              flexShrink={'0'}
+              overflowY={{ base: 'unset', md: 'scroll' }}
+              h={{ base: 'unset', md: '80vh' }}
+            >
               {renderCard()}
             </Flex>
             <ReactPaginate
-              initialPage={router.query.page - 1}
+              forcePage={page}
               breakLabel="..."
               nextLabel="next >"
               onPageChange={handlePageClick}
