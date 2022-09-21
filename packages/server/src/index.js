@@ -12,6 +12,7 @@ const { join } = require('path');
 const userRouter = require('./routers/user');
 const cartRouter = require('./routers/cart');
 const productRouter = require('./routers/product');
+const transactionRouter = require('./routers/transaction');
 
 app.use(cors());
 app.use(bearerToken());
@@ -20,15 +21,13 @@ app.use(express.json());
 
 // router
 app.use('/users', userRouter);
-
 app.use('/carts', cartRouter);
+app.use('/transactions', transactionRouter);
+app.use('/product', productRouter);
 
 app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);
 });
-
-app.use('/users', userRouter);
-app.use('/product', productRouter);
 
 app.use((error, req, res, next) => {
   console.log({ error });
