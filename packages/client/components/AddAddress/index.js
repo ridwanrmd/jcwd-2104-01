@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Heading,
   Button,
   Input,
   Select,
@@ -58,7 +57,7 @@ function AddAddress(props) {
       };
 
       const body = {
-        address,
+        address: addressDetail,
         province_id,
         province,
         city_id,
@@ -128,7 +127,7 @@ function AddAddress(props) {
   };
 
   const onHandleChange = (e) => {
-    setAddressDetail({ [e.target.name]: e.target.value });
+    setAddressDetail(e.target.value);
   };
 
   const onHandleChangeProvince = (e) => {
@@ -140,7 +139,7 @@ function AddAddress(props) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size={'xl'}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Tambah Alamat</ModalHeader>

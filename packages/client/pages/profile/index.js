@@ -16,9 +16,8 @@ import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
 import AddAddress from '../../components/AddAddress';
 import EditAddress from '../../components/EditAddress';
-
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+
 export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
@@ -241,7 +240,7 @@ export default function Profile(props) {
     <>
       <Navbar />
       <Box
-        marginBlock="6"
+        marginBlock="10"
         height={'83vh'}
         width={'82vh'}
         marginInline={{ base: '2', md: '35%' }}
