@@ -11,17 +11,19 @@ router.get('/', async (req, res, next) => {
     pageSize = 12,
     orderBy = 'price',
     order = 'ASC',
+    isRacikan = false,
   } = req.query;
 
   const limit = Number(pageSize);
   const offset = (Number(page) - 1) * Number(pageSize);
   try {
-    const amount = await product.count({
+    const amount = await product.findAll({
       order: Sequelize.literal(`${orderBy} ${order}`),
       where: {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
+        isRacikan,
       },
       include: [
         {
@@ -42,12 +44,14 @@ router.get('/', async (req, res, next) => {
         'stock',
         'unit',
         'url',
+        'createdAt',
       ],
       order: Sequelize.literal(`${orderBy} ${order}`),
       where: {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
+        isRacikan,
       },
       include: [
         {
@@ -64,7 +68,7 @@ router.get('/', async (req, res, next) => {
       status: 'Success',
       message: 'Success get product list',
       result: result,
-      totalPage: amount,
+      totalPage: amount.length,
     });
   } catch (error) {
     console.log(error);

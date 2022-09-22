@@ -35,7 +35,7 @@ export default function Product(props) {
     <>
       <Navbar session={session} user={props.user} />
       <Flex direction={{ md: 'row', base: 'column' }} marginTop="6">
-        <SidebarProduct />
+        <SidebarProduct setPage={setPage} />
         <Flex
           borderStart={{ md: '1px solid #C2CED6', base: 'unset' }}
           flexGrow={'1'}
@@ -109,6 +109,9 @@ export async function getServerSideProps(context) {
           headers: { Authorization: `Bearer ${accessToken}` },
         };
         const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+
+        if (resGetUser.data.data.isAdmin)
+          return { redirect: { destination: '/admin' } };
 
         return {
           props: {

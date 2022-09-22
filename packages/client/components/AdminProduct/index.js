@@ -1,14 +1,23 @@
-import { Box, Button, Flex, Spacer, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Spacer, Text } from '@chakra-ui/react';
 import React from 'react';
+import { api_origin } from '../../constraint';
 
-export default function AdminProduct() {
+export default function AdminProduct(props) {
   return (
     <Flex my="4" boxShadow={'md'} h="15vh">
-      <Box w="20%">Gambar</Box>
+      <Box w="20%">
+        <Image
+          src={api_origin + props.product.productImage}
+          alt="vitamin"
+          h="full"
+          w="full"
+          p="2"
+        />
+      </Box>
       <Flex direction="column">
-        <Text>Ini nama obat dan kayanya sih panjang namanya</Text>
-        <Text>Harga</Text>
-        <Text>Stock</Text>
+        <Text>{props.product.productName}</Text>
+        <Text>Rp. {props.product.price.toLocaleString('id')}</Text>
+        <Text>{`${props.product.unit} - stock ${props.product.stock}`}</Text>
         <Text>Detail</Text>
       </Flex>
       <Spacer />

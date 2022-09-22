@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       desc: {
         allowNull: false,
-        type: DataTypes.STRING(200),
+        type: DataTypes.TEXT,
       },
       productImage: {
         allowNull: false,
@@ -57,6 +57,10 @@ module.exports = (sequelize, DataTypes) => {
       url: {
         allowNull: false,
         type: DataTypes.STRING(150),
+      },
+      isRacikan: {
+        type: DataTypes.TINYINT(1),
+        defaultValue: '0',
       },
     },
     {
