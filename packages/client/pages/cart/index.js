@@ -17,6 +17,7 @@ import axiosInstance from '../../src/config/api';
 import { getSession } from 'next-auth/react';
 import { ImLocation2 } from 'react-icons/im';
 import ShippingAddress from '../../components/ShippingAddress';
+import ShippingMethod from '../../components/ShippingMethod';
 
 function Cart(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,14 +26,33 @@ function Cart(props) {
   const [cartList, setCartList] = useState([]);
   const [changes, setChanges] = useState(0);
   const [harga, setHarga] = useState(0);
-  const [modalSelect, setModalSelect] = useState(false);
+  const [modalKurir, setModalKurir] = useState(false);
 
   const [userAddresses, setUserAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState();
-  // console.log(selectedAddress);
+  const [selectedShipper, setSelectedShipper] = useState();
+  const [selectedShippingCost, setSelectedShippingCost] = useState();
+  // console.log(selectedShippingCost);
 
   let name = `${user.first_name} ${user.last_name}`;
   const recipient = name.toUpperCase();
+
+  const splitCost = selectedShippingCost?.split(',');
+
+  // useEffect(() => {
+  //   if (selectedShippingCost) {
+  //     splitCost();
+  //   }
+  // }, [selectedShippingCost]);
+
+  // const shipper = selectedShipper;
+  // const service = splitCost[0];
+  // const cost = splitCost[1];
+  // const etd = splitCost[2];
+
+  // const row1 = `Kurir: ${shipper}, ${service}`;
+  // const row3 = `Biaya: ${cost}`;
+  // const row4 = `Estimasi: ${etd} hari`;
 
   const fetchCartList = async () => {
     const session = await getSession();
@@ -79,7 +99,6 @@ function Cart(props) {
         `/addresses/userAddress`,
         config,
       );
-      // console.log(getUserAddresses.data.data);
       setUserAddresses(getUserAddresses.data.data);
     } catch (error) {
       console.log(error);
@@ -98,7 +117,6 @@ function Cart(props) {
         `/addresses/mainAddress`,
         config,
       );
-      // console.log(getUserMainAddress.data.data);
       setSelectedAddress(getUserMainAddress.data.data);
     } catch (error) {
       console.log(error);
@@ -126,6 +144,32 @@ function Cart(props) {
         />
       );
     });
+  };
+
+  const renderOngkirBox = () => {
+    const splitCost = selectedShippingCost.split(',');
+    const row1 = `Kurir: ${selectedShipper}, ${splitCost[0]}`;
+    const row3 = `Biaya: ${splitCost[1]}`;
+    const row4 = `Estimasi: ${splitCost[2]} hari`;
+    return (
+      <Box
+        pl="2"
+        boxShadow={[
+          'none',
+          '0px 2px 3px 2px rgba(33, 51, 96, 0.02), 0px 4px 12px 4px rgba(0, 155, 144, 0.08);',
+        ]}
+        borderRadius="8px"
+        border="1px"
+        color="blackAlpha.800"
+      >
+        <VStack align={'start'} pr={2}>
+          <Text>{row1}</Text>
+          <Text>Berat : 1 kg</Text>
+          <Text>{row3}</Text>
+          <Text>{row4}</Text>
+        </VStack>
+      </Box>
+    );
   };
 
   return (
@@ -167,7 +211,14 @@ function Cart(props) {
               </GridItem>
             </Grid>
             <HStack borderBottom="1px solid #C2CED6">
-              <VStack pl={2} width={650} py={2} mr={1} align={'start'}>
+              <VStack
+                // bg={'red'}
+                pl={2}
+                width={600}
+                py={2}
+                mr={1}
+                align={'start'}
+              >
                 <Text alignItems="left" as="b">
                   {recipient}
                 </Text>
@@ -177,7 +228,8 @@ function Cart(props) {
                   {`${selectedAddress?.city_name}, ${selectedAddress?.province}`}
                 </Text>
               </VStack>
-              <Box
+              {selectedShippingCost && renderOngkirBox()}
+              {/* <Box
                 pl="2"
                 boxShadow={[
                   'none',
@@ -185,34 +237,44 @@ function Cart(props) {
                 ]}
                 borderRadius="8px"
                 border="1px"
-                color="blue.400"
+                color="blackAlpha.800"
               >
                 <VStack align={'start'} pr={2}>
                   <Text>Kurir : JNE, Regular</Text>
                   <Text>Berat : 1 kg</Text>
                   <Text>Biaya : Rp 30.000</Text>
+                  <Text>Estimasi : 2-3 hari</Text>
                 </VStack>
-              </Box>
+              </Box> */}
             </HStack>
 
             <HStack px={2} py={3} spacing={2} borderBottom="6px solid #C2CED6">
-              <Button
-                colorScheme="twitter"
-                variant="outline"
-                onClick={() => setModalSelect(true)}
-              >
+              <Button colorScheme="twitter" variant="outline" onClick={onOpen}>
                 Pilih Alamat Lain
                 <ShippingAddress
-                  isOpen={modalSelect}
-                  onClose={() => setModalSelect(false)}
+                  isOpen={isOpen}
+                  onClose={onClose}
                   userAddresses={userAddresses}
                   setSelectedAddress={setSelectedAddress}
+                  setSelectedShipper={setSelectedShipper}
+                  setSelectedShippingCost={setSelectedShippingCost}
                   fetchUserAddresses={fetchUserAddresses}
                 />
               </Button>
 
-              <Button colorScheme="twitter" variant="outline">
+              <Button
+                colorScheme="twitter"
+                variant="outline"
+                onClick={() => setModalKurir(true)}
+              >
                 Pilih Metode Pengiriman
+                <ShippingMethod
+                  isOpen={modalKurir}
+                  onClose={() => setModalKurir(false)}
+                  destination={selectedAddress?.city_id}
+                  setSelectedShippingCost={setSelectedShippingCost}
+                  setSelectedShipper={setSelectedShipper}
+                />
               </Button>
             </HStack>
             <Grid
@@ -259,6 +321,24 @@ function Cart(props) {
                     Rp. {totalPrice()}
                   </Text>
                 </Box>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Text
+                    variant="subtitle-bold"
+                    color="#737A8D"
+                    fontWeight="400"
+                  >
+                    Ongkos Kirim
+                  </Text>
+                  {selectedShippingCost && (
+                    <Text variant="subtitle-bold" color="#737A8D">
+                      {`Rp. ${splitCost[1]}`}
+                    </Text>
+                  )}
+                </Box>
                 <Divider />
                 <Box
                   display="flex"
@@ -268,13 +348,7 @@ function Cart(props) {
                   <Text variant="subtitle-bold">Total</Text>
                   <Text variant="subtitle-bold">Rp. {totalPrice()}</Text>
                 </Box>
-                <Button
-                  mt={3}
-                  variant="outline"
-                  colorScheme="twitter"
-                  //   onClick={() => buyItems()
-                  //   disabled={selectedItem.length === 0}
-                >
+                <Button mt={3} variant="outline" colorScheme="twitter">
                   Bayar
                 </Button>
               </Stack>

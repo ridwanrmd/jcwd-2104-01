@@ -7,6 +7,7 @@ const editUserAddress = async (req, res, next) => {
   try {
     const { addressId } = req.params;
     const { province_id, province, city_id, city_name, address } = req.body;
+    console.log(req.params);
 
     const getAddress = await Address.findOne({
       where: { addressId },
@@ -61,7 +62,7 @@ const updateMainAddress = async (req, res, next) => {
 
     res.send({
       status: 'Berhasil',
-      message: 'Berhasil ubah status alamat utama',
+      message: 'Berhasil Mengganti Alamat Utama',
     });
   } catch (error) {
     next(error);

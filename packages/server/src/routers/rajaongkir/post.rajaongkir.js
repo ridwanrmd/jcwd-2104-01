@@ -2,15 +2,17 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-router.post('/ongkos/:asal/:tujuan/:berat/:kurir', (req, res) => {
-  const param = req.params;
+//config axios to rajaongkir
+axios.defaults.baseURL = 'https://api.rajaongkir.com/starter';
+axios.defaults.headers.common['key'] = '205258f7c4c0e26bd2a06dbbcabd2ca5';
+axios.defaults.headers.post['Content-Type'] =
+  'application/x-www-form-urlencoded';
+
+// get ongkir endpoint
+router.post('/ongkos', (req, res) => {
+  const body = req.body;
   axios
-    .post('/cost', {
-      origin: param.asal,
-      destination: param.tujuan,
-      weight: param.berat,
-      courier: param.kurir,
-    })
+    .post('/cost', body)
     .then((response) => res.json(response.data))
     .catch((err) => res.send(err));
 });

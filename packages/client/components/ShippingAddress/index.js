@@ -17,7 +17,6 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
-import { getSession } from 'next-auth/react';
 import EditAddress from '../../components/EditAddress';
 import AddAddress from '../../components/AddAddress';
 
@@ -28,19 +27,29 @@ function ShippingAddress(props) {
     setSelectedAddress,
     userAddresses,
     fetchUserAddresses,
-    useDisclosure,
+    setSelectedShippingCost,
+    setSelectedShipper,
   } = props;
   const [modalEdit, setModalEdit] = useState(false);
   const [modalAdd, setModalAdd] = useState(false);
-  // const [disabled, setDisabled] = useState(false);
-  // const [Addresses, setAddresses] = useState(userAddresses);
-  // const [selectedAddress, setSelectedAddress] = useState();
-  // console.log(userAddresses);
+  const [currentAddress, setCurrentAddress] = useState();
+
   const toast = useToast();
+
+  useEffect(() => {
+    setCurrentAddress(userAddresses[0]);
+  }, []);
 
   const onUpdateisMain = async (addressId) => {
     try {
       const res = await axiosInstance.patch(`/addresses/isMain/${addressId}`);
+      toast({
+        description: res.data.message,
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
 
       fetchUserAddresses();
     } catch (error) {
@@ -49,7 +58,7 @@ function ShippingAddress(props) {
   };
 
   const renderAddress = () => {
-    return userAddresses.map((address) => (
+    return userAddresses.map((address, index) => (
       <Box
         my="2"
         mx="2"
@@ -59,7 +68,7 @@ function ShippingAddress(props) {
         width={480}
         key={address.addressId}
       >
-        <HStack>
+        <HStack py={1}>
           <Box width={350} align="start">
             {address.isMain == 1 && (
               <Text
@@ -84,7 +93,6 @@ function ShippingAddress(props) {
               fontSize={{ base: 'md', md: 'md' }}
               fontWeight="medium"
               lineHeight={'6'}
-              // width={250}
             >
               {address.city_name}, {address.province}
             </Text>
@@ -95,6 +103,7 @@ function ShippingAddress(props) {
                 colorScheme={'twitter'}
                 onClick={() => {
                   setModalEdit(true);
+                  setCurrentAddress(userAddresses[index]);
                 }}
               >
                 Ubah Alamat
@@ -102,10 +111,7 @@ function ShippingAddress(props) {
                   isOpen={modalEdit}
                   onClose={() => setModalEdit(false)}
                   fetchUserAddresses={fetchUserAddresses}
-                  // addressId={currentAddress?.addressId}
-                  // address={currentAddress?.address}
-                  // province_name={currentAddress?.province}
-                  // city={currentAddress?.city_name}
+                  addressId={currentAddress?.addressId}
                 />
               </Button>
               {address.isMain == 0 && (
@@ -129,6 +135,8 @@ function ShippingAddress(props) {
               size="sm"
               onClick={() => {
                 setSelectedAddress(address);
+                setSelectedShipper();
+                setSelectedShippingCost();
                 onClose();
               }}
             >
@@ -148,7 +156,7 @@ function ShippingAddress(props) {
         <ModalBody>
           <FormControl px={2} py={3}>
             <Box
-              border="1px"
+              border="1px solid #C2CED6"
               borderRadius="3px"
               overflow="scroll"
               height="35vh"
@@ -172,17 +180,6 @@ function ShippingAddress(props) {
               </Button>
             </Box>
           </FormControl>
-          {/* <ModalFooter>
-            <Button
-              // isDisabled={disabled}
-              colorScheme="twitter"
-              // mr={3}
-              align="center"
-              // onClick={() => onAddAddress()}
-            >
-              Tambah Alamat Pengiriman
-            </Button>
-          </ModalFooter> */}
         </ModalBody>
       </ModalContent>
     </Modal>

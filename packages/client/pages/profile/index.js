@@ -28,6 +28,7 @@ export default function Profile(props) {
   const [disabled, setDisabled] = useState(false);
 
   const toast = useToast();
+
   useEffect(() => {
     fetchUserAddresses();
   }, []);
