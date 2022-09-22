@@ -38,13 +38,8 @@ function EditAddress(props) {
 
   const toast = useToast();
 
-  const splitProvince = selectedProvince.split(',');
-  const province_id = splitProvince[0];
-  const province = splitProvince[1];
-
-  const splitCity = selectedCity.split(',');
-  const city_id = splitCity[0];
-  const city_name = splitCity[1];
+  const splitProvince = selectedProvince?.split(',');
+  const splitCity = selectedCity?.split(',');
 
   useEffect(() => {
     getAllProvince();
@@ -68,10 +63,10 @@ function EditAddress(props) {
 
       const body = {
         address: addressDetail,
-        province_id,
-        province,
-        city_id,
-        city_name,
+        province_id: splitProvince[0],
+        province: splitProvince[1],
+        city_id: splitCity[0],
+        city_name: splitCity[1],
       };
 
       const res = await axiosInstance.patch(

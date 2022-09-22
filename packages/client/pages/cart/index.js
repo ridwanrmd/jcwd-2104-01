@@ -32,27 +32,11 @@ function Cart(props) {
   const [selectedAddress, setSelectedAddress] = useState();
   const [selectedShipper, setSelectedShipper] = useState();
   const [selectedShippingCost, setSelectedShippingCost] = useState();
-  // console.log(selectedShippingCost);
 
   let name = `${user.first_name} ${user.last_name}`;
   const recipient = name.toUpperCase();
 
   const splitCost = selectedShippingCost?.split(',');
-
-  // useEffect(() => {
-  //   if (selectedShippingCost) {
-  //     splitCost();
-  //   }
-  // }, [selectedShippingCost]);
-
-  // const shipper = selectedShipper;
-  // const service = splitCost[0];
-  // const cost = splitCost[1];
-  // const etd = splitCost[2];
-
-  // const row1 = `Kurir: ${shipper}, ${service}`;
-  // const row3 = `Biaya: ${cost}`;
-  // const row4 = `Estimasi: ${etd} hari`;
 
   const fetchCartList = async () => {
     const session = await getSession();
@@ -229,23 +213,6 @@ function Cart(props) {
                 </Text>
               </VStack>
               {selectedShippingCost && renderOngkirBox()}
-              {/* <Box
-                pl="2"
-                boxShadow={[
-                  'none',
-                  '0px 2px 3px 2px rgba(33, 51, 96, 0.02), 0px 4px 12px 4px rgba(0, 155, 144, 0.08);',
-                ]}
-                borderRadius="8px"
-                border="1px"
-                color="blackAlpha.800"
-              >
-                <VStack align={'start'} pr={2}>
-                  <Text>Kurir : JNE, Regular</Text>
-                  <Text>Berat : 1 kg</Text>
-                  <Text>Biaya : Rp 30.000</Text>
-                  <Text>Estimasi : 2-3 hari</Text>
-                </VStack>
-              </Box> */}
             </HStack>
 
             <HStack px={2} py={3} spacing={2} borderBottom="6px solid #C2CED6">

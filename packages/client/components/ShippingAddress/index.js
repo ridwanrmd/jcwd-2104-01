@@ -10,9 +10,7 @@ import {
   Text,
   ModalBody,
   FormControl,
-  VStack,
   HStack,
-  Spacer,
   useToast,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
@@ -137,6 +135,13 @@ function ShippingAddress(props) {
                 setSelectedAddress(address);
                 setSelectedShipper();
                 setSelectedShippingCost();
+                toast({
+                  description: 'Berhasil Memilih Alamat Pengiriman',
+                  position: 'top',
+                  status: 'success',
+                  duration: 3000,
+                  isClosable: true,
+                });
                 onClose();
               }}
             >

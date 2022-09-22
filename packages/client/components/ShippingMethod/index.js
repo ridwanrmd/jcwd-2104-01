@@ -7,12 +7,10 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Input,
   Select,
   FormLabel,
   FormControl,
   useToast,
-  Text,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
@@ -21,12 +19,10 @@ function ShippingMethod(props) {
   const { isOpen, onClose, setSelectedShippingCost, setSelectedShipper } =
     props;
   const [getOngkir, setGetOngkir] = useState([]);
-  //   const [userAddress, setUserAddress] = useState(destination);
   const [selectedKurir, setSelectedKurir] = useState('');
   const [selectedOngkir, setSelectedOngkir] = useState('');
 
-  //   const { city_id } = userAddress;
-  // console.log(selectedOngkir);
+  const toast = useToast();
 
   useEffect(() => {
     if (selectedKurir) {
@@ -44,7 +40,6 @@ function ShippingMethod(props) {
       const resGetOngkir = await axiosInstance.get(
         `rajaongkir/ongkos/${origin}/${destination}/${weight}/${courier}`,
       );
-      // console.log(resGetOngkir.data.rajaongkir.results[0].costs);
       setGetOngkir(resGetOngkir.data.rajaongkir.results[0].costs);
     } catch (error) {
       console.log(error.message);
@@ -110,12 +105,18 @@ function ShippingMethod(props) {
         </ModalBody>
         <ModalFooter>
           <Button
-            // isDisabled={disabled}
             colorScheme="twitter"
             mr={3}
             onClick={() => {
               setSelectedShippingCost(selectedOngkir);
               setSelectedShipper(selectedKurir);
+              toast({
+                description: 'Berhasil Memilih Metode Pengiriman',
+                position: 'top',
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+              });
               onClose();
             }}
           >
