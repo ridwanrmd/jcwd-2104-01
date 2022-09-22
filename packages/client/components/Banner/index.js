@@ -10,8 +10,10 @@ import {
   Text,
   Link,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 
 export default function Banner() {
+  const router = useRouter();
   return (
     <>
       <Show below="md">
@@ -33,7 +35,13 @@ export default function Banner() {
         </InputGroup>
       </Show>
       <Hide below="md">
-        <Box bgImage="url('/banner.png')" h="40vh">
+        <Box
+          bgImage="url('/banner.png')"
+          h="50vh"
+          bgSize={'cover'}
+          w="full"
+          bgPosition={'center'}
+        >
           <Text
             paddingStart={'20vw'}
             paddingTop="7vh"
@@ -57,16 +65,14 @@ export default function Banner() {
               </Button>
             </InputRightElement>
           </InputGroup>
-          <Link
-            paddingStart={'20vw'}
+          <Button
+            marginStart={'20vw'}
+            variant="link"
             color="white"
-            _hover={{
-              textDecoration: 'none',
-            }}
-            href={'#'}
+            onClick={() => router.push('/product?page=1')}
           >
             Lihat Semua Obat
-          </Link>
+          </Button>
         </Box>
       </Hide>
     </>

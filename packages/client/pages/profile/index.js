@@ -10,14 +10,15 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
 import AddAddress from '../../components/AddAddress';
 import EditAddress from '../../components/EditAddress';
-import React, { useEffect, useState } from 'react';
 
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
@@ -28,7 +29,6 @@ export default function Profile(props) {
   const [disabled, setDisabled] = useState(false);
 
   const toast = useToast();
-
   useEffect(() => {
     fetchUserAddresses();
   }, []);
@@ -187,9 +187,10 @@ export default function Profile(props) {
     ));
   };
 
+  const { data: session } = useSession();
+
   const onSaveProfile = async (body) => {
     try {
-      const session = await getSession();
       const { accessToken } = session.user;
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -239,7 +240,7 @@ export default function Profile(props) {
   };
   return (
     <>
-      <Navbar />
+      <Navbar session={session} user={user} />
       <Box
         marginBlock="10"
         height={'83vh'}

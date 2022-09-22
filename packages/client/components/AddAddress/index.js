@@ -6,6 +6,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Heading,
   Button,
   Input,
   Select,

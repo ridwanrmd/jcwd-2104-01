@@ -1,29 +1,18 @@
 import Head from 'next/head';
-// import axios from '../src/config/api';
+import axios from '../src/config/api';
 import { useEffect, useState } from 'react';
-import NextLink from 'next/link';
-
-import { useSession, signOut } from 'next-auth/react';
-
-import {
-  Box,
-  Flex,
-  Text,
-  Link,
-  Alert,
-  AlertIcon,
-  Button,
-  Spacer,
-} from '@chakra-ui/react';
-
+import { useSession, signOut, getSession } from 'next-auth/react';
+import { Box, Flex, Text, Button } from '@chakra-ui/react';
 import Navbar from '../components/Navbar';
 import axiosInstance from '../src/config/api';
 import Category from '../components/Category';
 import ProductCard from '../components/ProductCard';
 import Banner from '../components/Banner';
 import Prescription from '../components/Prescription';
+import { useRouter } from 'next/router';
 
 export default function Home(props) {
+  const router = useRouter();
   // this is just testing api connection, possibly could be remove
   const [checkApi, setCheckApi] = useState('');
   const fetchApi = async () => {
@@ -41,10 +30,6 @@ export default function Home(props) {
   // end of testing api
   const { data: session } = useSession();
 
-  const onLogoutClick = async () => {
-    await signOut();
-  };
-
   const renderCard = () => {
     return props.product.map((products) => {
       return <ProductCard key={products.productId} product={products} />;
@@ -58,8 +43,7 @@ export default function Home(props) {
         <meta name="description" content="Best Medical Store in da world" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <Navbar />
+      <Navbar session={session} user={props.user} />
 
       <Banner />
 
@@ -67,7 +51,6 @@ export default function Home(props) {
 
       <Category />
 
-      {/* Start Rekomendasi Obat */}
       <Box mx={{ base: '5', md: '10%' }} marginTop="2vh">
         <Flex mt="9" justifyContent={'space-between'}>
           <Text
@@ -77,40 +60,51 @@ export default function Home(props) {
           >
             Rekomendasi Obat & Vitamin
           </Text>
-          <Link
-            color={'twitter.500'}
-            _hover={{
-              textDecoration: 'none',
-            }}
-            href={'#'}
+          <Button
+            variant="link"
+            colorScheme="twitter"
+            onClick={() => router.push('/product?page=1')}
           >
             Lihat Semua
-          </Link>
+          </Button>
         </Flex>
         <Flex
           justifyContent={'space-between'}
           overflow={{ base: 'scroll', md: 'auto' }}
-          sx={{
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none',
-          }}
         >
           {renderCard()}
         </Flex>
       </Box>
-      {/* End Rekomendasi Obat */}
     </Box>
   );
 }
-
 export async function getServerSideProps(context) {
   try {
     const resGetProduct = await axiosInstance.get(`/product`, {
       params: { pageSize: 5 },
     });
+
+    const session = await getSession({ req: context.req });
+    if (session) {
+      try {
+        const { userId, accessToken } = session.user;
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+        const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+
+        return {
+          props: {
+            product: resGetProduct.data.result,
+            totalPage: resGetProduct.data.totalPage,
+            user: resGetUser.data.data,
+          },
+        };
+      } catch (error) {
+        const errorMessage = error.message;
+        return { props: { errorMessage } };
+      }
+    }
     return {
       props: {
         product: resGetProduct.data.result,

@@ -7,7 +7,6 @@ const editUserAddress = async (req, res, next) => {
   try {
     const { addressId } = req.params;
     const { province_id, province, city_id, city_name, address } = req.body;
-    console.log(req.params);
 
     const getAddress = await Address.findOne({
       where: { addressId },

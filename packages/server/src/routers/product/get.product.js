@@ -71,4 +71,39 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.get('/:url', async (req, res, next) => {
+  const { url } = req.params;
+  try {
+    const result = await product.findOne({
+      attributes: [
+        'productId',
+        'productName',
+        'price',
+        'desc',
+        'productImage',
+        'stock',
+        'unit',
+        'url',
+      ],
+      where: {
+        url,
+      },
+      include: [
+        {
+          model: Category,
+          attributes: ['category'],
+        },
+      ],
+    });
+
+    res.send({
+      status: 'Success',
+      message: 'Success get product list',
+      result: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = router;

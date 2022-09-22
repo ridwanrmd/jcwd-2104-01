@@ -1,5 +1,4 @@
 import { Flex, Image, Text, Stack, Link, Box } from '@chakra-ui/react';
-import { getRouteRegex } from 'next/dist/shared/lib/router/utils/route-regex';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -38,6 +37,7 @@ export default function Category() {
           justifyItems="center"
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
             router.push(
               '/product?page=1&category=Demam%20dan%20Sakit%20Kepala&orderBy=price&order=ASC',
@@ -68,6 +68,7 @@ export default function Category() {
           marginBlockEnd={['unset', '5']}
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
             router.push('/product?page=1&category=P3K&orderBy=price&order=ASC')
           }
@@ -95,6 +96,7 @@ export default function Category() {
           marginBlockEnd={['unset', '5']}
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
             router.push(
               '/product?page=1&category=Asthma&orderBy=price&order=ASC',
@@ -124,6 +126,7 @@ export default function Category() {
           marginBlockEnd={['unset', '5']}
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
             router.push(
               '/product?page=1&category=Batuk%20dan%20Flu&orderBy=price&order=ASC',
@@ -153,8 +156,9 @@ export default function Category() {
           marginBlockEnd={['unset', '5']}
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
-            getRouteRegex.push(
+            router.push(
               '/product?page=1&category=Vitamin&orderBy=price&order=ASC',
             )
           }
@@ -182,6 +186,7 @@ export default function Category() {
           marginBlockEnd={['unset', '5']}
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
             router.push(
               '/product?page=1&category=Pencernaan&orderBy=price&order=ASC',
@@ -211,6 +216,7 @@ export default function Category() {
           marginBlockEnd={['unset', '5']}
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
             router.push('/product?page=1&category=Mata&orderBy=price&order=ASC')
           }
@@ -238,6 +244,7 @@ export default function Category() {
           marginBlockEnd={['unset', '5']}
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
             router.push(
               '/product?page=1&category=Antibiotik%20dan%20Anti%20Jamur&orderBy=price&order=ASC',
@@ -267,6 +274,7 @@ export default function Category() {
           marginBlockEnd={['unset', '5']}
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
+          cursor="pointer"
           onClick={() =>
             router.push(
               '/product?page=1&category=Minyak%20Angin%20dan%20Balsam&orderBy=price&order=ASC',
