@@ -21,7 +21,7 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import { SearchIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 
-export default function SidebarProduct() {
+export default function SidebarProduct({ setPage }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState('');
   const router = useRouter();
@@ -50,12 +50,11 @@ export default function SidebarProduct() {
 
   const onSearchHandler = () => {
     const path = router.asPath;
-    if (router.query.productName) {
-      let replaceProduct = path.replace(
-        `productName=${router.query.productName}`,
-        `productName=${search}`,
-      );
-      router.push(replaceProduct);
+    if (router.query.productName || router.query.productName == 0) {
+      let splitter = path.split('&productName');
+      let replacer = splitter[0].replace(`page=${router.query.page}`, 'page=1');
+      setPage(0);
+      router.push(`${replacer}&productName=${search}`);
     } else {
       router.push(`${path}&productName=${search}`);
     }
@@ -147,7 +146,7 @@ export default function SidebarProduct() {
             >
               Semua Obat
             </Button>
-            <Accordion allowMultiple>
+            <Accordion allowMultiple defaultIndex={[0]}>
               <AccordionItem>
                 <h2>
                   <AccordionButton>

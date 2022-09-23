@@ -93,6 +93,9 @@ export async function getServerSideProps(context) {
         };
         const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
 
+        if (resGetUser.data.data.isAdmin)
+          return { redirect: { destination: '/admin' } };
+
         return {
           props: {
             product: resGetProduct.data.result,

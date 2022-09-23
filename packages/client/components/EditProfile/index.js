@@ -215,7 +215,7 @@ function EditProfile(props) {
             <FormLabel fontSize={'sm'}>Tanggal Lahir :</FormLabel>
             <Input
               name="birthDate"
-              // value={birthDate.slice(0, 10)}
+              value={birthDate?.slice(0, 10)}
               onChange={onHandleChange}
               type="date"
               max="2017-01-01"
