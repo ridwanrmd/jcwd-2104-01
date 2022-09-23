@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }) {
           <Head>
             <title>Medbox</title>
             <meta name="description" content="best app in the world" />
-            <link rel="icon" href="/favicon.ico" />
+            <link rel="icon" href="/Logo.svg" />
           </Head>
           <Component {...pageProps} />
         </ChakraProvider>

@@ -6,14 +6,16 @@ const { error } = require('console');
 const cors = require('cors');
 const PORT = process.env.PORT || 8000;
 const app = express();
-const { join } = require('path');
 
 // Routers
 const userRouter = require('./routers/user');
+const addressRouter = require('./routers/address');
+const rajaongkirRouter = require('./routers/rajaongkir');
 const cartRouter = require('./routers/cart');
 const productRouter = require('./routers/product');
 const transactionRouter = require('./routers/transaction');
 
+// Config
 app.use(cors());
 app.use(bearerToken());
 app.use('/public', express.static('public'));
@@ -25,9 +27,16 @@ app.use('/carts', cartRouter);
 app.use('/transactions', transactionRouter);
 app.use('/product', productRouter);
 
+app.use('/carts', cartRouter);
+
 app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);
 });
+
+app.use('/users', userRouter);
+app.use('/addresses', addressRouter);
+app.use('/rajaongkir', rajaongkirRouter);
+app.use('/product', productRouter);
 
 app.use((error, req, res, next) => {
   console.log({ error });

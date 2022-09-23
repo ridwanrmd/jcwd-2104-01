@@ -15,13 +15,13 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
-  Hide,
+  Show,
 } from '@chakra-ui/react';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { SearchIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 
-export default function SidebarProduct() {
+export default function SidebarProduct({ setPage }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState('');
   const router = useRouter();
@@ -50,8 +50,14 @@ export default function SidebarProduct() {
 
   const onSearchHandler = () => {
     const path = router.asPath;
-    let splitter = path.split('productName')[0];
-    router.push(`${splitter}&productName=${search}`);
+    if (router.query.productName || router.query.productName == 0) {
+      let splitter = path.split('&productName');
+      let replacer = splitter[0].replace(`page=${router.query.page}`, 'page=1');
+      setPage(0);
+      router.push(`${replacer}&productName=${search}`);
+    } else {
+      router.push(`${path}&productName=${search}`);
+    }
   };
 
   const renderCategory = () => {
@@ -126,7 +132,7 @@ export default function SidebarProduct() {
             onClick={isOpen ? onClose : onOpen}
           />
         </Flex>
-        <Hide below="md">
+        <Show above="md">
           <Stack as={'nav'}>
             <Button
               marginStart="4"
@@ -140,7 +146,7 @@ export default function SidebarProduct() {
             >
               Semua Obat
             </Button>
-            <Accordion defaultIndex={[0]} allowMultiple>
+            <Accordion allowMultiple defaultIndex={[0]}>
               <AccordionItem>
                 <h2>
                   <AccordionButton>
@@ -221,7 +227,7 @@ export default function SidebarProduct() {
               Unggah Resep
             </Button>
           </Stack>
-        </Hide>
+        </Show>
       </Flex>
       {isOpen ? (
         <Box pb={4} display={{ md: 'none' }}>

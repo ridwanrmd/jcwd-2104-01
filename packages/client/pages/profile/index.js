@@ -3,25 +3,194 @@ import {
   Button,
   HStack,
   Image,
-  Input,
   Text,
   VStack,
   useDisclosure,
+  Spacer,
+  useToast,
 } from '@chakra-ui/react';
 import { api_origin } from '../../constraint';
-import { getSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import { getSession, useSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import EditProfile from '../../components/EditProfile';
+import AddAddress from '../../components/AddAddress';
+import EditAddress from '../../components/EditAddress';
+
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
+  const [userAddresses, setUserAddresses] = useState([]);
+  const [currentAddress, setCurrentAddress] = useState();
+  const [modalAdd, setModalAdd] = useState(false);
+  const [modalEdit, setModalEdit] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
+  const toast = useToast();
+  useEffect(() => {
+    fetchUserAddresses();
+  }, []);
+
+  useEffect(() => {
+    setCurrentAddress(userAddresses[0]);
+  }, []);
+
+  const fetchUserAddresses = async () => {
+    try {
+      const session = await getSession();
+      const { accessToken } = session.user;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      const getUserAddresses = await axiosInstance.get(
+        `/addresses/userAddress`,
+        config,
+      );
+      setUserAddresses(getUserAddresses.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onDeleteAddress = async (addressId) => {
+    try {
+      setDisabled(true);
+      const session = await getSession();
+      const { accessToken } = session.user;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+
+      const res = await axiosInstance.delete(
+        `/addresses/delete/${addressId}`,
+        config,
+      );
+      toast({
+        description: res.data.message,
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+
+      fetchUserAddresses();
+    } catch (error) {
+      alert(errorMessage);
+    } finally {
+      setDisabled(false);
+    }
+  };
+
+  const onUpdateisMain = async (addressId) => {
+    try {
+      const res = await axiosInstance.patch(`/addresses/isMain/${addressId}`);
+
+      fetchUserAddresses();
+    } catch (error) {
+      alert(errorMessage);
+    }
+  };
+
+  const renderAddress = () => {
+    return userAddresses.map((address, index) => (
+      <Box
+        my="1"
+        border="2px"
+        borderColor="gray.300"
+        borderRadius="md"
+        width={452}
+        key={address.addressId}
+      >
+        <HStack>
+          <Box>
+            {address.isMain == 1 && (
+              <Text
+                ms="2"
+                fontFamily="inherit"
+                color="red"
+                fontSize={{ base: 'sm', md: 'sm' }}
+              >
+                Alamat Utama
+              </Text>
+            )}
+            <Text
+              marginStart={2}
+              fontSize={{ base: 'md', md: 'md' }}
+              fontWeight="medium"
+              lineHeight={'6'}
+              width={276}
+            >
+              {address.address}
+            </Text>
+            <Text
+              marginStart={2}
+              fontSize={{ base: 'md', md: 'md' }}
+              fontWeight="medium"
+              lineHeight={'6'}
+              width={250}
+            >
+              {address.city_name}, {address.province}
+            </Text>
+          </Box>
+          <Spacer />
+          <VStack>
+            {address.isMain == 0 && (
+              <Button
+                colorScheme={'twitter'}
+                mr="4"
+                mb="-2"
+                variant="ghost"
+                size="xs"
+                onClick={() => {
+                  onUpdateisMain(address.addressId);
+                }}
+              >
+                <Text size="xs">Set Utama</Text>
+              </Button>
+            )}
+            <HStack paddingEnd={2}>
+              <Button
+                variant="ghost"
+                size="sm"
+                colorScheme={'twitter'}
+                onClick={() => {
+                  setCurrentAddress(userAddresses[index]);
+                  setModalEdit(true);
+                }}
+              >
+                Ubah
+                <EditAddress
+                  isOpen={modalEdit}
+                  onClose={() => setModalEdit(false)}
+                  fetchUserAddresses={fetchUserAddresses}
+                  addressId={currentAddress?.addressId}
+                  address={currentAddress?.address}
+                  province_name={currentAddress?.province}
+                  city={currentAddress?.city_name}
+                />
+              </Button>
+              <Button
+                isDisabled={disabled}
+                variant="ghost"
+                size="sm"
+                colorScheme={'twitter'}
+                onClick={() => onDeleteAddress(address.addressId)}
+              >
+                Hapus
+              </Button>
+            </HStack>
+          </VStack>
+        </HStack>
+      </Box>
+    ));
+  };
+
+  const { data: session } = useSession();
 
   const onSaveProfile = async (body) => {
     try {
-      const session = await getSession();
       const { accessToken } = session.user;
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -71,9 +240,11 @@ export default function Profile(props) {
   };
   return (
     <>
-      <Navbar />
+      <Navbar session={session} user={user} />
       <Box
-        height={'80vh'}
+        marginBlock="10"
+        height={'83vh'}
+        width={'82vh'}
         marginInline={{ base: '2', md: '35%' }}
         shadow={{ base: 'unset', md: 'md' }}
       >
@@ -86,7 +257,7 @@ export default function Profile(props) {
           >
             Profile
           </Text>
-          <HStack mt="4" mb="6">
+          <HStack mt="4" mb="1" pb="2">
             <Image
               objectFit={'cover'}
               rounded={'full'}
@@ -114,7 +285,7 @@ export default function Profile(props) {
           </HStack>
         </Box>
         <Box mt="2" mx="6" borderBottom="1px solid #C2CED6">
-          <VStack mb="6">
+          <VStack mb="3">
             <Text
               fontSize={{ base: 'md', md: 'md' }}
               fontWeight="medium"
@@ -128,20 +299,49 @@ export default function Profile(props) {
               lineHeight={'6'}
               color="#878686"
             >
-              Isi nama, profil dan alamat rumahmu
+              Isi nama dan profilmu
             </Text>
             <Button colorScheme={'twitter'} w="full" onClick={onOpen}>
               Lengkapi Profil
+              <EditProfile
+                isOpen={isOpen}
+                onClose={onClose}
+                userProfile={user}
+                onSaveProfile={onSaveProfile}
+              />
             </Button>
           </VStack>
         </Box>
+        <Box mt="2" mx="6" borderBottom="1px solid #C2CED6">
+          <Text
+            mt="5"
+            mb="2"
+            fontSize={{ base: 'md', md: 'md' }}
+            fontWeight="medium"
+            lineHeight={'6'}
+            // as="u"
+          >
+            Alamat
+          </Text>
+          <Box overflow="scroll" height="23vh">
+            {renderAddress()}
+          </Box>
+        </Box>
+        <Box mb="4" mt="3.5" mx="6">
+          <Button
+            colorScheme={'twitter'}
+            w="full"
+            onClick={() => setModalAdd(true)}
+          >
+            Tambahkan Alamat
+            <AddAddress
+              isOpen={modalAdd}
+              onClose={() => setModalAdd(false)}
+              fetchUserAddresses={fetchUserAddresses}
+            />
+          </Button>
+        </Box>
       </Box>
-      <EditProfile
-        isOpen={isOpen}
-        onClose={onClose}
-        userProfile={user}
-        onSaveProfile={onSaveProfile}
-      />
     </>
   );
 }
@@ -150,13 +350,25 @@ export async function getServerSideProps(context) {
   try {
     const session = await getSession({ req: context.req });
     if (!session) return { redirect: { destination: '/' } };
+
     const { userId, accessToken } = session.user;
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
+
     const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+
+    const resGetAddress = await axiosInstance.get(
+      `/addresses/userAddress`,
+      config,
+    );
+
     return {
-      props: { user: resGetUser.data.data },
+      props: {
+        user: resGetUser.data.data,
+        addresses: resGetAddress.data.data,
+        session,
+      },
     };
   } catch (error) {
     const errorMessage = error.message;
