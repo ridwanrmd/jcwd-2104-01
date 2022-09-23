@@ -61,7 +61,7 @@ const updateMainAddress = async (req, res, next) => {
 
     res.send({
       status: 'Berhasil',
-      message: 'Berhasil ubah status alamat utama',
+      message: 'Berhasil Mengganti Alamat Utama',
     });
   } catch (error) {
     next(error);

@@ -26,4 +26,18 @@ router.get('/kota/:provId', (req, res) => {
     .catch((err) => res.send(err));
 });
 
+// get ongkir endpoint
+router.get('/ongkos/:origin/:destination/:weight/:courier', (req, res) => {
+  const param = req.params;
+  axios
+    .post('/cost', {
+      origin: param.origin,
+      destination: param.destination,
+      weight: param.weight,
+      courier: param.courier,
+    })
+    .then((response) => res.json(response.data))
+    .catch((err) => res.send(err));
+});
+
 module.exports = router;
