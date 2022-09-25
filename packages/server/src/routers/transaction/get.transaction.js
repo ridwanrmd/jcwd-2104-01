@@ -12,7 +12,7 @@ const { auth } = require('../../helpers/auth');
 const getTransactionUser = async (req, res, next) => {
   try {
     const { transactionId } = req.params;
-    const { userId } = req.user;
+
     const getTransactData = await detailTransaction.findAll({
       where: { transactionId },
       attributes: ['dtId', 'productId', 'quantity'],
@@ -33,10 +33,15 @@ const getTransactionUser = async (req, res, next) => {
         {
           model: transaction,
           attributes: [
+            'userId',
             'transactionId',
             'addressId',
             'total',
             'transactionStatus',
+            'createdAt',
+            'kurir',
+            'biaya',
+            'estimasi',
           ],
         },
       ],
@@ -54,5 +59,6 @@ const getTransactionUser = async (req, res, next) => {
     console.log(error);
   }
 };
+
 router.get('/dataTransaction/:transactionId', auth, getTransactionUser);
 module.exports = router;

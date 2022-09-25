@@ -16,7 +16,7 @@ const createTransaction = async (req, res, next) => {
   try {
     const { userId } = req.user;
     // const { addressId, transactionId, productId } = req.body;
-    const { addressId } = req.body;
+    const { addressId, kurir, biaya, estimasi } = req.body;
     let total;
 
     const findCart = await cart.findAll({
@@ -54,11 +54,15 @@ const createTransaction = async (req, res, next) => {
 
     // const dataBody = () => {
     // return findCart.forEach(async (data) => {
+
     const newTransaction = await transaction.create(
       {
         userId,
         total: totalPrice(),
         addressId,
+        kurir,
+        biaya,
+        estimasi,
         transactionStatus: 'Menuggu Pembayaran',
       },
       // { transaction: t },
@@ -82,6 +86,7 @@ const createTransaction = async (req, res, next) => {
         }
       }),
     );
+
     schedule.scheduleJob(new Date(dueDate), async () => {
       const checkStatus = await transaction.findOne({
         where: {
@@ -110,7 +115,17 @@ const createTransaction = async (req, res, next) => {
             },
             { where: { productId: data.dataValues.productId } },
           );
+          // await cart.destroy({
+          //   where: { userId },
+          // });
         }
+      });
+    });
+    findCart.forEach(async (data) => {
+      await detailTransaction.create({
+        quantity: data.dataValues.quantity,
+        productId: data.dataValues.productId,
+        transactionId: newTransaction.dataValues.transactionId,
       });
     });
     findCart.forEach(async (data) => {
@@ -135,13 +150,6 @@ const createTransaction = async (req, res, next) => {
       data: {
         wrap,
       },
-    });
-    findCart.forEach(async (data) => {
-      await detailTransaction.create({
-        quantity: data.dataValues.quantity,
-        productId: data.dataValues.productId,
-        transactionId: newTransaction.dataValues.transactionId,
-      });
     });
   } catch (error) {
     next(error);

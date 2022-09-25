@@ -55,6 +55,18 @@ module.exports = (sequelize, DataTypes) => {
           'Pesanan Dikonfirmasi',
         ),
       },
+      kurir: {
+        allowNull: true,
+        type: DataTypes.STRING(50),
+      },
+      biaya: {
+        allowNull: true,
+        type: DataTypes.STRING(50),
+      },
+      estimasi: {
+        allowNull: true,
+        type: DataTypes.STRING(50),
+      },
       paymentProof: {
         type: DataTypes.STRING(100),
         defaultValue: '/public/user/default-avatar.png',

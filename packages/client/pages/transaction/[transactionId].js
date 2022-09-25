@@ -1,22 +1,59 @@
 import { Box, Button, Stack } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Navbar from '../../components/Navbar';
-
+import { useRouter } from 'next/router';
+import ListPTransaction from '../../components/CardTransaction/ListPTransaction';
 function Transaction(props) {
-  console.log(props);
+  const { data: session } = useSession();
+  const { getTransactData } = props.transaction.data;
+
+  const [transactionList, setTransactionList] = useState([]);
+  const router = useRouter();
+
+  // console.log(router.query.transactionId);
+  useEffect(() => {
+    fetchTransactionList();
+  }, []);
+
+  const fetchTransactionList = async () => {
+    try {
+      const session = await getSession();
+      const { accessToken } = session.user;
+      const { transactionId } = router.query;
+      console.log(transactionId);
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+
+      const get = await axiosInstance.get(
+        `/transactions/dataTransaction/${transactionId}`,
+        config,
+      );
+      // console.log(get.data.data.getTransactData);
+      setTransactionList(get.data.data.getTransactData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // console.log(transactionList);
+  const renderListTransaction = () => {
+    return <ListPTransaction data={transactionList} />;
+  };
+
   return (
     <>
-      <Navbar />
+      <Navbar session={session} user={props.user} />
       <Box
         display={['block', 'block', 'block']}
-        //   mx={[5, 0, 235]}
-        w={['40%', '60%', '40%']}
+        // //   mx={[5, 0, 235]}
+        // w={['40%', '40%', '40%']}
         mb={['100px', '200px', '359px']}
         justifyContent="center"
         mt="66px"
       >
+        {renderListTransaction()}
         {/* <MenungguPembayaranComWT />
           <MenungguPembayaranComRinOr />
           <MenungguPembayaranComMetPeb transaction={transaction} /> */}
@@ -28,9 +65,6 @@ function Transaction(props) {
         >
           <Button w="405px" variant="main-outline">
             Kembali Ke Beranda
-          </Button>
-          <Button w="405px" variant="main">
-            Check Status Pembayaran
           </Button>
         </Stack>
       </Box>
@@ -63,7 +97,7 @@ export async function getServerSideProps(context) {
     );
 
     return {
-      props: { transaction: restransactionUser.data },
+      props: { user: resGetUser.data, transaction: restransactionUser.data },
     };
   } catch (error) {
     const errorMessage = error.message;
