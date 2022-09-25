@@ -3,7 +3,7 @@ const router = express.Router();
 const { Op, Sequelize } = require('sequelize');
 const { product, Category, productCategory } = require('../../../models');
 
-router.get('/', async (req, res, next) => {
+const getAllProduct = async (req, res, next) => {
   const {
     category,
     productName,
@@ -73,9 +73,9 @@ router.get('/', async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
-});
+};
 
-router.get('/:url', async (req, res, next) => {
+const getDetailProduct = async (req, res, next) => {
   const { url } = req.params;
   try {
     const result = await product.findOne({
@@ -108,41 +108,9 @@ router.get('/:url', async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
-});
+};
 
-router.get('/:url', async (req, res, next) => {
-  const { url } = req.params;
-  try {
-    const result = await product.findOne({
-      attributes: [
-        'productId',
-        'productName',
-        'price',
-        'desc',
-        'productImage',
-        'stock',
-        'unit',
-        'url',
-      ],
-      where: {
-        url,
-      },
-      include: [
-        {
-          model: Category,
-          attributes: ['category'],
-        },
-      ],
-    });
-
-    res.send({
-      status: 'Success',
-      message: 'Success get product list',
-      result: result,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
+router.get('/', getAllProduct);
+router.get('/:url', getDetailProduct);
 
 module.exports = router;
