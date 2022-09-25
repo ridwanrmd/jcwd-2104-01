@@ -195,14 +195,7 @@ function Cart(props) {
               </GridItem>
             </Grid>
             <HStack borderBottom="1px solid #C2CED6">
-              <VStack
-                // bg={'red'}
-                pl={2}
-                width={600}
-                py={2}
-                mr={1}
-                align={'start'}
-              >
+              <VStack pl={2} width={600} py={2} mr={1} align={'start'}>
                 <Text alignItems="left" as="b">
                   {recipient}
                 </Text>
@@ -251,9 +244,6 @@ function Cart(props) {
               pl={2}
               py={3}
             >
-              ceritanya cart list ceritanya cart list ceritanya cart list
-              ceritanya cart list ceritanya cart list ceritanya cart list
-              ceritanya cart list
               {renderCartList()}
             </Grid>
           </Box>
