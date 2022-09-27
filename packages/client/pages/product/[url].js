@@ -12,10 +12,12 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
-export default function ProductDetail({ product }) {
+export default function ProductDetail({ product, user }) {
   const router = useRouter();
+  const { data: session } = useSession();
   const [show, setShow] = useState(false);
 
   const handleToggle = () => setShow(!show);
@@ -41,13 +43,9 @@ export default function ProductDetail({ product }) {
   };
   return (
     <>
-      <Navbar />
+      <Navbar session={session} user={user} />
       <Show below="md">
-        <Box
-          marginBlock={'5'}
-          marginInline="3"
-          onClick={() => router.push('/product?page=1')}
-        >
+        <Box marginBlock={'5'} marginInline="3" onClick={() => router.back()}>
           <ArrowBackIcon fontSize={'4xl'} />
         </Box>
       </Show>
@@ -133,6 +131,27 @@ export async function getServerSideProps(context) {
     const resGetProduct = await axiosInstance.get(
       `/product/${context.params.url}`,
     );
+
+    const session = await getSession({ req: context.req });
+    if (session) {
+      try {
+        const { userId, accessToken } = session.user;
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+        const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+
+        return {
+          props: {
+            product: resGetProduct.data.result,
+            user: resGetUser.data.data,
+          },
+        };
+      } catch (error) {
+        const errorMessage = error.message;
+        return { props: { errorMessage } };
+      }
+    }
     return {
       props: {
         product: resGetProduct.data.result,
