@@ -11,7 +11,7 @@ const { createToken } = require('../../lib/token');
 const { sendMail, sendForgotPasswordMail } = require('../../lib/nodemailer');
 
 const { auth } = require('../../helpers/auth');
-const uploadUser = require('../../lib/multer');
+const { uploadUser } = require('../../lib/multer');
 const fs = require('fs');
 const path = require('path');
 const appRoot = require('app-root-path');
