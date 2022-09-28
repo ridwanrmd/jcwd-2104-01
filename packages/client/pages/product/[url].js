@@ -12,12 +12,28 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 export default function ProductDetail({ product }) {
+  // console.log(product);
   const router = useRouter();
   const [show, setShow] = useState(false);
 
+  const addToCart = async () => {
+    const session = await getSession();
+    const userId = session.user.userId;
+    const { accessToken } = session.user;
+    // console.log(token);
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+    const body = {
+      quantity: 1,
+      productId: product.productId,
+    };
+    await axiosInstance.post('/carts/add-to-cart', body, config);
+  };
   const handleToggle = () => setShow(!show);
   const renderCategory = () => {
     return product.Categories.map((category) => {
@@ -87,6 +103,7 @@ export default function ProductDetail({ product }) {
           >{`Rp. ${product.price.toLocaleString('id')}`}</Text>
           {product.stock != 0 ? (
             <Button
+              onClick={addToCart}
               w="max-content"
               variant={'solid'}
               colorScheme="twitter"

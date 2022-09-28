@@ -1,4 +1,4 @@
-import { Flex, Spacer, Text, Button } from '@chakra-ui/react';
+import { Flex, Spacer, Text, Button, Box } from '@chakra-ui/react';
 import React from 'react';
 import moment from 'moment';
 

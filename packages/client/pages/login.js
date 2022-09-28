@@ -134,6 +134,9 @@ function Login() {
                   <Link color={'blue.500'}>Forgot password?</Link>
                 </NextLink>
               </Stack>
+              <NextLink href={'/register'}>
+                <Link color={'blue.500'}>New To Us?</Link>
+              </NextLink>
               <Button
                 colorScheme={'twitter'}
                 variant={'solid'}

@@ -1,12 +1,12 @@
-import { Flex, Spacer, Text } from '@chakra-ui/react';
+import { Flex, Spacer, Text, Button, Box } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 
-const StatusTransaction = ({ data }) => {
+const StatusTransaction = ({ data, statusTrans }) => {
   const [addressUser, setAddressUser] = useState({});
-  // console.log(address);
+  console.log(statusTrans);
   let dtId;
   let status;
   let createdAt;
@@ -84,10 +84,7 @@ const StatusTransaction = ({ data }) => {
         <Flex>
           <Text minW="140px">Delivery Fee </Text>:
           <Spacer />
-          <Text textAlign={'end'}>
-            Rp.{NumOnkir.toLocaleString('id-ID')}
-            {/* harusnya shiping GANTI */}
-          </Text>
+          <Text textAlign={'end'}>Rp.{NumOnkir.toLocaleString('id-ID')}</Text>
         </Flex>
         <Flex>
           <Text minW="140px" fontWeight={'700'}>

@@ -92,7 +92,7 @@ export default function Navbar({ session, user }) {
                   textDecoration: 'none',
                   bg: 'gray.200',
                 }}
-                href={'#'}
+                href={'/riwayat'}
               >
                 Riwayat
               </Link>

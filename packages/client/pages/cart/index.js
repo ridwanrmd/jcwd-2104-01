@@ -12,6 +12,7 @@ import {
   Text,
   VStack,
   useDisclosure,
+  Link,
 } from '@chakra-ui/react';
 import Navbar from '../../components/Navbar';
 import ProductCart from '../../components/ProductCart/ProductCart';
@@ -40,7 +41,7 @@ function Cart(props) {
   const recipient = name.toUpperCase();
 
   const splitCost = selectedShippingCost?.split(',');
-  console.log(selectedShippingCost);
+  // console.log(selectedShippingCost);
   const { data: session } = useSession();
   const fetchCartList = async () => {
     const session = await getSession();
@@ -205,12 +206,14 @@ function Cart(props) {
         body,
         config,
       );
+      // window.location.assign(`/transaction/${res.data.data.ID}`);
 
       // console.log(res.data.data.wrap);
     } catch (error) {
       console.log(error);
     }
   };
+  // const Idtransactions = res.data.data.ID;
 
   return (
     <>
@@ -369,6 +372,7 @@ function Cart(props) {
                   <Text variant="subtitle-bold">Grand Total</Text>
                   <Text variant="subtitle-bold">Rp. {totalPrice()}</Text>
                 </Box>
+                {/* <Link href={`/transaction/${Idtransactions}`}> */}
                 <Button
                   mt={3}
                   variant="outline"
@@ -379,6 +383,7 @@ function Cart(props) {
                 >
                   Bayar
                 </Button>
+                {/* </Link> */}
               </Stack>
             </Box>
           </Box>

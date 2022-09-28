@@ -18,8 +18,8 @@ import axiosInstance from '../../src/config/api';
 import { api_origin } from '../../constraint';
 import OrderStatus from '../../components/CardTransaction/OrderStatus';
 import PaymentAndAddress from '../../components/CardTransaction/PaymentAndAddress';
-const TransactionList = ({ data, address }) => {
-  // console.log(data);
+const TransactionList = ({ data, address, statusTrans }) => {
+  // console.log(statusTrans);
   return (
     <div key={data.dtId}>
       <Flex>
@@ -66,7 +66,11 @@ const TransactionList = ({ data, address }) => {
           </Text>
           <Grid templateColumns="repeat(4, 1fr)" gap="1rem">
             <GridItem colSpan={2} p="1rem">
-              <OrderStatus data={data} address={address} />
+              <OrderStatus
+                data={data}
+                address={address}
+                statusTrans={statusTrans}
+              />
             </GridItem>
           </Grid>
         </Box>

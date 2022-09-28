@@ -137,6 +137,7 @@ const loginUserController = async (req, res, next) => {
     const resGetLoginUser = await user.findOne({
       where: { email: email },
     });
+    // console.log(resGetLoginUser);
 
     if (!resGetLoginUser) {
       throw {
@@ -181,6 +182,48 @@ const loginUserController = async (req, res, next) => {
         },
       },
     });
+
+    //admin Login
+    if (resGetLoginUser.dataValues.isAdmin) {
+      const { email, password } = req.body;
+
+      const resGetLoginUser = await user.findOne({
+        where: { email: email },
+      });
+      console.log(resGetLoginUser);
+
+      if (!resGetLoginUser) {
+        throw {
+          code: 400,
+          message: 'email yang anda masukan salah',
+        };
+      }
+      const userPass = resGetLoginUser.dataValues;
+      const isPasswordMatch = compare(password, userPass.password);
+
+      if (!isPasswordMatch) {
+        throw {
+          code: 400,
+          message: `Password yang anda masukan salah`,
+        };
+      }
+
+      const token = createToken({
+        userId: userPass.userId,
+        first_name: userPass.first_name,
+      });
+      res.send({
+        status: 'Succsess',
+        message: 'Login Succsess admin',
+        data: {
+          result: {
+            userId: userPass.userId,
+            first_name: userPass.first_name,
+            accessToken: token,
+          },
+        },
+      });
+    }
   } catch (error) {
     next(error);
     console.log(error);
