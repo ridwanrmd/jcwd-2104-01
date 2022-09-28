@@ -67,7 +67,7 @@ function Riwayat(props) {
   function selectedStatus() {
     return data?.map((x, i) => {
       // console.log(x);
-      return <History data={x} selected={selected} />;
+      return <History data={x} selected={selected} key={i} />;
     });
   }
   return (

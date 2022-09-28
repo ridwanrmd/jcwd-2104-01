@@ -37,7 +37,10 @@ const TransactionList = ({ data, address, statusTrans }) => {
                 >
                   <Grid templateColumns="repeat(4, 1fr)" gap="1rem">
                     <GridItem colSpan={1}>
-                      <Image src={api_origin + v.product.productImage} />
+                      <Image
+                        src={api_origin + v.product.productImage}
+                        alt={'user'}
+                      />
                     </GridItem>
                     <GridItem colSpan={3}>
                       <Flex direction={'column'} ml="1rem">
