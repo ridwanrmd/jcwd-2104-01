@@ -14,7 +14,7 @@ import {
 import React from 'react';
 import AdminProduct from '../../components/AdminProduct';
 import AdminSidebar from '../../components/AdminSidebar';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axiosInstance from '../../src/config/api';
 import ReactPaginate from 'react-paginate';

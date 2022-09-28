@@ -12,6 +12,7 @@ const rajaongkirRouter = require('./routers/rajaongkir');
 const cartRouter = require('./routers/cart');
 const productRouter = require('./routers/product');
 const categoryRouter = require('./routers/category');
+const prescriptionRouter = require('./routers/prescription');
 
 // Config
 app.use(cors());
@@ -26,6 +27,7 @@ app.use('/addresses', addressRouter);
 app.use('/rajaongkir', rajaongkirRouter);
 app.use('/product', productRouter);
 app.use('/category', categoryRouter);
+app.use('/prescriptions', prescriptionRouter);
 
 app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);
