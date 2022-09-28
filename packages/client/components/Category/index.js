@@ -19,6 +19,7 @@ export default function Category({ category }) {
           padding="2"
           shadow={{ base: 'unset', md: 'base' }}
           cursor="pointer"
+          key={data.categoryId}
           onClick={() =>
             router.push(
               `/product?page=1&category=${data.category}&orderBy=price&order=ASC`,

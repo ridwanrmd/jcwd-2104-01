@@ -47,7 +47,9 @@ export default function Inventory(props) {
 
   const renderCategory = () => {
     return props.category.map((data) => (
-      <option value={data.category}>{data.category}</option>
+      <option key={data.categoryId} value={data.category}>
+        {data.category}
+      </option>
     ));
   };
 
