@@ -72,7 +72,7 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
-router.patch('/', auth, async (req, res, next) => {
+const updateUserController = async (req, res, next) => {
   const { email, first_name, last_name, birthDate, phone, gender, image } =
     req.body;
 
@@ -106,9 +106,10 @@ router.patch('/', auth, async (req, res, next) => {
   } catch (error) {
     res.status(400).send(error);
   }
-});
+};
 
 router.patch('/updatePassword/', changePassController);
 router.patch('/forgotPassword/:userId', forgotPassword);
+router.patch('/', auth, updateUserController);
 
 module.exports = router;

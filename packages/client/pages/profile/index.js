@@ -18,7 +18,6 @@ import AddAddress from '../../components/AddAddress';
 import EditAddress from '../../components/EditAddress';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);
@@ -299,7 +298,7 @@ export default function Profile(props) {
               lineHeight={'6'}
               color="#878686"
             >
-              Isi nama dan profilmuz
+              Isi nama dan profilmu
             </Text>
             <Button colorScheme={'twitter'} w="full" onClick={onOpen}>
               Lengkapi Profil

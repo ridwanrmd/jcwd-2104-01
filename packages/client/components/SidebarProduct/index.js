@@ -21,7 +21,7 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import { SearchIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 
-export default function SidebarProduct({ setPage }) {
+export default function SidebarProduct({ setPage, category }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState('');
   const router = useRouter();
@@ -61,30 +61,19 @@ export default function SidebarProduct({ setPage }) {
   };
 
   const renderCategory = () => {
-    let kategori = [
-      'Batuk dan Flu',
-      'Demam dan Sakit Kepala',
-      'Antibiotik dan Anti Jamur',
-      'Minyak Angin dan Balsam',
-      'Pencernaan',
-      'Vitamin',
-      'Asthma',
-      'P3K',
-      'Mata',
-    ];
-    return kategori.map((category) => {
+    return category.map((categories) => {
       return (
         <Button
-          key={category}
+          key={categories.categoryId}
           width={'max-content'}
           variant={'link'}
           color="#1a202c"
           fontWeight={'normal'}
           fontSize={'md'}
-          value={category}
+          value={categories.category}
           onClick={onClickLink}
         >
-          {category}
+          {categories.category}
         </Button>
       );
     });

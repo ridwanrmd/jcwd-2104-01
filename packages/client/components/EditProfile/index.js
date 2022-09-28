@@ -123,7 +123,7 @@ function EditProfile(props) {
                   accept=".png, .jpg, .gif"
                   onChange={(e) => {
                     setUser({ ...user, profileImages: e.target.files[0] });
-                    setImageSource(URL.createObjectURL(event.target.files[0]));
+                    setImageSource(URL.createObjectURL(e.target.files[0]));
                   }}
                 />
 
@@ -215,7 +215,7 @@ function EditProfile(props) {
             <FormLabel fontSize={'sm'}>Tanggal Lahir :</FormLabel>
             <Input
               name="birthDate"
-              // value={birthDate.slice(0, 10)}
+              value={birthDate?.slice(0, 10)}
               onChange={onHandleChange}
               type="date"
               max="2017-01-01"
