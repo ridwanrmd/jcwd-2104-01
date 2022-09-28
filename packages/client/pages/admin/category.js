@@ -1,17 +1,26 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
-import React from 'react';
+import {
+  Box,
+  Button,
+  Flex,
+  Text,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react';
 import AdminSidebar from '../../components/AdminSidebar';
 import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axiosInstance from '../../src/config/api';
 import ReactPaginate from 'react-paginate';
 import styles from './Admin.module.css';
-import { useState } from 'react';
 import AdminCategory from '../../components/AdminCategory';
+import AddCategory from '../../components/AddCategory';
+import { useState } from 'react';
 
 export default function Category(props) {
+  const toast = useToast();
   const router = useRouter();
   const [page, setPage] = useState(0);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const renderCategory = () => {
     return props.category.map((data) => {
@@ -30,6 +39,53 @@ export default function Category(props) {
       router.push(`${path}?page=${pages}`);
     }
   };
+
+  const onSaveCategory = async (body) => {
+    let path = router.asPath;
+    try {
+      const session = await getSession();
+      const { accessToken } = session.user;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      const addCategory = {
+        category: body.category,
+      };
+
+      if (body.categoryImages) {
+        const gambar = body.categoryImages;
+        const data = new FormData();
+        const fileName = Date.now() + gambar.name;
+        data.append('name', fileName);
+        data.append('gambar', gambar);
+
+        addCategory.categoryImage = `/public/category/${fileName}`;
+        try {
+          await axiosInstance.post('/category/upload', data, config);
+        } catch (error) {
+          return alert(error.response.data.message);
+        }
+      }
+      try {
+        const res = await axiosInstance.post('/category', addCategory, config);
+        toast({
+          title: res.data.message,
+          status: 'success',
+          position: 'top',
+          duration: 2000,
+          isClosable: true,
+        });
+      } catch (error) {
+        return alert(error.response.data.message);
+      }
+      onClose();
+      router.push(path);
+    } catch (error) {
+      console.log({ error });
+      return alert(error.response.data.message);
+    }
+  };
+
   return (
     <Flex justifyContent="center">
       <AdminSidebar user={props.user} />
@@ -48,7 +104,14 @@ export default function Category(props) {
                 {renderCategory()}
               </Box>
               <Flex justifyContent={'flex-end'}>
-                <Button colorScheme={'twitter'}>Tambah</Button>
+                <Button colorScheme={'twitter'} onClick={onOpen}>
+                  Tambah
+                  <AddCategory
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    onSaveCategory={onSaveCategory}
+                  />
+                </Button>
               </Flex>
               <ReactPaginate
                 forcePage={page}
