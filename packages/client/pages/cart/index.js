@@ -18,6 +18,7 @@ import { getSession } from 'next-auth/react';
 import { ImLocation2 } from 'react-icons/im';
 import ShippingAddress from '../../components/ShippingAddress';
 import ShippingMethod from '../../components/ShippingMethod';
+import AddAddressNew from '../../components/AddAddressNew';
 
 function Cart(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,6 +28,7 @@ function Cart(props) {
   const [changes, setChanges] = useState(0);
   const [harga, setHarga] = useState(0);
   const [modalKurir, setModalKurir] = useState(false);
+  const [modalAdd, setModalAdd] = useState();
 
   const [userAddresses, setUserAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState();
@@ -132,12 +134,13 @@ function Cart(props) {
 
   const renderOngkirBox = () => {
     const splitCost = selectedShippingCost.split(',');
-    const row1 = `Kurir: ${selectedShipper}, ${splitCost[0]}`;
-    const row3 = `Biaya: ${splitCost[1]}`;
+    const row1 = `${selectedShipper.toUpperCase()}, ${splitCost[0]}`;
+    const row3 = `Rp ${Number(splitCost[1]).toLocaleString('id')}`;
     const row4 = `Estimasi: ${splitCost[2]} hari`;
+    const row4Post = `${splitCost[2]}`;
     return (
       <Box
-        pl="2"
+        padding="2"
         boxShadow={[
           'none',
           '0px 2px 3px 2px rgba(33, 51, 96, 0.02), 0px 4px 12px 4px rgba(0, 155, 144, 0.08);',
@@ -145,12 +148,35 @@ function Cart(props) {
         borderRadius="8px"
         border="1px"
         color="blackAlpha.800"
+        fontWeight="500"
+        fontSize="16px"
+        lineHeight="20px"
       >
-        <VStack align={'start'} pr={2}>
-          <Text>{row1}</Text>
-          <Text>Berat : 1 kg</Text>
-          <Text>{row3}</Text>
-          <Text>{row4}</Text>
+        <VStack align={'start'}>
+          <HStack>
+            <Text pr={'8'}>Kurir</Text>
+            <Text>:</Text>
+            <Text>{row1}</Text>
+          </HStack>
+          <HStack>
+            <Text pr={'6'}>Berat</Text>
+            <Text>:</Text>
+            <Text>1 Kg</Text>
+          </HStack>
+          <HStack>
+            <Text pr={'5'}>Biaya</Text>
+            <Text>:</Text>
+            <Text>{row3}</Text>
+          </HStack>
+          <HStack>
+            <Text>Estimasi</Text>
+            <Text>:</Text>
+            {selectedShipper == 'pos' ? (
+              <Text>{row4Post}</Text>
+            ) : (
+              <Text>{row4}</Text>
+            )}
+          </HStack>
         </VStack>
       </Box>
     );
@@ -195,47 +221,76 @@ function Cart(props) {
               </GridItem>
             </Grid>
             <HStack borderBottom="1px solid #C2CED6">
-              <VStack pl={2} width={600} py={2} mr={1} align={'start'}>
+              <VStack pl={2} width={560} py={2} mr={1} align={'start'}>
                 <Text alignItems="left" as="b">
                   {recipient}
                 </Text>
                 <Text>{user.phone}</Text>
-                <Text>{selectedAddress?.address.toUpperCase()}</Text>
-                <Text>
-                  {`${selectedAddress?.city_name}, ${selectedAddress?.province}`}
-                </Text>
+                {!selectedAddress ? (
+                  <Text color="red.500">
+                    Anda belum memiliki alamat pengiriman
+                  </Text>
+                ) : (
+                  <>
+                    <Text>{selectedAddress?.address.toUpperCase()}</Text>
+                    <Text>
+                      {`${selectedAddress?.city_name}, ${selectedAddress?.province}`}
+                    </Text>
+                  </>
+                )}
               </VStack>
               {selectedShippingCost && renderOngkirBox()}
             </HStack>
-
             <HStack px={2} py={3} spacing={2} borderBottom="6px solid #C2CED6">
-              <Button colorScheme="twitter" variant="outline" onClick={onOpen}>
-                Pilih Alamat Lain
-                <ShippingAddress
-                  isOpen={isOpen}
-                  onClose={onClose}
-                  userAddresses={userAddresses}
-                  setSelectedAddress={setSelectedAddress}
-                  setSelectedShipper={setSelectedShipper}
-                  setSelectedShippingCost={setSelectedShippingCost}
-                  fetchUserAddresses={fetchUserAddresses}
-                />
-              </Button>
+              {!selectedAddress ? (
+                <Button
+                  colorScheme="twitter"
+                  variant="outline"
+                  onClick={() => setModalAdd(true)}
+                >
+                  + Tambah Alamat
+                  <AddAddressNew
+                    isOpen={modalAdd}
+                    onClose={() => setModalAdd(false)}
+                    fetchUserAddresses={fetchUserAddresses}
+                    fetchUserMainAddress={fetchUserMainAddress}
+                  />
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    colorScheme="twitter"
+                    variant="outline"
+                    onClick={onOpen}
+                  >
+                    Pilih Alamat Lain
+                    <ShippingAddress
+                      isOpen={isOpen}
+                      onClose={onClose}
+                      userAddresses={userAddresses}
+                      setSelectedAddress={setSelectedAddress}
+                      setSelectedShipper={setSelectedShipper}
+                      setSelectedShippingCost={setSelectedShippingCost}
+                      fetchUserAddresses={fetchUserAddresses}
+                    />
+                  </Button>
 
-              <Button
-                colorScheme="twitter"
-                variant="outline"
-                onClick={() => setModalKurir(true)}
-              >
-                Pilih Metode Pengiriman
-                <ShippingMethod
-                  isOpen={modalKurir}
-                  onClose={() => setModalKurir(false)}
-                  destination={selectedAddress?.city_id}
-                  setSelectedShippingCost={setSelectedShippingCost}
-                  setSelectedShipper={setSelectedShipper}
-                />
-              </Button>
+                  <Button
+                    colorScheme="twitter"
+                    variant="outline"
+                    onClick={() => setModalKurir(true)}
+                  >
+                    Pilih Metode Pengiriman
+                    <ShippingMethod
+                      isOpen={modalKurir}
+                      onClose={() => setModalKurir(false)}
+                      destination={selectedAddress?.city_id}
+                      setSelectedShippingCost={setSelectedShippingCost}
+                      setSelectedShipper={setSelectedShipper}
+                    />
+                  </Button>
+                </>
+              )}
             </HStack>
             <Grid
               borderBottom="6px solid #C2CED6"
@@ -292,7 +347,7 @@ function Cart(props) {
                   </Text>
                   {selectedShippingCost && (
                     <Text variant="subtitle-bold" color="#737A8D">
-                      {`Rp. ${splitCost[1]}`}
+                      {`Rp ${Number(splitCost[1]).toLocaleString('id')}`}
                     </Text>
                   )}
                 </Box>

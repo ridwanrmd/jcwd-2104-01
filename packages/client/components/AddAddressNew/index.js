@@ -6,6 +6,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Heading,
   Button,
   Input,
   Select,
@@ -18,7 +19,7 @@ import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 
 function AddAddress(props) {
-  const { isOpen, onClose, fetchUserAddresses } = props;
+  const { isOpen, onClose, fetchUserAddresses, fetchUserMainAddress } = props;
   const [addressDetail, setAddressDetail] = useState();
   const [getProvince, setGetProvince] = useState([]);
   const [getCity, setGetCity] = useState([]);
@@ -75,6 +76,7 @@ function AddAddress(props) {
       onClose();
       setAddressDetail({});
       fetchUserAddresses();
+      fetchUserMainAddress();
     } catch (error) {
       console.log({ error });
       alert(error.response.data.message);

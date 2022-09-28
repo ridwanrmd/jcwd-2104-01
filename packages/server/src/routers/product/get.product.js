@@ -4,6 +4,7 @@ const { Op, Sequelize } = require('sequelize');
 const { product, Category, productCategory } = require('../../../models');
 
 router.get('/', async (req, res, next) => {
+  console.log(req.query);
   const {
     category,
     productName,
@@ -11,7 +12,7 @@ router.get('/', async (req, res, next) => {
     pageSize = 12,
     orderBy = 'price',
     order = 'ASC',
-    isRacikan = false,
+    // isRacikan = false,
   } = req.query;
 
   const limit = Number(pageSize);
@@ -23,7 +24,7 @@ router.get('/', async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
-        isRacikan,
+        // isRacikan,
       },
       include: [
         {

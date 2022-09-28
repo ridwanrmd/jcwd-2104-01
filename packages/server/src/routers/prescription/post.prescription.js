@@ -7,7 +7,6 @@ const { prescription } = require('../../../models');
 // create new prescription
 const createNewPrescription = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { name } = req.body;
     const { userId } = req.user;
 
