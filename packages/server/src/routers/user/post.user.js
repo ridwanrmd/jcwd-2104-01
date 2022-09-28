@@ -216,7 +216,7 @@ const forgotPasswordController = async (req, res, next) => {
   }
 };
 
-router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
+const uploadUserImageController = async (req, res) => {
   try {
     const { userId } = req.user;
     const postPath = path.join(appRoot.path, 'packages', 'server');
@@ -226,8 +226,6 @@ router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
     const { dataValues } = resGetUser;
 
     const paths = postPath + dataValues.image;
-
-    console.log(dataValues.image.split('/')[3] != 'default-avatar.png');
 
     if (dataValues.image.split('/')[3] != 'default-avatar.png') {
       fs.unlink(paths, (err) => {
@@ -245,8 +243,14 @@ router.post('/upload', auth, uploadUser.single('gambar'), async (req, res) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
+router.post(
+  '/upload',
+  auth,
+  uploadUser.single('gambar'),
+  uploadUserImageController,
+);
 router.post('/register', registerUserHandler);
 router.post('/verification', resendEmailVerification);
 router.post('/login', loginUserController);

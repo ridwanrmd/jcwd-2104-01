@@ -35,7 +35,7 @@ export default function Product(props) {
     <>
       <Navbar session={session} user={props.user} />
       <Flex direction={{ md: 'row', base: 'column' }} marginTop="6">
-        <SidebarProduct setPage={setPage} />
+        <SidebarProduct setPage={setPage} category={props.category} />
         <Flex
           borderStart={{ md: '1px solid #C2CED6', base: 'unset' }}
           flexGrow={'1'}
@@ -100,7 +100,7 @@ export async function getServerSideProps(context) {
     const resGetProduct = await axiosInstance.get(`/product`, {
       params: context.query,
     });
-
+    const resGetCategory = await axiosInstance.get('/category');
     const session = await getSession({ req: context.req });
     if (session) {
       try {
@@ -117,6 +117,7 @@ export async function getServerSideProps(context) {
           props: {
             product: resGetProduct.data.result,
             totalPage: resGetProduct.data.totalPage,
+            category: resGetCategory.data.result,
             user: resGetUser.data.data,
           },
         };
@@ -130,6 +131,7 @@ export async function getServerSideProps(context) {
       props: {
         product: resGetProduct.data.result,
         totalPage: resGetProduct.data.totalPage,
+        category: resGetCategory.data.result,
       },
     };
   } catch (error) {

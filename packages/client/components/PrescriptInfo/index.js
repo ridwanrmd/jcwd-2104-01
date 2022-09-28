@@ -12,7 +12,7 @@ function PrescriptInfo() {
       >
         Cara Upload Resep Dokter
       </Text>
-      <HStack mx="106px" mt="41px" spacing="70px">
+      <HStack mx="110px" mt="41px" spacing="70px">
         <VStack width="170px">
           <Box bg="#C2CED6" width="112px" height="112px" borderRadius="670">
             <Box pt="4" pl="2">

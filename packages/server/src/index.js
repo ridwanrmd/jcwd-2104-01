@@ -13,7 +13,8 @@ const rajaongkirRouter = require('./routers/rajaongkir');
 const cartRouter = require('./routers/cart');
 const productRouter = require('./routers/product');
 const prescriptionRouter = require('./routers/prescription');
-const transactionRouter = require('./routers/transaction')
+const transactionRouter = require('./routers/transaction');
+const categoryRouter = require('./routers/category');
 
 // Config
 app.use(cors());
@@ -21,19 +22,19 @@ app.use(bearerToken());
 app.use('/public', express.static('public'));
 app.use(express.json());
 
-app.get('/api', (req, res) => {
-  res.send(`Hello, this is my API`);
-});
-
 // router
-app.use('/users', userRouter);
 app.use('/carts', cartRouter);
 app.use('/users', userRouter);
 app.use('/addresses', addressRouter);
 app.use('/rajaongkir', rajaongkirRouter);
 app.use('/product', productRouter);
-app.use('/prescriptions', prescriptionRouter);
 app.use('/transactions', transactionRouter);
+app.use('/category', categoryRouter);
+app.use('/prescriptions', prescriptionRouter);
+
+app.get('/api', (req, res) => {
+  res.send(`Hello, this is my API`);
+});
 
 app.use((error, req, res, next) => {
   console.log({ error });

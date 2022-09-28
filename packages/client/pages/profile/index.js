@@ -18,7 +18,6 @@ import AddAddress from '../../components/AddAddress';
 import EditAddress from '../../components/EditAddress';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 export default function Profile(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState(props.user);

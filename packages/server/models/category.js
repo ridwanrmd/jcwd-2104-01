@@ -23,7 +23,15 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      category: DataTypes.STRING(30),
+      category: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true,
+      },
+      categoryImage: {
+        type: DataTypes.STRING(250),
+        defaultValue: '/public/category/category-default.svg',
+      },
     },
     {
       sequelize,

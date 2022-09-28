@@ -9,11 +9,18 @@ import {
   Hide,
   Text,
   Link,
+  Alert,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 export default function Banner() {
   const router = useRouter();
+  const [search, setSearch] = useState('');
+
+  const onSearchHandler = () => {
+    router.push(`/product?page=1&productName=${search}`);
+  };
   return (
     <>
       <Show below="md">
@@ -26,9 +33,14 @@ export default function Banner() {
           backgroundColor="white"
           rounded={10}
         >
-          <Input type="text" placeholder="Cari Obat" />
+          <Input
+            type="text"
+            placeholder="Cari Obat"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
           <InputRightElement h={'full'}>
-            <Button variant={'ghost'}>
+            <Button variant={'ghost'} onClick={onSearchHandler}>
               <SearchIcon />
             </Button>
           </InputRightElement>
@@ -53,13 +65,19 @@ export default function Banner() {
             Your Pharmacy, <br /> Everywhere
           </Text>
           <InputGroup w={'30%'} ms="20vw" backgroundColor="white" mb="4">
-            <Input type="text" placeholder="Cari Obat" />
+            <Input
+              type="text"
+              placeholder="Cari Obat"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
             <InputRightElement h={'full'}>
               <Button
                 variant={'solid'}
                 minWidth="4vw"
                 colorScheme={'twitter'}
                 rounded="none"
+                onClick={onSearchHandler}
               >
                 <SearchIcon />
               </Button>

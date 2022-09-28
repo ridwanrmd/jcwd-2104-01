@@ -49,7 +49,7 @@ export default function Home(props) {
 
       <Prescription />
 
-      <Category />
+      <Category category={props.category} />
 
       <Box mx={{ base: '5', md: '10%' }} marginTop="2vh">
         <Flex mt="9" justifyContent={'space-between'}>
@@ -84,6 +84,8 @@ export async function getServerSideProps(context) {
       params: { pageSize: 5 },
     });
 
+    const resGetCategory = await axiosInstance.get('/category');
+
     const session = await getSession({ req: context.req });
     if (session) {
       try {
@@ -100,6 +102,7 @@ export async function getServerSideProps(context) {
           props: {
             product: resGetProduct.data.result,
             totalPage: resGetProduct.data.totalPage,
+            category: resGetCategory.data.result,
             user: resGetUser.data.data,
           },
         };
@@ -112,6 +115,7 @@ export async function getServerSideProps(context) {
       props: {
         product: resGetProduct.data.result,
         totalPage: resGetProduct.data.totalPage,
+        category: resGetCategory.data.result,
       },
     };
   } catch (error) {

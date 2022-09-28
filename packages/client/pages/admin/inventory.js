@@ -21,7 +21,7 @@ import ReactPaginate from 'react-paginate';
 import styles from './Admin.module.css';
 import { useEffect, useState } from 'react';
 
-export default function Admin(props) {
+export default function Inventory(props) {
   const router = useRouter();
   const [page, setPage] = useState(0);
   const [categories, setCategories] = useState('');
@@ -34,8 +34,6 @@ export default function Admin(props) {
     setOrder(`${router.query.orderBy} ${router.query.order}` || '');
   }, [router.query.category, router.query.orderBy]);
 
-  console.log();
-
   const onSelectChange = (e) => {
     if (router.asPath.includes('isRacikan')) {
       router.push(
@@ -45,6 +43,14 @@ export default function Admin(props) {
       router.push(`/admin/inventory?page=1&category=${e.target.value}`);
     }
     setCategories(e.target.value);
+  };
+
+  const renderCategory = () => {
+    return props.category.map((data) => (
+      <option key={data.categoryId} value={data.category}>
+        {data.category}
+      </option>
+    ));
   };
 
   const renderProduct = () => {
@@ -175,25 +181,11 @@ export default function Admin(props) {
                 <Select
                   name="category"
                   value={categories}
-                  placeholder="Kategori"
+                  placeholder="Semua Kategori"
                   onChange={onSelectChange}
                   w="fit-content"
                 >
-                  <option value="Batuk dan Flu">Batuk & Flue</option>
-                  <option value="Demam dan Sakit Kepala">
-                    Demam & Sakit Kepala
-                  </option>
-                  <option value="Antibiotik dan Anti Jamur">
-                    Antibiotik & Anti Jamur
-                  </option>
-                  <option value="Minyak Angin dan Balsam">
-                    Minyak Angin & Balsam
-                  </option>
-                  <option value="Pencernaan">Pencernaan</option>
-                  <option value="Vitamin">Vitamin</option>
-                  <option value="Asthma">Asthma</option>
-                  <option value="P3K">P3K</option>
-                  <option value="Mata">Mata</option>
+                  {renderCategory()}
                 </Select>
                 <Select
                   value={order}
@@ -241,37 +233,25 @@ export async function getServerSideProps(context) {
     const resGetProduct = await axiosInstance.get(`/product`, {
       params: context.query,
     });
-
+    const resGetCategory = await axiosInstance.get('/category');
     const session = await getSession({ req: context.req });
     if (!session) return { redirect: { destination: '/' } };
-    if (session) {
-      try {
-        const { userId, accessToken } = session.user;
-        const config = {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        };
-        const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
 
-        if (!resGetUser.data.data.isAdmin)
-          return { redirect: { destination: '/' } };
+    const { userId, accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+    const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
 
-        return {
-          props: {
-            product: resGetProduct.data.result,
-            totalPage: resGetProduct.data.totalPage,
-            user: resGetUser.data.data,
-          },
-        };
-      } catch (error) {
-        const errorMessage = error.message;
-        return { props: { errorMessage } };
-      }
-    }
+    if (!resGetUser.data.data.isAdmin)
+      return { redirect: { destination: '/' } };
 
     return {
       props: {
         product: resGetProduct.data.result,
         totalPage: resGetProduct.data.totalPage,
+        category: resGetCategory.data.result,
+        user: resGetUser.data.data,
       },
     };
   } catch (error) {
