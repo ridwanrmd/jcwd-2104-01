@@ -30,8 +30,13 @@ module.exports = (sequelize, DataTypes) => {
       },
 
       productName: {
+        type: DataTypes.STRING(100),
         allowNull: false,
-        type: DataTypes.STRING(50),
+        unique: true,
+      },
+      satuanUnit: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
       },
       desc: {
         allowNull: false,
@@ -57,10 +62,6 @@ module.exports = (sequelize, DataTypes) => {
       url: {
         allowNull: false,
         type: DataTypes.STRING(150),
-      },
-      isRacikan: {
-        type: DataTypes.TINYINT(1),
-        defaultValue: '0',
       },
     },
     {
