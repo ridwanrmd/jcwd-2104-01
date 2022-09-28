@@ -18,25 +18,23 @@ export default function Admin({ user }) {
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
   if (!session) return { redirect: { destination: '/' } };
-  if (session) {
-    try {
-      const { userId, accessToken } = session.user;
-      const config = {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      };
-      const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+  try {
+    const { userId, accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+    const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
 
-      if (!resGetUser.data.data.isAdmin)
-        return { redirect: { destination: '/' } };
+    if (!resGetUser.data.data.isAdmin)
+      return { redirect: { destination: '/' } };
 
-      return {
-        props: {
-          user: resGetUser.data.data,
-        },
-      };
-    } catch (error) {
-      const errorMessage = error.message;
-      return { props: { errorMessage } };
-    }
+    return {
+      props: {
+        user: resGetUser.data.data,
+      },
+    };
+  } catch (error) {
+    const errorMessage = error.message;
+    return { props: { errorMessage } };
   }
 }

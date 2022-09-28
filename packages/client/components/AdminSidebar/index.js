@@ -3,6 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { api_origin } from '../../constraint';
 import { signOut } from 'next-auth/react';
+import { HamburgerIcon } from '@chakra-ui/icons';
 
 export default function AdminSidebar({ user }) {
   const router = useRouter();
@@ -44,6 +45,20 @@ export default function AdminSidebar({ user }) {
           <Image src="/laporan.svg" alt="laporan" />
           <Text color="white" ms="2">
             Laporan
+          </Text>
+        </Flex>
+      </Box>
+      <Box
+        h="10"
+        cursor="pointer"
+        p="2"
+        bg={router.pathname.includes('category') ? '#005E9D' : 'unset'}
+        onClick={() => router.push('/admin/category')}
+      >
+        <Flex justifyContent="center">
+          <HamburgerIcon color="white" h="5" w="5" />
+          <Text color="white" ms="2">
+            Kategori
           </Text>
         </Flex>
       </Box>

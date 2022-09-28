@@ -1,5 +1,4 @@
 import { Box, Button, Flex, Image, Spacer, Text } from '@chakra-ui/react';
-import React from 'react';
 import { api_origin } from '../../constraint';
 
 export default function AdminProduct(props) {

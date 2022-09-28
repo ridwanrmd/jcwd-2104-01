@@ -36,16 +36,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
-      isOpen: {
-        type: DataTypes.TINYINT(1),
-        allowNull: false,
-        defaultValue: '0',
-      },
-      isAvailable: {
-        type: DataTypes.TINYINT(1),
-        allowNull: false,
-        defaultValue: '0',
-      },
     },
     {
       sequelize,
