@@ -14,9 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       transaction.hasMany(models.detailTransaction, {
         foreignKey: 'transactionId',
       });
-      // transaction.belongsTo(models.product, {
-      //   foreignKey: 'productId',
-      // });
     }
   }
   transaction.init(
@@ -35,14 +32,7 @@ module.exports = (sequelize, DataTypes) => {
           key: 'userId',
         },
       },
-      productId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'products',
-          key: 'productId',
-        },
-      },
+
       addressId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -64,6 +54,18 @@ module.exports = (sequelize, DataTypes) => {
           'Dikirim',
           'Pesanan Dikonfirmasi',
         ),
+      },
+      kurir: {
+        allowNull: true,
+        type: DataTypes.STRING(50),
+      },
+      biaya: {
+        allowNull: true,
+        type: DataTypes.STRING(50),
+      },
+      estimasi: {
+        allowNull: true,
+        type: DataTypes.STRING(50),
       },
       paymentProof: {
         type: DataTypes.STRING(100),
