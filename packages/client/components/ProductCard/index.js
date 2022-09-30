@@ -1,8 +1,25 @@
 import { Text, Image, Flex, Button, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { api_origin } from '../../constraint';
+import { getSession, useSession } from 'next-auth/react';
+import axiosInstance from '../../src/config/api';
 
 export default function ProductCard(props) {
+  // console.log(props.product.productId);
+  const addToCart = async () => {
+    const session = await getSession();
+    const userId = session.user.userId;
+    const { accessToken } = session.user;
+    // console.log(token);
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+    const body = {
+      quantity: 1,
+      productId: props.product.productId,
+    };
+    await axiosInstance.post('/carts/add-to-cart', body, config);
+  };
   const router = useRouter();
   return (
     <Flex
@@ -51,6 +68,7 @@ export default function ProductCard(props) {
       {props.product.stock != 0 ? (
         <Button
           mx="4"
+          onClick={addToCart}
           variant={'outline'}
           colorScheme="twitter"
           marginBlock={'22px'}

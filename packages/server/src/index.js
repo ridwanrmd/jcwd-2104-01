@@ -1,6 +1,5 @@
 require('dotenv/config');
 const express = require('express');
-
 const app = express();
 const PORT = process.env.PORT || 8000;
 const cors = require('cors');
@@ -23,6 +22,9 @@ app.use('/public', express.static('public'));
 app.use(express.json());
 
 // router
+
+app.use('/transactions', transactionRouter);
+
 app.use('/carts', cartRouter);
 app.use('/users', userRouter);
 app.use('/addresses', addressRouter);
