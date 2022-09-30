@@ -42,6 +42,7 @@ export default function Category(props) {
 
   const onSaveCategory = async (body) => {
     let path = router.asPath;
+    console.log(body);
     try {
       const session = await getSession();
       const { accessToken } = session.user;

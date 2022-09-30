@@ -143,9 +143,43 @@ const uploadPayment = multer({
   },
 });
 
+const productPath = path.join(
+  appRoot.path,
+  'packages',
+  'server',
+  'public',
+  'product',
+);
+
+const storageProduct = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, productPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
+const uploadProduct = multer({
+  storage: storageProduct,
+  fileFilter(req, file, cb) {
+    const allowedExtension = ['.png', '.jpg', '.svg'];
+
+    const extname = path.extname(file.originalname);
+
+    if (!allowedExtension.includes(extname)) {
+      const error = new Error('Please upload image file (jpg, png, svg)');
+      return cb(error);
+    }
+
+    cb(null, true);
+  },
+});
+
 module.exports = {
   uploadUser,
   uploadPrescription,
   uploadPayment,
   uploadCategory,
+  uploadProduct,
 };

@@ -194,7 +194,7 @@ function Prescription(props) {
                     width="350px"
                     height="250"
                     src={prescriptionSource}
-                    alt="warning icon"
+                    alt="gambar resep"
                   />
                 </Box>
                 {prescriptionImage?.size >= 201792 ? (

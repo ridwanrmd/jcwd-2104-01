@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       product.hasMany(models.transaction, { foreignKey: 'productId' });
       product.hasMany(models.detailTransaction, { foreignKey: 'productId' });
       product.hasMany(models.logHistory, { foreignKey: 'productId' });
-      product.hasMany(models.detailProduct, { foreignKey: 'productId' });
+      product.hasOne(models.detailProduct, { foreignKey: 'productId' });
       product.belongsToMany(models.Category, {
         through: models.productCategory,
         foreignKey: 'productId',
@@ -63,11 +63,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING(150),
       },
+      deletedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize,
       modelName: 'product',
       tableName: 'products',
+      paranoid: true,
     },
   );
   return product;

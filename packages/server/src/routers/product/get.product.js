@@ -51,7 +51,7 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
-        isRacikan,
+        // isRacikan,
       },
       include: [
         {
