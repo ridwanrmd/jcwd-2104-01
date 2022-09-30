@@ -11,7 +11,6 @@ const getAllProduct = async (req, res, next) => {
     pageSize = 12,
     orderBy = 'price',
     order = 'ASC',
-    isRacikan = false,
   } = req.query;
 
   const limit = Number(pageSize);
@@ -23,7 +22,6 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
-        isRacikan,
       },
       include: [
         {
@@ -51,7 +49,6 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
-        isRacikan,
       },
       include: [
         {

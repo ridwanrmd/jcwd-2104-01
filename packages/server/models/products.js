@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-
       productName: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -37,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
       satuanUnit: {
         type: DataTypes.STRING(100),
         allowNull: false,
+      },
+      isRacikan: {
+        type: DataTypes.TINYINT(1),
+        defaultValue: '0',
+      },
+      formula: {
+        type: DataTypes.JSON,
+        allowNull: true,
       },
       desc: {
         allowNull: false,
