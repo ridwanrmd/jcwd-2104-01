@@ -78,6 +78,7 @@ export default function Home(props) {
     </Box>
   );
 }
+
 export async function getServerSideProps(context) {
   try {
     const resGetProduct = await axiosInstance.get(`/product`, {

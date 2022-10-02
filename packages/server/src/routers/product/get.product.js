@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { Op, Sequelize } = require('sequelize');
-const { product, Category, productCategory } = require('../../../models');
+const {
+  product,
+  Category,
+  productCategory,
+  detailProduct,
+} = require('../../../models');
 
 const getAllProduct = async (req, res, next) => {
   const {
@@ -11,6 +16,7 @@ const getAllProduct = async (req, res, next) => {
     pageSize = 12,
     orderBy = 'price',
     order = 'ASC',
+    isRacikan = false,
   } = req.query;
 
   const limit = Number(pageSize);
@@ -22,6 +28,7 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
+        isRacikan,
       },
       include: [
         {
@@ -49,6 +56,7 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
+        isRacikan,
       },
       include: [
         {
@@ -56,10 +64,21 @@ const getAllProduct = async (req, res, next) => {
           attributes: ['category'],
           where: { category: category ? category : { [Op.ne]: null } },
         },
+        {
+          model: detailProduct,
+        },
       ],
       offset,
       limit,
     });
+
+    if (!amount.length) {
+      return res.status(404).send({
+        message: 'Not Found',
+        result: result,
+        totalPage: amount.length,
+      });
+    }
 
     res.send({
       status: 'Success',
@@ -68,7 +87,7 @@ const getAllProduct = async (req, res, next) => {
       totalPage: amount.length,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 

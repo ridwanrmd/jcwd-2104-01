@@ -20,6 +20,20 @@ export default function ProductDetail({ product, user }) {
   const { data: session } = useSession();
   const [show, setShow] = useState(false);
 
+  const addToCart = async () => {
+    const session = await getSession();
+    const userId = session.user.userId;
+    const { accessToken } = session.user;
+    // console.log(token);
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+    const body = {
+      quantity: 1,
+      productId: product.productId,
+    };
+    await axiosInstance.post('/carts/add-to-cart', body, config);
+  };
   const handleToggle = () => setShow(!show);
   const renderCategory = () => {
     return product.Categories.map((category) => {
@@ -85,6 +99,7 @@ export default function ProductDetail({ product, user }) {
           >{`Rp. ${product.price.toLocaleString('id')}`}</Text>
           {product.stock != 0 ? (
             <Button
+              onClick={addToCart}
               w="max-content"
               variant={'solid'}
               colorScheme="twitter"
