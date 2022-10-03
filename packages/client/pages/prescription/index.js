@@ -50,11 +50,7 @@ function Prescription(props) {
 
       const name = `/public/prescription/${fileName}`;
 
-      const resUpload = await axiosInstance.post(
-        '/prescriptions/upload',
-        data,
-        config,
-      );
+      await axiosInstance.post('/prescriptions/upload', data, config);
 
       const resPostPrescription = await axiosInstance.post(
         '/prescriptions/',

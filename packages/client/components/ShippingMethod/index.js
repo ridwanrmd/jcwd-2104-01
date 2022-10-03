@@ -27,7 +27,6 @@ function ShippingMethod(props) {
   const [getOngkir, setGetOngkir] = useState([]);
   const [selectedKurir, setSelectedKurir] = useState('');
   const [selectedOngkir, setSelectedOngkir] = useState('');
-  // console.log(selectedKurir);
   const toast = useToast();
 
   useEffect(() => {
@@ -42,7 +41,6 @@ function ShippingMethod(props) {
       const destination = props.destination;
       const weight = 1000;
       const courier = selectedKurir;
-      // console.log(destination);
 
       const resGetOngkir = await axiosInstance.get(
         `rajaongkir/ongkos/${origin}/${destination}/${weight}/${courier}`,

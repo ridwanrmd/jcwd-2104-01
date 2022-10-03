@@ -1,9 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
-  Spinner,
-  useToast,
   Divider,
   Grid,
   GridItem,
@@ -30,7 +27,6 @@ function Cart(props) {
   const [user, setUser] = useState(props.user);
   const [cartList, setCartList] = useState([]);
   const [changes, setChanges] = useState(0);
-  const [harga, setHarga] = useState(0);
   const [modalKurir, setModalKurir] = useState(false);
   const [modalAdd, setModalAdd] = useState();
 
@@ -43,21 +39,16 @@ function Cart(props) {
   const recipient = name.toUpperCase();
 
   const splitCost = selectedShippingCost?.split(',');
-  // console.log(selectedShippingCost);
   const { data: session } = useSession();
   const fetchCartList = async () => {
     const session = await getSession();
     const { accessToken } = session.user;
-
-    // console.log(accessToken);
 
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
     try {
       const get = await axiosInstance.get('/carts/getCart', config);
-
-      // console.log(get);
 
       setCartList(get.data.data.getCart);
     } catch (error) {
@@ -187,7 +178,6 @@ function Cart(props) {
   const totalPrice = () => {
     if (selectedShippingCost) {
       const splitCost = selectedShippingCost.split(',');
-      // console.log(splitCost);
 
       const tempPrice = cartList.map((data) => {
         return data.product.price * data.quantity;
@@ -214,14 +204,12 @@ function Cart(props) {
   const onClickBayar = async () => {
     try {
       const splitCost = selectedShippingCost.split(',');
-      // console.log(splitCost);
       const body = {
         addressId: selectedAddress.addressId,
         kurir: splitCost[0],
         estimasi: splitCost[2],
         biaya: splitCost[1],
       };
-      // console.log(body);
       const session = await getSession();
       const { accessToken } = session.user;
       const config = {
@@ -232,14 +220,10 @@ function Cart(props) {
         body,
         config,
       );
-      // window.location.assign(`/transaction/${res.data.data.ID}`);
-
-      // console.log(res.data.data.wrap);
     } catch (error) {
       console.log(error);
     }
   };
-  // const Idtransactions = res.data.data.ID;
 
   return (
     <>
@@ -419,7 +403,6 @@ function Cart(props) {
                   <Text variant="subtitle-bold">Grand Total</Text>
                   <Text variant="subtitle-bold">Rp. {totalPrice()}</Text>
                 </Box>
-                {/* <Link href={`/transaction/${Idtransactions}`}> */}
                 <Button
                   mt={3}
                   variant="outline"
@@ -430,7 +413,6 @@ function Cart(props) {
                 >
                   Bayar
                 </Button>
-                {/* </Link> */}
               </Stack>
             </Box>
           </Box>

@@ -5,11 +5,7 @@ import {
   TabPanels,
   TabPanel,
   Tab,
-  Button,
-  Flex,
-  Spacer,
 } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import History from '../../components/HistoryTransaction/History';
@@ -19,24 +15,12 @@ import styles from './Product.module.css';
 import ReactPaginate from 'react-paginate';
 
 function Riwayat(props) {
-  // console.log(props.totalPage);
   const { data: session } = useSession();
-  const [user, setUser] = useState(props.user);
   const [selected, setSelected] = useState(0);
   const [data, setData] = useState([]);
-  const router = useRouter();
   const [page, setPage] = useState(1);
-  // console.log(props.user);
-  // console.log(page);
-  // useEffect(() => {
-  //   setPage(router.query.page - 1);
-  // }, []);
   const handlePageClick = (e) => {
-    // let pages = e.selected + 1;
     setPage(e.selected);
-    // const path = router.asPath;
-    // let replaced = path.replace(`page=${router.query.page}`, `page=${pages}`);
-    // router.push(replaced);
   };
 
   useEffect(() => {
@@ -46,27 +30,21 @@ function Riwayat(props) {
   const fetchTransaction = async () => {
     try {
       const session = await getSession();
-      const userId = session.user.userId;
       const { accessToken } = session.user;
-      //   console.log(token);
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
-      //   console.log(config);
       const res = await axiosInstance.get(
         `/transactions/historyTransaction?selected=${selected}&page=${page}`,
         config,
       );
-      // console.log(res.data.data.restransactionStatus);
       setData(res.data.data.restransactionStatus);
-      //   console.log(res.data.data.responseTransaction);
     } catch (error) {
       console.log(error);
     }
   };
   function selectedStatus() {
     return data?.map((x, i) => {
-      // console.log(x);
       return <History data={x} selected={selected} key={i} />;
     });
   }
@@ -135,20 +113,14 @@ export default Riwayat;
 export async function getServerSideProps(context) {
   try {
     const session = await getSession({ req: context.req });
-    // console.log(session);
     if (!session) return { redirect: { destination: '/' } };
-
-    // console.log(session);
 
     const userId = session.user.userId;
     const accessToken = session.user.accessToken;
-    // console.log(transactionId);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
-    // console.log(config);
     const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
-    // console.log(resGetUser.data.data);
     const restransactionUser = await axiosInstance.get(
       `/transactions/historyTransaction`,
       config,
@@ -157,7 +129,7 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
-        user: resGetUser.data,
+        user: resGetUser.data.data,
         transaction: restransactionUser.data,
         totalPage: restransactionUser.data.totalPage,
       },

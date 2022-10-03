@@ -6,7 +6,6 @@ import axiosInstance from '../../src/config/api';
 
 const StatusTransaction = ({ data, statusTrans }) => {
   const [addressUser, setAddressUser] = useState({});
-  // console.log(statusTrans);
   let dtId;
   let status;
   let createdAt;
@@ -15,7 +14,6 @@ const StatusTransaction = ({ data, statusTrans }) => {
   let ongkir;
   let userId;
   data.forEach((v, i) => {
-    // console.log(v);
     key = i;
     dtId = v.transaction.transactionId;
     status = v.transaction.transactionStatus;
@@ -41,12 +39,10 @@ const StatusTransaction = ({ data, statusTrans }) => {
 
       const res = await axiosInstance.get(`/addresses/mainAddress`, config);
       setAddressUser(res.data.data);
-      // console.log(res.data.data);
     } catch (error) {
       console.log(error);
     }
   };
-  // console.log(addressUser.address);
 
   return (
     <>
