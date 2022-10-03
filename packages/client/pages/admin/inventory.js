@@ -58,7 +58,13 @@ export default function Inventory(props) {
 
   const renderProduct = () => {
     return props.product.map((products) => {
-      return <AdminProduct key={products.productId} product={products} />;
+      return (
+        <AdminProduct
+          key={products.productId}
+          product={products}
+          categories={props.category}
+        />
+      );
     });
   };
   const handlePageClick = (e) => {

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 import '@fontsource/poppins';
 import Navbar from '../../components/Navbar';
@@ -21,6 +20,7 @@ import NextLink from 'next/link';
 import Image from 'next/image';
 import theme from '../../components/theme';
 import PrescriptInfo from '../../components/PrescriptInfo';
+import { useSession, signOut, getSession } from 'next-auth/react';
 
 import { useRouter } from 'next/router';
 
@@ -30,6 +30,7 @@ function Prescription(props) {
   const [prescriptionImage, setPrescriptionImage] = useState();
 
   const toast = useToast();
+  const { data: session } = useSession();
 
   const onUploadPrescription = async () => {
     try {
@@ -84,11 +85,15 @@ function Prescription(props) {
 
   return (
     <ChakraProvider theme={theme}>
-      <Navbar />
+      <Navbar session={session} user={props.user} />
       <Box mx={{ base: '24px', md: '120px' }} mt="24px" height={'145vh'}>
         <HStack>
           <NextLink href="/">
-            <Link>
+            <Link
+              _hover={{
+                textDecoration: 'none',
+              }}
+            >
               <Text
                 width={'71px'}
                 fontWeight="500"
@@ -281,6 +286,8 @@ export async function getServerSideProps(context) {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
     const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+    if (!resGetUser.data.data.isVerified)
+      return { redirect: { destination: '/' } };
     return {
       props: {
         user: resGetUser.data.data,

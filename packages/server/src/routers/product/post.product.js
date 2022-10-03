@@ -14,7 +14,6 @@ const slugify = require('slugify');
 // create new product
 const addNewProduct = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { userId } = req.user;
     const {
       productName,
@@ -36,8 +35,6 @@ const addNewProduct = async (req, res, next) => {
     if (resGetProduct.length) {
       throw { code: 400, message: 'Produk serupa sudah ada dalam stock' };
     }
-
-    console.log(req.body);
 
     const result = await sequelize.transaction(async (t) => {
       const resCreateProduct = await product.create(

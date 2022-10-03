@@ -47,7 +47,7 @@ export default function Home(props) {
 
       <Banner />
 
-      <Prescription />
+      <Prescription user={props.user} />
 
       <Category category={props.category} />
 

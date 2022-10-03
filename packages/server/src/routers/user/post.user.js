@@ -190,7 +190,7 @@ const loginUserController = async (req, res, next) => {
       const resGetLoginUser = await user.findOne({
         where: { email: email },
       });
-      console.log(resGetLoginUser);
+      // console.log(resGetLoginUser);
 
       if (!resGetLoginUser) {
         throw {

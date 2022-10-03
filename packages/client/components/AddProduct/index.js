@@ -288,30 +288,11 @@ export default function AddProduct(props) {
               fontSize="12px"
               lineHeight="16px"
             >
-              Harga
-            </FormLabel>
-            <Input
-              name="category"
-              type="text"
-              variant="filled"
-              placeholder="ex : 20000"
-              onChange={(e) => {
-                setPrice(e.target.value);
-              }}
-            />
-          </FormControl>
-          <FormControl mb="28px">
-            <FormLabel
-              mb="4px"
-              fontWeight="500"
-              fontSize="12px"
-              lineHeight="16px"
-            >
               Kemasan
             </FormLabel>
             <Select
               _focusVisible
-              name="categoryId"
+              name="unit"
               fontSize={{ base: '13', md: '14' }}
               fontWeight={400}
               placeholder="Pilih Kemasan"
@@ -332,30 +313,11 @@ export default function AddProduct(props) {
               fontSize="12px"
               lineHeight="16px"
             >
-              Jumlah Obat per-Kemasan
-            </FormLabel>
-            <Input
-              name="detailQuantity"
-              type="text"
-              variant="filled"
-              placeholder="ex : 20"
-              onChange={(e) => {
-                setDetailQuantity(e.target.value);
-              }}
-            />
-          </FormControl>
-          <FormControl mb="28px">
-            <FormLabel
-              mb="4px"
-              fontWeight="500"
-              fontSize="12px"
-              lineHeight="16px"
-            >
               Bentuk Obat
             </FormLabel>
             <Select
               _focusVisible
-              name="categoryId"
+              name="satuanUnit"
               fontSize={{ base: '13', md: '14' }}
               fontWeight={400}
               placeholder="Pilih Bentuk Obat"
@@ -378,11 +340,49 @@ export default function AddProduct(props) {
               fontSize="12px"
               lineHeight="16px"
             >
+              Jumlah Obat per-Kemasan
+            </FormLabel>
+            <Input
+              name="detailQuantity"
+              type="number"
+              variant="filled"
+              placeholder="ex : 20"
+              onChange={(e) => {
+                setDetailQuantity(e.target.value);
+              }}
+            />
+          </FormControl>
+          <FormControl mb="28px">
+            <FormLabel
+              mb="4px"
+              fontWeight="500"
+              fontSize="12px"
+              lineHeight="16px"
+            >
+              Harga
+            </FormLabel>
+            <Input
+              name="price"
+              type="number"
+              variant="filled"
+              placeholder="ex : 20000"
+              onChange={(e) => {
+                setPrice(e.target.value);
+              }}
+            />
+          </FormControl>
+          <FormControl mb="28px">
+            <FormLabel
+              mb="4px"
+              fontWeight="500"
+              fontSize="12px"
+              lineHeight="16px"
+            >
               Jumlah Barang
             </FormLabel>
             <Input
-              name="category"
-              type="text"
+              name="stock"
+              type="number"
               variant="filled"
               placeholder="ex : 200"
               onChange={(e) => {

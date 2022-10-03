@@ -138,7 +138,6 @@ const uploadPayment = multer({
       );
       return cb(error);
     }
-
     cb(null, true);
   },
 });

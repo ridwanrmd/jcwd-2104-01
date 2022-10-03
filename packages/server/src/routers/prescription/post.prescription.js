@@ -31,7 +31,6 @@ const createNewPrescription = async (req, res, next) => {
 // upload prescription image
 const uploadPrescriptionImage = (req, res) => {
   try {
-    console.log('disana');
     return res.send({
       status: 'Berhasil',
       message: 'Berhasil Unggah Resep',

@@ -95,7 +95,7 @@ const getTransactionSelected = async (req, res, next) => {
         offset,
         limit,
       });
-      console.log(restransactionStatus.length);
+      // console.log(restransactionStatus.length);
 
       res.send({
         status: 'success',

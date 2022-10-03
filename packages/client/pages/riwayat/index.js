@@ -19,15 +19,15 @@ import styles from './Product.module.css';
 import ReactPaginate from 'react-paginate';
 
 function Riwayat(props) {
-  console.log(props.totalPage);
+  // console.log(props.totalPage);
   const { data: session } = useSession();
   const [user, setUser] = useState(props.user);
   const [selected, setSelected] = useState(0);
   const [data, setData] = useState([]);
   const router = useRouter();
   const [page, setPage] = useState(1);
-  // console.log(data);
-  console.log(page);
+  // console.log(props.user);
+  // console.log(page);
   // useEffect(() => {
   //   setPage(router.query.page - 1);
   // }, []);
@@ -73,7 +73,7 @@ function Riwayat(props) {
   return (
     <div>
       <div>
-        <Navbar session={session} user={user} />
+        <Navbar session={session} user={props.user} />
       </div>
       <Text fontSize={30} fontWeight={'semibold'} my={8} ml={20}>
         Riwayat Pemesanan

@@ -8,25 +8,42 @@ const { uploadPayment } = require('../../lib/multer');
 const updateNewPayment = async (req, res, next) => {
   try {
     const { userId } = req.user;
-    const transactionId = req.params;
-    const name = req.body;
+    const { transactionId } = req.params;
+    const paymentProof = req.body.name;
 
     const resAddPayment = await transaction.update(
-      { paymentProof: name },
-      { where: transactionId, userId },
+      { paymentProof },
+      { where: { transactionId, userId } },
     );
     if (!resAddPayment) throw { message: 'Gagal unggah bukti pembayaran' };
 
     res.send({
       status: 'Berhasil',
-      message: 'Berhasil Unggah Resep',
-      data: resCreatePrescription,
+      message: 'Berhasil Unggah Bukti Pembayaran',
+      data: resAddPayment,
     });
   } catch (error) {
     next(error);
   }
 };
 
-router.patch('/payment/:transactionId', auth, updateNewPayment);
+const uploadPaymentImage = (req, res) => {
+  try {
+    return res.send({
+      status: 'Berhasil',
+      message: 'Berhasil Unggah Bukti Pembayaran',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.patch('/:transactionId', auth, updateNewPayment);
+router.patch(
+  '/upload/payment',
+  auth,
+  uploadPayment.single('gambar'),
+  uploadPaymentImage,
+);
 
 module.exports = router;

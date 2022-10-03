@@ -18,7 +18,7 @@ const patchProduct = async (req, res, next) => {
       price,
       unit,
       satuanUnit,
-      detailQuantity,
+      quantity,
       categoryId,
     } = req.body;
 
@@ -38,7 +38,7 @@ const patchProduct = async (req, res, next) => {
       );
 
       await detailProduct.update(
-        { quantity: detailQuantity },
+        { quantity },
         { where: { productId } },
         { transaction: t },
       );
@@ -57,8 +57,8 @@ const patchProduct = async (req, res, next) => {
     }
 
     res.send({
-      status: 'Success',
-      message: 'Success update category',
+      status: 'Berhasil',
+      message: 'Berhasil Update Produk',
     });
   } catch (error) {
     next(error);

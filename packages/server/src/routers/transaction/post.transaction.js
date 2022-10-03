@@ -162,7 +162,7 @@ const ConfrimDeliveryTransaction = async (req, res, next) => {
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
-    console.log(findTransaction);
+    // console.log(findTransaction);
     const finishTransaction = await transaction.update(
       { transactionStatus: 'Pesanan Dikonfirmasi' },
       {
@@ -260,7 +260,7 @@ const CancelTransaction = async (req, res, next) => {
           );
         });
         findTransaction.forEach(async (data) => {
-          console.log(data);
+          // console.log(data);
           await detailTransaction.destroy({
             where: { transactionId: data.dataValues.transactionId },
           });

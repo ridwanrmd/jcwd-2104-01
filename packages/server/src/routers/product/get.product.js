@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { Op, Sequelize } = require('sequelize');
-const { product, Category, productCategory } = require('../../../models');
+const {
+  product,
+  Category,
+  detailProduct,
+  productCategory,
+} = require('../../../models');
 
 const getAllProduct = async (req, res, next) => {
   const {
@@ -44,6 +49,7 @@ const getAllProduct = async (req, res, next) => {
         'stock',
         'unit',
         'url',
+        'satuanUnit',
         'createdAt',
       ],
       order: Sequelize.literal(`${orderBy} ${order}`),
@@ -51,13 +57,16 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
-        // isRacikan,
       },
       include: [
         {
           model: Category,
           attributes: ['category'],
           where: { category: category ? category : { [Op.ne]: null } },
+        },
+        {
+          model: detailProduct,
+          attributes: ['quantity'],
         },
       ],
       offset,
@@ -110,7 +119,25 @@ const getDetailProduct = async (req, res, next) => {
   }
 };
 
+const getQuantityDetailProduct = async (req, res, next) => {
+  const { productId } = req.params;
+  try {
+    const result = await detailProduct.findOne({
+      attributes: ['quantity'],
+      where: { productId },
+    });
+    res.send({
+      status: 'Success',
+      message: 'Success get quantity detail product',
+      result: result.dataValues,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 router.get('/', getAllProduct);
 router.get('/:url', getDetailProduct);
+router.get('/quantity/:productId', getQuantityDetailProduct);
 
 module.exports = router;

@@ -6,7 +6,7 @@ import axiosInstance from '../../src/config/api';
 
 const StatusTransaction = ({ data, statusTrans }) => {
   const [addressUser, setAddressUser] = useState({});
-  console.log(statusTrans);
+  // console.log(statusTrans);
   let dtId;
   let status;
   let createdAt;

@@ -26,7 +26,7 @@ function Transaction(props) {
   const CancelOrder = async () => {
     try {
       const { transactionId } = router.query;
-      console.log(transactionId);
+      // console.log(transactionId);
       const cancel = await axiosInstance.post(
         `/transactions/cancelTransaction/${transactionId}`,
       );
@@ -58,7 +58,7 @@ function Transaction(props) {
       const session = await getSession();
       const { accessToken } = session.user;
       const { transactionId } = router.query;
-      console.log(transactionId);
+      // console.log(transactionId);
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };

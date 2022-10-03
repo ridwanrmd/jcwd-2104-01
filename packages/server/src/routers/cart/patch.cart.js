@@ -9,7 +9,7 @@ const editCart = async (req, res, next) => {
     const { userId } = req.user;
     // console.log(userId);
     const { quantity } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const { cartId } = req.params;
 
     const editQuantity = await cart.update(

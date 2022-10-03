@@ -63,7 +63,7 @@ const getUserWithToken = async (req, res, next) => {
 
     const resGotUser = await user.findOne({ where: { userId } });
     const { dataValues } = resGotUser;
-    console.log(dataValues);
+    // console.log(dataValues);
     res.send({
       status: 'Success',
       message: 'Get user with token',
