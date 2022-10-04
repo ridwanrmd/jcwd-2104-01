@@ -22,14 +22,16 @@ function Transaction(props) {
   const [transactionList, setTransactionList] = useState([]);
   const [statusTrans, setStatusTrans] = useState([]);
   const router = useRouter();
-  // console.log(transactionList);
+  // console.log(statusTrans);
   const CancelOrder = async () => {
     try {
       const { transactionId } = router.query;
-      console.log(transactionId);
+      // console.log(transactionId);
       const cancel = await axiosInstance.post(
-        `/transactions/cancelTransaction/${transactionId}`,
+        `/transactions/cancelTransaction/${transactionId}?transactionId=${transactionId}`,
       );
+      fetchTransactionList();
+      // console.log(cancel);
     } catch (error) {
       console.log(error);
     }
@@ -39,10 +41,10 @@ function Transaction(props) {
     try {
       const { transactionId } = router.query;
       const updateStatus = await axiosInstance.post(
-        `/transactions/confirmTransaction/${transactionId}`,
+        `/transactions/confirmTransaction/${transactionId}?transactionId=${transactionId}`,
       );
       // console.log(updateStatus.data.data.updatedTransaction);
-      setStatusTrans(updateStatus.data.data.updatedTransaction);
+      fetchTransactionList();
     } catch (error) {
       console.log(error);
     }
@@ -58,7 +60,7 @@ function Transaction(props) {
       const session = await getSession();
       const { accessToken } = session.user;
       const { transactionId } = router.query;
-      console.log(transactionId);
+      // console.log(transactionId);
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
@@ -110,20 +112,13 @@ function Transaction(props) {
             justifyContent={'center'}
             // width={'100%'}
           >
-            <NextLink href={'/riwayat'}>
-              <Button
-                size={'xs'}
-                colorScheme={'twitter'}
-                onClick={confrimOrder}
-              >
-                Delivered Order
-              </Button>
-            </NextLink>
-            <NextLink href={'/riwayat'}>
-              <Button size={'xs'} colorScheme={'twitter'} onClick={CancelOrder}>
-                Cancel Order
-              </Button>
-            </NextLink>
+            <Button size={'xs'} colorScheme={'twitter'} onClick={confrimOrder}>
+              Delivered Order
+            </Button>
+
+            <Button size={'xs'} colorScheme={'twitter'} onClick={CancelOrder}>
+              Cancel Order
+            </Button>
           </Flex>
         </Stack>
       </Box>
@@ -156,7 +151,10 @@ export async function getServerSideProps(context) {
     );
 
     return {
-      props: { user: resGetUser.data, transaction: restransactionUser.data },
+      props: {
+        user: resGetUser.data.data,
+        transaction: restransactionUser.data,
+      },
     };
   } catch (error) {
     const errorMessage = error.message;

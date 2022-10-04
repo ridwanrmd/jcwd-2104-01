@@ -158,7 +158,7 @@ const createTransaction = async (req, res, next) => {
 
 const ConfrimDeliveryTransaction = async (req, res, next) => {
   try {
-    const { transactionId } = req.params;
+    const { transactionId } = req.query;
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
@@ -190,7 +190,7 @@ const ConfrimDeliveryTransaction = async (req, res, next) => {
 
 const CancelTransaction = async (req, res, next) => {
   try {
-    const { transactionId } = req.params;
+    const { transactionId } = req.query;
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
@@ -198,6 +198,7 @@ const CancelTransaction = async (req, res, next) => {
     let statusTR;
     findTransaction.forEach(async (data) => {
       // console.log(data.dataValues);
+      console.log('1');
       statusTR = data.dataValues.transactionStatus;
       if (
         statusTR == 'Menuggu Pembayaran' ||
@@ -211,6 +212,7 @@ const CancelTransaction = async (req, res, next) => {
             },
           },
         );
+        console.log('2');
         const getDTData = await detailTransaction.findAll({
           where: { transactionId: data.dataValues.transactionId },
           attributes: ['dtId', 'productId', 'quantity'],
@@ -244,12 +246,14 @@ const CancelTransaction = async (req, res, next) => {
             },
           ],
         });
+        // console.log(getDTData);
         getDTData.map(async (data) => {
-          // console.log(data.dataValues);
+          // console.log(data.dataValues.productId);
           const updateProduct = await product.findOne({
             where: { productId: data.dataValues.productId },
           });
-          // console.log(updateProduct.dataValues.productId);
+          console.log(updateProduct);
+          // console.log(getDTData);
           await product.update(
             {
               stock: updateProduct.dataValues.stock + data.dataValues.quantity,
@@ -258,25 +262,17 @@ const CancelTransaction = async (req, res, next) => {
               where: { productId: updateProduct.dataValues.productId },
             },
           );
-        });
-        findTransaction.forEach(async (data) => {
-          console.log(data);
-          await detailTransaction.destroy({
-            where: { transactionId: data.dataValues.transactionId },
-          });
-          await transaction.destroy({
-            where: { transactionId: data.dataValues.transactionId },
-          });
+          console.log('2');
         });
         res.send({
           status: 'Succsess',
           message: 'Cancel Transaction',
         });
       }
-      res.send({
-        status: 'Rejected',
-        message: 'Transaction Status In Prosess',
-      });
+      // res.send({
+      //   status: 'Rejected',
+      //   message: 'Transaction Status In Prosess',
+      // });
     });
   } catch (error) {
     next(error);

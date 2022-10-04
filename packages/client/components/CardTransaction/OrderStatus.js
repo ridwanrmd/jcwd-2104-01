@@ -4,9 +4,9 @@ import moment from 'moment';
 import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 
-const StatusTransaction = ({ data, statusTrans }) => {
+const StatusTransaction = ({ data }) => {
   const [addressUser, setAddressUser] = useState({});
-  console.log(statusTrans);
+  // console.log(statusTrans);
   let dtId;
   let status;
   let createdAt;

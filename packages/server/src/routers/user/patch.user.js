@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 const { user } = require('../../../models');
 const { auth } = require('../../helpers/auth');
 const { hash, compare } = require('../../lib/bycrypt');
+const { isFieldEmpties, passwordValidator } = require('../../helpers');
 
 const changePassController = async (req, res, next) => {
   try {
@@ -29,6 +30,13 @@ const changePassController = async (req, res, next) => {
         detail: `Password: ${newPassword}, Confirm Password: ${ConfirmPassword}`,
       });
     }
+    const validatePassword = passwordValidator(newPassword);
+    if (validatePassword)
+      throw {
+        code: 400,
+        message: validatePassword,
+      };
+
     const resChangePass = await user.findOne({ where: { userId } });
 
     //hashing pass and update DB
@@ -51,6 +59,13 @@ const forgotPassword = async (req, res, next) => {
   try {
     const { newPassword, ConfirmPassword } = req.body;
     const { userId } = req.params;
+
+    const validatePassword = passwordValidator(newPassword);
+    if (validatePassword)
+      throw {
+        code: 400,
+        message: validatePassword,
+      };
 
     if (newPassword !== ConfirmPassword) {
       res.send({

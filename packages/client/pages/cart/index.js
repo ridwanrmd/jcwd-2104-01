@@ -22,6 +22,7 @@ import { getSession, useSession } from 'next-auth/react';
 import { ImLocation2 } from 'react-icons/im';
 import ShippingAddress from '../../components/ShippingAddress';
 import ShippingMethod from '../../components/ShippingMethod';
+import { useRouter } from 'next/router';
 
 function Cart(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,6 +32,7 @@ function Cart(props) {
   const [changes, setChanges] = useState(0);
   const [harga, setHarga] = useState(0);
   const [modalKurir, setModalKurir] = useState(false);
+  const router = useRouter();
 
   const [userAddresses, setUserAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState();
@@ -206,7 +208,8 @@ function Cart(props) {
         body,
         config,
       );
-      // window.location.assign(`/transaction/${res.data.data.ID}`);
+      // console.log(res);
+      router.replace(`/transaction/${res.data.data.ID}`);
 
       // console.log(res.data.data.wrap);
     } catch (error) {

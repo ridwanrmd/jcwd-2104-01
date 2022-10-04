@@ -147,6 +147,12 @@ const loginUserController = async (req, res, next) => {
     }
     const userPass = resGetLoginUser.dataValues;
     // console.log(userPass);
+    const validatePassword = passwordValidator(password);
+    if (validatePassword)
+      throw {
+        code: 400,
+        message: validatePassword,
+      };
 
     //sementara
     // if (password !== userPass.password) {
@@ -190,7 +196,7 @@ const loginUserController = async (req, res, next) => {
       const resGetLoginUser = await user.findOne({
         where: { email: email },
       });
-      console.log(resGetLoginUser);
+      // console.log(resGetLoginUser);
 
       if (!resGetLoginUser) {
         throw {
@@ -207,6 +213,12 @@ const loginUserController = async (req, res, next) => {
           message: `Password yang anda masukan salah`,
         };
       }
+      const validatePassword = passwordValidator(password);
+      if (validatePassword)
+        throw {
+          code: 400,
+          message: validatePassword,
+        };
 
       const token = createToken({
         userId: userPass.userId,

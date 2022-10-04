@@ -34,16 +34,22 @@ function ForgotPassword(props) {
     ConfirmPassword,
   };
   const onClick = async () => {
-    const response = await axiosInstance.patch(
-      `/users/forgotPassword/${userId}`,
-      body,
-    );
-    // console.log(response);
-    if (response.data.code == 400) {
-      setErrorMessage(response.data.message);
-    }
-    if (!response.error) {
-      router.replace('/login');
+    try {
+      const response = await axiosInstance.patch(
+        `/users/forgotPassword/${userId}`,
+        body,
+      );
+      // console.log(response);
+      if (response.data.code == 400) {
+        setErrorMessage(response.data.message);
+      }
+      if (!response.error) {
+        router.replace('/login');
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response) return alert(error.response.data.message);
+      alert(error.message);
     }
   };
   return (
