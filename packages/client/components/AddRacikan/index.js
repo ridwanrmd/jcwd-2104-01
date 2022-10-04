@@ -48,14 +48,15 @@ export default function AddRacikan(props) {
     ));
   };
 
-  const onSelectHandler = (e) => {
+  const onSelectHandler = (e, key) => {
     // console.log(e.target.checked);
     // console.log(e.target.value);
-    const { value, checked } = e.target;
+    // console.log(key);
+    const { checked } = e.target;
     if (checked) {
-      setKategori([...kategori, { category: value }]);
+      setKategori([...kategori, { categoryId: key }]);
     } else {
-      setKategori(kategori.filter((data) => data.category != value));
+      setKategori(kategori.filter((data) => data.categoryId != key));
     }
   };
 
@@ -66,7 +67,7 @@ export default function AddRacikan(props) {
       // </option>
       <Checkbox
         key={data.categoryId}
-        onChange={onSelectHandler}
+        onChange={(e) => onSelectHandler(e, data.categoryId)}
         value={data.category}
         width="30%"
         isRequired={isRequired}
@@ -144,8 +145,9 @@ export default function AddRacikan(props) {
             <Flex>
               <Select
                 name="category"
+                defaultValue="Pilih Obat Satuan"
                 // placeholder="Pilih Obat Satuan"
-                // onChange={onSelectChange}
+                // onChange={onSelectHandler}
                 // style={{
                 //   width: '50%',
                 //   height: 'fit-content',
@@ -160,7 +162,7 @@ export default function AddRacikan(props) {
                 width={'fit-content'}
                 required
               >
-                <option selected hidden disabled value="">
+                <option value="Pilih Obat Satuan" hidden disabled>
                   Pilih Obat Satuan
                 </option>
                 {renderProductList()}
