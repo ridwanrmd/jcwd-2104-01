@@ -5,27 +5,19 @@ import {
   Grid,
   GridItem,
   Image,
-  Spinner,
   Text,
   Divider,
 } from '@chakra-ui/react';
 import React from 'react';
-import { IoChatbubbleEllipses } from 'react-icons/io5';
-import moment from 'moment';
-import { TbClock } from 'react-icons/tb';
-import { MdArrowDropDown } from 'react-icons/md';
-import axiosInstance from '../../src/config/api';
 import { api_origin } from '../../constraint';
 import OrderStatus from '../../components/CardTransaction/OrderStatus';
 import PaymentAndAddress from '../../components/CardTransaction/PaymentAndAddress';
 const TransactionList = ({ data, address, statusTrans }) => {
-  // console.log(statusTrans);
   return (
     <div key={data.dtId}>
       <Flex>
         <Flex gap="1rem" direction={'column'} maxW="600px">
           {data.map((v, i) => {
-            // console.log(v);
             return (
               <div key={i}>
                 <Box

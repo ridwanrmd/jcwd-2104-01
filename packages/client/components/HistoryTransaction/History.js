@@ -1,25 +1,8 @@
-import {
-  Button,
-  Icon,
-  Input,
-  Flex,
-  Box,
-  HStack,
-  Tabs,
-  TabList,
-  TabPanels,
-  TabPanel,
-  Tab,
-  Link,
-} from '@chakra-ui/react';
+import { Button, Box, HStack, Link } from '@chakra-ui/react';
 import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../src/config/api';
-import { DeleteIcon, AddIcon, WarningIcon } from '@chakra-ui/icons';
-import axios from 'axios';
+import React from 'react';
 
 const TransactionHistory = ({ data, selected }) => {
-  // console.log(data);
   return (
     <div>
       <HStack

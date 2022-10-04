@@ -22,9 +22,7 @@ export default function ProductDetail({ product, user }) {
 
   const addToCart = async () => {
     const session = await getSession();
-    const userId = session.user.userId;
     const { accessToken } = session.user;
-    // console.log(token);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };

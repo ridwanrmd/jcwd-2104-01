@@ -8,12 +8,30 @@ import {
   Show,
   Text,
   Link,
+  useToast,
 } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { BsFileText } from 'react-icons/bs';
 import NextLink from 'next/link';
 
-export default function Prescription() {
+export default function Prescription(props) {
+  const toast = useToast();
+
+  const protectPrescription = () => {
+    if (!props.user.isVerified) {
+      toast({
+        description: 'Silahkan Verifikasi Akun Anda Terlebih Dahulu',
+        position: 'top',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    } else {
+      redirect: {
+        destination: '/admin';
+      }
+    }
+  };
   return (
     <Box mx={{ base: '5', md: '10%' }}>
       <Show above="md">
@@ -42,15 +60,11 @@ export default function Prescription() {
               Punya Resep Dokter?
             </Text>
           </Show>
-          <NextLink href="/prescription">
-            <Link>
-              <Hide below="md">
-                <Text fontWeight={'normal'} fontSize="lg" color="#262626">
-                  Unggah Resep
-                </Text>
-              </Hide>
-            </Link>
-          </NextLink>
+          <Hide below="md">
+            <Text fontWeight={'normal'} fontSize="lg" color="#262626">
+              Unggah Resep
+            </Text>
+          </Hide>
           <Show below="md">
             <Text
               fontWeight={'normal'}
@@ -83,20 +97,36 @@ export default function Prescription() {
             }}
           />
         </Show>
-        <NextLink href="/prescription">
-          <Link>
-            <Hide below="md">
-              <Button
-                variant={'outline'}
-                colorScheme="twitter"
-                marginEnd={'4'}
-                p="6"
-              >
-                Unggah Resep
-              </Button>
-            </Hide>
-          </Link>
-        </NextLink>
+        {!props.user.isVerified ? (
+          <Button
+            variant={'outline'}
+            colorScheme="twitter"
+            marginEnd={'4'}
+            p="6"
+            onClick={protectPrescription}
+          >
+            Unggah Resep
+          </Button>
+        ) : (
+          <NextLink href="/prescription">
+            <Link
+              _hover={{
+                textDecoration: 'none',
+              }}
+            >
+              <Hide below="md">
+                <Button
+                  variant={'outline'}
+                  colorScheme="twitter"
+                  marginEnd={'4'}
+                  p="6"
+                >
+                  Unggah Resep
+                </Button>
+              </Hide>
+            </Link>
+          </NextLink>
+        )}
       </Flex>
     </Box>
   );

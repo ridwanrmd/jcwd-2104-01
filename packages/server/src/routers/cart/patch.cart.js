@@ -7,9 +7,7 @@ const { auth } = require('../../helpers/auth');
 const editCart = async (req, res, next) => {
   try {
     const { userId } = req.user;
-    // console.log(userId);
     const { quantity } = req.body;
-    console.log(req.body);
     const { cartId } = req.params;
 
     const editQuantity = await cart.update(

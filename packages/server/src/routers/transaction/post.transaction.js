@@ -15,7 +15,6 @@ const { auth } = require('../../helpers/auth');
 const createTransaction = async (req, res, next) => {
   try {
     const { userId } = req.user;
-    // const { addressId, transactionId, productId } = req.body;
     const { addressId, kurir, biaya, estimasi } = req.body;
     let total;
 
@@ -40,7 +39,6 @@ const createTransaction = async (req, res, next) => {
         },
       ],
     });
-    // console.log(findCart);
     const totalPrice = () => {
       const tempPrice = findCart.map((data) => {
         return (
@@ -48,26 +46,18 @@ const createTransaction = async (req, res, next) => {
         );
       });
       const grandTotal = tempPrice.reduce((x, y) => x + y, 0);
-      // setHarga(grandTotal);
       return grandTotal;
     };
 
-    // const dataBody = () => {
-    // return findCart.forEach(async (data) => {
-
-    const newTransaction = await transaction.create(
-      {
-        userId,
-        total: totalPrice(),
-        addressId,
-        kurir,
-        biaya,
-        estimasi,
-        transactionStatus: 'Menuggu Pembayaran',
-      },
-      // { transaction: t },
-    );
-    // console.log(newTransaction.dataValues.transactionId);
+    const newTransaction = await transaction.create({
+      userId,
+      total: totalPrice(),
+      addressId,
+      kurir,
+      biaya,
+      estimasi,
+      transactionStatus: 'Menuggu Pembayaran',
+    });
     const dueDate = moment(newTransaction.dataValues.createdAt).add(1, 'days');
 
     const wrap = await Promise.all(
@@ -137,7 +127,6 @@ const createTransaction = async (req, res, next) => {
         },
         {
           where: { productId: data.dataValues.productId },
-          // transaction: t,
         },
       );
     });
@@ -162,7 +151,6 @@ const ConfrimDeliveryTransaction = async (req, res, next) => {
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
-    console.log(findTransaction);
     const finishTransaction = await transaction.update(
       { transactionStatus: 'Pesanan Dikonfirmasi' },
       {
@@ -174,7 +162,6 @@ const ConfrimDeliveryTransaction = async (req, res, next) => {
     const updatedTransaction = await transaction.findAll({
       where: { transactionId },
     });
-    // console.log(finishTransaction);
     res.send({
       status: 'Succsess',
       message: 'Finish Transaction',
@@ -194,10 +181,8 @@ const CancelTransaction = async (req, res, next) => {
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
-    // console.log(findTransaction.dataValues);
     let statusTR;
     findTransaction.forEach(async (data) => {
-      // console.log(data.dataValues);
       statusTR = data.dataValues.transactionStatus;
       if (
         statusTR == 'Menuggu Pembayaran' ||
@@ -245,11 +230,9 @@ const CancelTransaction = async (req, res, next) => {
           ],
         });
         getDTData.map(async (data) => {
-          // console.log(data.dataValues);
           const updateProduct = await product.findOne({
             where: { productId: data.dataValues.productId },
           });
-          // console.log(updateProduct.dataValues.productId);
           await product.update(
             {
               stock: updateProduct.dataValues.stock + data.dataValues.quantity,
@@ -260,7 +243,6 @@ const CancelTransaction = async (req, res, next) => {
           );
         });
         findTransaction.forEach(async (data) => {
-          console.log(data);
           await detailTransaction.destroy({
             where: { transactionId: data.dataValues.transactionId },
           });

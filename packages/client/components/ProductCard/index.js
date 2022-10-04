@@ -1,16 +1,13 @@
 import { Text, Image, Flex, Button, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { api_origin } from '../../constraint';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 
 export default function ProductCard(props) {
-  // console.log(props.product.productId);
   const addToCart = async () => {
     const session = await getSession();
-    const userId = session.user.userId;
     const { accessToken } = session.user;
-    // console.log(token);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };

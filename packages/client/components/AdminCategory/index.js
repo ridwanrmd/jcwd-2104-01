@@ -42,7 +42,14 @@ export default function AdminCategory(props) {
       const result = await axiosInstance.delete(
         `/category/${props.category.categoryId}`,
       );
-      alert(result.data.message);
+      toast({
+        title: result.data.message,
+        status: 'success',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
+      // alert(result.data.message);
       onDeleteClose();
       router.push(path);
     } catch (error) {

@@ -9,7 +9,6 @@ import {
   Link,
   Stack,
   Image,
-  Box,
   Text,
   InputGroup,
   InputRightElement,
@@ -39,7 +38,6 @@ function Login() {
       email,
       password,
     });
-    // console.log(response);
     if (email == '') {
       setIsLoginProcess(false);
       return setErrorEmail('Email field is empty');

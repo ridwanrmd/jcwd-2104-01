@@ -7,7 +7,6 @@ const { prescription } = require('../../../models');
 // create new prescription
 const createNewPrescription = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { name } = req.body;
     const { userId } = req.user;
 
@@ -32,7 +31,6 @@ const createNewPrescription = async (req, res, next) => {
 // upload prescription image
 const uploadPrescriptionImage = (req, res) => {
   try {
-    console.log('disana');
     return res.send({
       status: 'Berhasil',
       message: 'Berhasil Unggah Resep',

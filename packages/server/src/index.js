@@ -1,11 +1,9 @@
 require('dotenv/config');
 const express = require('express');
-const bearerToken = require('express-bearer-token');
-const { error } = require('console');
-
-const cors = require('cors');
-const PORT = process.env.PORT || 8000;
 const app = express();
+const PORT = process.env.PORT || 8000;
+const cors = require('cors');
+const bearerToken = require('express-bearer-token');
 
 // Routers
 const userRouter = require('./routers/user');
@@ -13,9 +11,9 @@ const addressRouter = require('./routers/address');
 const rajaongkirRouter = require('./routers/rajaongkir');
 const cartRouter = require('./routers/cart');
 const productRouter = require('./routers/product');
+const prescriptionRouter = require('./routers/prescription');
 const transactionRouter = require('./routers/transaction');
 const categoryRouter = require('./routers/category');
-const prescriptionRouter = require('./routers/prescription');
 
 // Config
 app.use(cors());
@@ -32,6 +30,7 @@ app.use('/users', userRouter);
 app.use('/addresses', addressRouter);
 app.use('/rajaongkir', rajaongkirRouter);
 app.use('/product', productRouter);
+app.use('/transactions', transactionRouter);
 app.use('/category', categoryRouter);
 app.use('/prescriptions', prescriptionRouter);
 
