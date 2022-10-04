@@ -7,9 +7,11 @@ import {
   IconButton,
   Show,
   Text,
+  Link,
 } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { BsFileText } from 'react-icons/bs';
+import NextLink from 'next/link';
 
 export default function Prescription() {
   return (
@@ -40,11 +42,15 @@ export default function Prescription() {
               Punya Resep Dokter?
             </Text>
           </Show>
-          <Hide below="md">
-            <Text fontWeight={'normal'} fontSize="lg" color="#262626">
-              Unggah Resep
-            </Text>
-          </Hide>
+          <NextLink href="/prescription">
+            <Link>
+              <Hide below="md">
+                <Text fontWeight={'normal'} fontSize="lg" color="#262626">
+                  Unggah Resep
+                </Text>
+              </Hide>
+            </Link>
+          </NextLink>
           <Show below="md">
             <Text
               fontWeight={'normal'}
@@ -77,16 +83,20 @@ export default function Prescription() {
             }}
           />
         </Show>
-        <Hide below="md">
-          <Button
-            variant={'outline'}
-            colorScheme="twitter"
-            marginEnd={'4'}
-            p="6"
-          >
-            Unggah Resep
-          </Button>
-        </Hide>
+        <NextLink href="/prescription">
+          <Link>
+            <Hide below="md">
+              <Button
+                variant={'outline'}
+                colorScheme="twitter"
+                marginEnd={'4'}
+                p="6"
+              >
+                Unggah Resep
+              </Button>
+            </Hide>
+          </Link>
+        </NextLink>
       </Flex>
     </Box>
   );

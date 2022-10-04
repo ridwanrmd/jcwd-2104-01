@@ -5,6 +5,7 @@ const { Category } = require('../../../models');
 const patchCategory = async (req, res, next) => {
   try {
     const { categoryId, category, categoryImage } = req.body;
+    console.log(req.body);
     const [result] = await Category.update(
       {
         category,

@@ -43,7 +43,12 @@ export default function Navbar({ session, user }) {
       >
         {session && !user.isVerified ? <ResendEmail user={user} /> : null}
 
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+        <Flex
+          // bg={'red.200'}
+          h={16}
+          alignItems={'center'}
+          justifyContent={'space-between'}
+        >
           <HStack spacing={8} alignItems={'center'}>
             <Box>
               <NextLink href="/">
@@ -92,7 +97,7 @@ export default function Navbar({ session, user }) {
                   textDecoration: 'none',
                   bg: 'gray.200',
                 }}
-                href={'#'}
+                href={'/riwayat'}
               >
                 Riwayat
               </Link>

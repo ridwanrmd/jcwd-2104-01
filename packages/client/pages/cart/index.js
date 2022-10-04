@@ -1,6 +1,9 @@
 import {
   Box,
   Button,
+  Checkbox,
+  Spinner,
+  useToast,
   Divider,
   Grid,
   GridItem,
@@ -9,12 +12,13 @@ import {
   Text,
   VStack,
   useDisclosure,
+  Link,
 } from '@chakra-ui/react';
 import Navbar from '../../components/Navbar';
 import ProductCart from '../../components/ProductCart/ProductCart';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { ImLocation2 } from 'react-icons/im';
 import ShippingAddress from '../../components/ShippingAddress';
 import ShippingMethod from '../../components/ShippingMethod';
@@ -37,27 +41,26 @@ function Cart(props) {
   const recipient = name.toUpperCase();
 
   const splitCost = selectedShippingCost?.split(',');
-
+  // console.log(selectedShippingCost);
+  const { data: session } = useSession();
   const fetchCartList = async () => {
     const session = await getSession();
     const { accessToken } = session.user;
+
+    // console.log(accessToken);
+
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
     try {
       const get = await axiosInstance.get('/carts/getCart', config);
+
+      // console.log(get);
+
       setCartList(get.data.data.getCart);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const totalPrice = () => {
-    const tempPrice = cartList.map((data) => {
-      return data.product.price * data.quantity;
-    });
-    const grandTotal = tempPrice.reduce((x, y) => x + y, 0);
-    return grandTotal;
   };
 
   useEffect(() => {
@@ -155,10 +158,66 @@ function Cart(props) {
       </Box>
     );
   };
+  const totalPrice = () => {
+    if (selectedShippingCost) {
+      const splitCost = selectedShippingCost.split(',');
+      // console.log(splitCost);
+
+      const tempPrice = cartList.map((data) => {
+        return data.product.price * data.quantity;
+      });
+      const grandTotal =
+        tempPrice.reduce((x, y) => x + y, 0) + Number(splitCost[1]);
+      return grandTotal;
+    }
+
+    const tempPrice = cartList.map((data) => {
+      return data.product.price * data.quantity;
+    });
+    const grandTotal = tempPrice.reduce((x, y) => x + y, 0);
+    return grandTotal;
+  };
+  const priceProduct = () => {
+    const tempPrice = cartList.map((data) => {
+      return data.product.price * data.quantity;
+    });
+    const grandTotal = tempPrice.reduce((x, y) => x + y, 0);
+    return grandTotal;
+  };
+
+  const onClickBayar = async () => {
+    try {
+      const splitCost = selectedShippingCost.split(',');
+      // console.log(splitCost);
+      const body = {
+        addressId: selectedAddress.addressId,
+        kurir: splitCost[0],
+        estimasi: splitCost[2],
+        biaya: splitCost[1],
+      };
+      // console.log(body);
+      const session = await getSession();
+      const { accessToken } = session.user;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      const res = await axiosInstance.post(
+        `/transactions/newTransaction`,
+        body,
+        config,
+      );
+      // window.location.assign(`/transaction/${res.data.data.ID}`);
+
+      // console.log(res.data.data.wrap);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // const Idtransactions = res.data.data.ID;
 
   return (
     <>
-      <Navbar />
+      <Navbar session={session} user={user} />
       <Grid
         mb="40px"
         templateColumns="repeat(6,1fr)"
@@ -195,14 +254,7 @@ function Cart(props) {
               </GridItem>
             </Grid>
             <HStack borderBottom="1px solid #C2CED6">
-              <VStack
-                // bg={'red'}
-                pl={2}
-                width={600}
-                py={2}
-                mr={1}
-                align={'start'}
-              >
+              <VStack pl={2} width={600} py={2} mr={1} align={'start'}>
                 <Text alignItems="left" as="b">
                   {recipient}
                 </Text>
@@ -241,6 +293,7 @@ function Cart(props) {
                   destination={selectedAddress?.city_id}
                   setSelectedShippingCost={setSelectedShippingCost}
                   setSelectedShipper={setSelectedShipper}
+                  totalPrice={totalPrice}
                 />
               </Button>
             </HStack>
@@ -251,9 +304,6 @@ function Cart(props) {
               pl={2}
               py={3}
             >
-              ceritanya cart list ceritanya cart list ceritanya cart list
-              ceritanya cart list ceritanya cart list ceritanya cart list
-              ceritanya cart list
               {renderCartList()}
             </Grid>
           </Box>
@@ -282,10 +332,10 @@ function Cart(props) {
                     color="#737A8D"
                     fontWeight="400"
                   >
-                    Grand total
+                    Total Price Product
                   </Text>
                   <Text variant="subtitle-bold" color="#737A8D">
-                    Rp. {totalPrice()}
+                    Rp. {priceProduct()}
                   </Text>
                 </Box>
                 <Box
@@ -312,12 +362,21 @@ function Cart(props) {
                   justifyContent="space-between"
                   alignItems="center"
                 >
-                  <Text variant="subtitle-bold">Total</Text>
+                  <Text variant="subtitle-bold">Grand Total</Text>
                   <Text variant="subtitle-bold">Rp. {totalPrice()}</Text>
                 </Box>
-                <Button mt={3} variant="outline" colorScheme="twitter">
+                {/* <Link href={`/transaction/${Idtransactions}`}> */}
+                <Button
+                  mt={3}
+                  variant="outline"
+                  colorScheme="twitter"
+                  onClick={() => {
+                    onClickBayar();
+                  }}
+                >
                   Bayar
                 </Button>
+                {/* </Link> */}
               </Stack>
             </Box>
           </Box>

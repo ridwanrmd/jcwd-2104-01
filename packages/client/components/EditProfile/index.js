@@ -123,7 +123,7 @@ function EditProfile(props) {
                   accept=".png, .jpg, .gif"
                   onChange={(e) => {
                     setUser({ ...user, profileImages: e.target.files[0] });
-                    setImageSource(URL.createObjectURL(event.target.files[0]));
+                    setImageSource(URL.createObjectURL(e.target.files[0]));
                   }}
                 />
 

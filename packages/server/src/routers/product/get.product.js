@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { Op, Sequelize } = require('sequelize');
-const { product, Category, productCategory } = require('../../../models');
+const {
+  product,
+  Category,
+  productCategory,
+  detailProduct,
+} = require('../../../models');
 
 const getAllProduct = async (req, res, next) => {
   const {
@@ -59,10 +64,21 @@ const getAllProduct = async (req, res, next) => {
           attributes: ['category'],
           where: { category: category ? category : { [Op.ne]: null } },
         },
+        {
+          model: detailProduct,
+        },
       ],
       offset,
       limit,
     });
+
+    // if (!amount.length) {
+    //   return res.status(404).send({
+    //     message: 'Not Found',
+    //     result: result,
+    //     totalPage: amount.length,
+    //   });
+    // }
 
     res.send({
       status: 'Success',
@@ -71,7 +87,7 @@ const getAllProduct = async (req, res, next) => {
       totalPage: amount.length,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
@@ -110,7 +126,18 @@ const getDetailProduct = async (req, res, next) => {
   }
 };
 
+const getAllProductNoLimit = async (req, res, next) => {
+  const getAllProduct = await product.findAll({
+    attributes: ['productId', 'productName', 'unit', 'satuanUnit'],
+    where: {
+      isRacikan: false,
+    },
+  });
+  res.send({ status: 'Success', message: 'bismillah', result: getAllProduct });
+};
+
 router.get('/', getAllProduct);
+router.get('/all', getAllProductNoLimit);
 router.get('/:url', getDetailProduct);
 
 module.exports = router;

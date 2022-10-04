@@ -12,16 +12,30 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
+import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
 import { api_origin } from '../../constraint';
 import axiosInstance from '../../src/config/api';
-
+import EditCategory from '../EditCategory';
 export default function AdminCategory(props) {
+  const toast = useToast();
   const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure();
+
+  const cancelDeleteRef = useRef();
+
   const onDeleteController = async () => {
     try {
       let path = router.asPath;
@@ -29,10 +43,59 @@ export default function AdminCategory(props) {
         `/category/${props.category.categoryId}`,
       );
       alert(result.data.message);
-      onClose();
+      onDeleteClose();
       router.push(path);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const onSave = async (body) => {
+    let path = router.asPath;
+    const session = await getSession();
+    const { accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+    try {
+      const updateCategory = {
+        category: body.category,
+        categoryId: body.categoryId,
+      };
+      if (body.categoryImages) {
+        const gambar = body.categoryImages;
+        const data = new FormData();
+        const fileName = Date.now() + gambar.name;
+        data.append('name', fileName);
+        data.append('gambar', gambar);
+        updateCategory.categoryImage = `/public/category/${fileName}`;
+        try {
+          await axiosInstance.post('/category/upload', data, config);
+        } catch (error) {
+          return alert(error.response.data.message);
+        }
+      }
+      try {
+        const res = await axiosInstance.patch(
+          '/category',
+          updateCategory,
+          config,
+        );
+        toast({
+          title: res.data.message,
+          status: 'success',
+          position: 'top',
+          duration: 2000,
+          isClosable: true,
+        });
+      } catch (error) {
+        return alert(error.response?.data?.message);
+      }
+      onEditClose();
+      router.push(path);
+    } catch (error) {
+      console.log({ error });
+      return alert(error.response?.data?.message);
     }
   };
   return (
@@ -52,18 +115,24 @@ export default function AdminCategory(props) {
         </Flex>
         <Spacer />
         <Flex w="20%" justifyContent="space-evenly" alignItems={'center'}>
-          <Button variant="outline" colorScheme="red" onClick={onOpen}>
+          <Button variant="outline" colorScheme="red" onClick={onDeleteOpen}>
             Hapus
           </Button>
-          <Button variant="outline" colorScheme="twitter">
+          <Button variant="outline" colorScheme="twitter" onClick={onEditOpen}>
             Edit
           </Button>
         </Flex>
       </Flex>
+      <EditCategory
+        isOpen={isEditOpen}
+        onClose={onEditClose}
+        onSave={onSave}
+        categories={props.category}
+      />
       <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
+        isOpen={isDeleteOpen}
+        leastDestructiveRef={cancelDeleteRef}
+        onClose={onDeleteClose}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -77,7 +146,7 @@ export default function AdminCategory(props) {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button ref={cancelDeleteRef} onClick={onDeleteClose}>
                 Batalkan
               </Button>
               <Button colorScheme="red" onClick={onDeleteController} ml={3}>
