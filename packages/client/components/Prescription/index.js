@@ -97,7 +97,7 @@ export default function Prescription(props) {
             }}
           />
         </Show>
-        {!props.user.isVerified ? (
+        {!props.user?.isVerified ? (
           <Button
             variant={'outline'}
             colorScheme="twitter"
