@@ -236,8 +236,9 @@ export default function Inventory(props) {
                     onChange={onClickOrder}
                     w="fit-content"
                     variant="outline"
+                    defaultValue=""
                   >
-                    <option selected hidden disabled value="">
+                    <option hidden disabled value="">
                       Urutkan
                     </option>
                     <option value="price ASC">Harga: Rendah ke Tinggi</option>
