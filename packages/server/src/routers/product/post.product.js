@@ -1,4 +1,5 @@
 const express = require('express');
+const slugify = require('slugify');
 const router = express.Router();
 const { auth } = require('../../helpers/auth');
 const {
@@ -9,7 +10,172 @@ const {
   productCategory,
 } = require('../../../models');
 const { uploadProduct } = require('../../lib/multer');
-const slugify = require('slugify');
+
+const postObatRacikan = async (req, res, next) => {
+  const { formula, productName, stock = 1, kategori } = req.body;
+  let stocks = Number(stock);
+  const { userId } = req.user;
+  const t = await sequelize.transaction();
+
+  try {
+    // Checking product name
+    const getExistingProduct = await product.findAll({
+      where: { productName },
+      transaction: t,
+    });
+
+    if (getExistingProduct.length)
+      throw { code: 400, message: 'Nama product sudah digunakan' };
+
+    let harga = 0;
+    const getInitialStock = await Promise.all(
+      formula.map(async (data) => {
+        let quantities = Number(data.quantity);
+        const existingProducts = await product.findOne({
+          where: {
+            productName: data.productName,
+          },
+          include: [{ model: detailProduct }],
+          transaction: t,
+        });
+
+        if (!existingProducts)
+          throw {
+            code: 404,
+            message: `Product ${data.productName} tidak ditemukan`,
+          };
+        harga +=
+          (existingProducts.dataValues.price /
+            existingProducts.dataValues.detailProduct.dataValues.quantity) *
+          quantities;
+
+        for (i = 0; i < stocks; i++) {
+          const existingProduct = await product.findOne({
+            where: {
+              productName: data.productName,
+            },
+            include: [{ model: detailProduct }],
+            transaction: t,
+          });
+
+          if (
+            existingProduct.dataValues.detailProduct.dataValues
+              .currentQuantity < quantities
+          ) {
+            if (existingProduct.dataValues.stock == 0)
+              throw {
+                code: 404,
+                message: `Stock ${data.productName} Habis`,
+              };
+            await product.update(
+              {
+                stock: existingProduct.dataValues.stock - 1,
+              },
+              { where: { productName: data.productName }, transaction: t },
+            );
+            await detailProduct.update(
+              {
+                currentQuantity:
+                  existingProduct.dataValues.detailProduct.dataValues
+                    .currentQuantity +
+                  existingProduct.dataValues.detailProduct.dataValues.quantity,
+              },
+              {
+                where: { productId: existingProduct.dataValues.productId },
+                transaction: t,
+              },
+            );
+            const newDetailProduct = await detailProduct.findOne({
+              where: { productId: existingProduct.dataValues.productId },
+              transaction: t,
+            });
+            await detailProduct.update(
+              {
+                currentQuantity:
+                  newDetailProduct.dataValues.currentQuantity - quantities,
+              },
+              {
+                where: { productId: newDetailProduct.dataValues.productId },
+                transaction: t,
+              },
+            );
+          } else {
+            await detailProduct.update(
+              {
+                currentQuantity:
+                  existingProduct.dataValues.detailProduct.dataValues
+                    .currentQuantity - quantities,
+              },
+              {
+                where: { productId: existingProduct.dataValues.productId },
+                transaction: t,
+              },
+            );
+          }
+        }
+        return existingProducts.dataValues.stock;
+      }),
+    );
+
+    // digunakan buat masukin ke product history
+    const getNewStock = await Promise.all(
+      formula.map(async (data) => {
+        const newProductStock = await product.findOne({
+          where: { productName: data.productName },
+          transaction: t,
+        });
+        return newProductStock.dataValues.stock;
+      }),
+    );
+
+    // digunakan buat masukin ke product history
+    const checkPengeluaranStock = getInitialStock.map(
+      (data, index) => data - getNewStock[index],
+    );
+    console.log(checkPengeluaranStock);
+
+    const createNewProduct = await product.create(
+      {
+        productName,
+        stock: stocks,
+        formula,
+        desc: 'Obat Racikan',
+        price: harga,
+        url: slugify(productName, { lower: true }),
+        unit: 'Racikan',
+        satuanUnit: 'Racikan',
+        isRacikan: true,
+      },
+      { transaction: t },
+    );
+    if (!createNewProduct.dataValues)
+      throw { code: 400, message: 'Gagal membuat obat racikan' };
+
+    const createProductCategories = await Promise.all(
+      kategori.map(async (data) => {
+        const createProductCategory = await productCategory.create(
+          {
+            productId: createNewProduct.dataValues.productId,
+            categoryId: data.categoryId,
+          },
+          { transaction: t },
+        );
+        return createProductCategory;
+      }),
+    );
+
+    // console.log(createProductCategories);
+
+    if (!createProductCategories.length)
+      throw { code: 400, message: 'Gagal memasukkan product category' };
+
+    await t.commit();
+    res.send({ status: 'Success', message: 'Berhasil membuat obat racikan' });
+  } catch (error) {
+    next(error);
+    await t.rollback();
+  }
+};
 
 // create new product
 const addNewProduct = async (req, res, next) => {
@@ -103,6 +269,7 @@ const uploadImage = async (req, res, next) => {
   }
 };
 
+router.post('/racikan', auth, postObatRacikan);
 router.post('/', auth, addNewProduct);
 router.post('/upload', auth, uploadProduct.single('gambar'), uploadImage);
 
