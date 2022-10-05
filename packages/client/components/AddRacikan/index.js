@@ -8,29 +8,40 @@ import {
   ModalCloseButton,
   Button,
   Input,
-  Image,
   FormLabel,
-  FormControl,
   Flex,
-  Box,
-  FormErrorMessage,
   Checkbox,
   Select,
   Text,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import axiosInstance from '../../src/config/api';
 
 export default function AddRacikan(props) {
-  const { isOpen, onClose, onSaveCategory, category, productList } = props;
+  const { isOpen, onClose, category, productList, getSession } = props;
   const [kategori, setKategori] = useState([]);
-  const [size, setSize] = useState(1);
-  const [isError, setisError] = useState(false);
   const [isRequired, setisRequired] = useState(true);
-  const [isCategoryError, setisCategoryError] = useState(false);
-  const [productName, setProductName] = useState({
+  const [quantityFormula, setQuantityFormula] = useState();
+  const [productFormula, setProductFormula] = useState();
+  const [formula, setFormula] = useState([]);
+  const [product, setProduct] = useState({
     productName: '',
     quantity: 0,
   });
+
+  const toast = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     if (kategori.length) {
@@ -40,6 +51,36 @@ export default function AddRacikan(props) {
     }
   }, [kategori]);
 
+  const onDeleteHandler = (productName) => {
+    setFormula(formula.filter((data) => data.productName != productName));
+  };
+
+  const renderFormula = () => {
+    return formula.map((data) => {
+      return (
+        <Tr key={data.quantity}>
+          <Td>{data.productName}</Td>
+          <Td>{data.quantity}</Td>
+          <Td>
+            <Button
+              size="sm"
+              colorScheme={'red'}
+              onClick={() => onDeleteHandler(data.productName)}
+            >
+              Delete
+            </Button>
+          </Td>
+        </Tr>
+      );
+    });
+  };
+
+  const onTambahHandler = () => {
+    let obj = { productName: productFormula, quantity: quantityFormula };
+    setFormula([...formula, obj]);
+    setQuantityFormula('');
+  };
+
   const renderProductList = () => {
     return productList?.map((data) => (
       <option key={data.productId} value={data.productName}>
@@ -48,10 +89,7 @@ export default function AddRacikan(props) {
     ));
   };
 
-  const onSelectHandler = (e, key) => {
-    // console.log(e.target.checked);
-    // console.log(e.target.value);
-    // console.log(key);
+  const onCheckedHandler = (e, key) => {
     const { checked } = e.target;
     if (checked) {
       setKategori([...kategori, { categoryId: key }]);
@@ -62,12 +100,9 @@ export default function AddRacikan(props) {
 
   const renderCategory = () => {
     return category.map((data) => (
-      // <option key={data.categoryId} value={data.category}>
-      //   {data.category}
-      // </option>
       <Checkbox
         key={data.categoryId}
-        onChange={(e) => onSelectHandler(e, data.categoryId)}
+        onChange={(e) => onCheckedHandler(e, data.categoryId)}
         value={data.category}
         width="30%"
         isRequired={isRequired}
@@ -77,25 +112,10 @@ export default function AddRacikan(props) {
     ));
   };
 
-  //   useEffect(() => {
-  //     const checkCategory = () => {
-  //       if (category.category === '') {
-  //         setisError(true);
-  //         setisCategoryError(true);
-  //         return;
-  //       } else {
-  //         setisError(false);
-  //         setisCategoryError(false);
-  //         return;
-  //       }
-  //     };
-  //     checkCategory();
-  //   }, [category]);
-
   const onHandleChange = (e) => {
     //   setCategory({ ...category, [e.target.name]: e.target.value });
     // console.log(e.target.value);
-    setProductName({ ...productName, [e.target.name]: e.target.value });
+    setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
   const onCancel = () => {
@@ -104,9 +124,37 @@ export default function AddRacikan(props) {
     // delete category.categoryImages;
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log(`hadeh ppusing ${productName}`);
+    let path = router.asPath;
+    const session = await getSession();
+    const { accessToken } = session.user;
+
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+
+    let body = {
+      productName: product.productName,
+      stock: product.quantity,
+      kategori,
+      formula,
+    };
+
+    try {
+      const res = await axiosInstance.post('/product/racikan', body, config);
+      toast({
+        description: res.data.message,
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      onClose();
+      router.push(path);
+    } catch (error) {
+      return alert(error.response.data.message);
+    }
   };
 
   return (
@@ -120,7 +168,7 @@ export default function AddRacikan(props) {
             {/* <FormControl isInvalid={isCategoryError} mb={3}> */}
             <FormLabel fontSize={'sm'}>Nama Obat :</FormLabel>
             <Input
-              name="category"
+              name="productName"
               type="text"
               variant="filled"
               onChange={onHandleChange}
@@ -131,7 +179,7 @@ export default function AddRacikan(props) {
             <Input
               name="quantity"
               type="number"
-              max="5"
+              min="1"
               variant="filled"
               onChange={onHandleChange}
               mb="2"
@@ -142,23 +190,11 @@ export default function AddRacikan(props) {
               {renderCategory()}
             </Flex>
             <Text>Formula : </Text>
-            <Flex>
+            <Flex mb="4">
               <Select
                 name="category"
                 defaultValue="Pilih Obat Satuan"
-                // placeholder="Pilih Obat Satuan"
-                // onChange={onSelectHandler}
-                // style={{
-                //   width: '50%',
-                //   height: 'fit-content',
-                //   padding: '5px',
-                //   background: '#F5F6F6',
-                // position: 'absolute',
-                // }}
-                // size={size}
-                // onFocus={() => setSize(5)}
-                // onBlur={() => setSize(1)}
-                // onClick={() => setSize(1)}
+                onChange={(e) => setProductFormula(e.target.value)}
                 width={'fit-content'}
                 required
               >
@@ -171,18 +207,35 @@ export default function AddRacikan(props) {
               <Input
                 type="number"
                 placeholder="masukkan quantity"
+                name="quantity"
                 marginInline="6"
                 width="50%"
+                value={quantityFormula}
+                onChange={(e) => setQuantityFormula(e.target.value)}
               />
-              <Button colorScheme="whatsapp">Tambah</Button>
+              <Button colorScheme="whatsapp" onClick={onTambahHandler}>
+                Tambah
+              </Button>
             </Flex>
-
-            {/* {isCategoryError && (
-                <FormErrorMessage fontSize={'xs'}>
-                  Nama kategori tidak boleh kosong
-                </FormErrorMessage>
-              )}
-            </FormControl> */}
+            {formula.length != 0 && (
+              <TableContainer>
+                <Table
+                  variant="striped"
+                  colorScheme="teal"
+                  size="sm"
+                  width="70%"
+                >
+                  <Thead>
+                    <Tr>
+                      <Th>Product</Th>
+                      <Th>Quantity</Th>
+                      <Th>Action</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>{renderFormula()}</Tbody>
+                </Table>
+              </TableContainer>
+            )}
           </ModalBody>
 
           <ModalFooter>

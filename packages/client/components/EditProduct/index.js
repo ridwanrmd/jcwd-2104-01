@@ -266,7 +266,7 @@ export default function EditProduct(props) {
             <Input
               name="quantity"
               type="number"
-              value={product.detailProduct.quantity}
+              value={product.detailProduct?.quantity}
               variant="filled"
               onChange={(e) => {
                 setProduct({

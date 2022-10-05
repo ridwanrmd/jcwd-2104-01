@@ -12,7 +12,9 @@ const {
 const { uploadProduct } = require('../../lib/multer');
 
 const postObatRacikan = async (req, res, next) => {
-  const { formula, productName, stock = 1 } = req.body;
+  const { formula, productName, stock = 1, kategori } = req.body;
+  let stocks = Number(stock);
+  const { userId } = req.user;
   const t = await sequelize.transaction();
 
   try {
@@ -28,6 +30,7 @@ const postObatRacikan = async (req, res, next) => {
     let harga = 0;
     const getInitialStock = await Promise.all(
       formula.map(async (data) => {
+        let quantities = Number(data.quantity);
         const existingProducts = await product.findOne({
           where: {
             productName: data.productName,
@@ -35,6 +38,7 @@ const postObatRacikan = async (req, res, next) => {
           include: [{ model: detailProduct }],
           transaction: t,
         });
+
         if (!existingProducts)
           throw {
             code: 404,
@@ -42,10 +46,10 @@ const postObatRacikan = async (req, res, next) => {
           };
         harga +=
           (existingProducts.dataValues.price /
-            existingProducts.dataValues.detailProducts[0].dataValues.quantity) *
-          data.quantity;
+            existingProducts.dataValues.detailProduct.dataValues.quantity) *
+          quantities;
 
-        for (i = 0; i < stock; i++) {
+        for (i = 0; i < stocks; i++) {
           const existingProduct = await product.findOne({
             where: {
               productName: data.productName,
@@ -55,8 +59,8 @@ const postObatRacikan = async (req, res, next) => {
           });
 
           if (
-            existingProduct.dataValues.detailProducts[0].dataValues
-              .currentQuantity < data.quantity
+            existingProduct.dataValues.detailProduct.dataValues
+              .currentQuantity < quantities
           ) {
             if (existingProduct.dataValues.stock == 0)
               throw {
@@ -72,10 +76,9 @@ const postObatRacikan = async (req, res, next) => {
             await detailProduct.update(
               {
                 currentQuantity:
-                  existingProduct.dataValues.detailProducts[0].dataValues
+                  existingProduct.dataValues.detailProduct.dataValues
                     .currentQuantity +
-                  existingProduct.dataValues.detailProducts[0].dataValues
-                    .quantity,
+                  existingProduct.dataValues.detailProduct.dataValues.quantity,
               },
               {
                 where: { productId: existingProduct.dataValues.productId },
@@ -89,7 +92,7 @@ const postObatRacikan = async (req, res, next) => {
             await detailProduct.update(
               {
                 currentQuantity:
-                  newDetailProduct.dataValues.currentQuantity - data.quantity,
+                  newDetailProduct.dataValues.currentQuantity - quantities,
               },
               {
                 where: { productId: newDetailProduct.dataValues.productId },
@@ -100,8 +103,8 @@ const postObatRacikan = async (req, res, next) => {
             await detailProduct.update(
               {
                 currentQuantity:
-                  existingProduct.dataValues.detailProducts[0].dataValues
-                    .currentQuantity - data.quantity,
+                  existingProduct.dataValues.detailProduct.dataValues
+                    .currentQuantity - quantities,
               },
               {
                 where: { productId: existingProduct.dataValues.productId },
@@ -134,7 +137,7 @@ const postObatRacikan = async (req, res, next) => {
     const createNewProduct = await product.create(
       {
         productName,
-        stock,
+        stock: stocks,
         formula,
         desc: 'Obat Racikan',
         price: harga,
@@ -147,8 +150,27 @@ const postObatRacikan = async (req, res, next) => {
     );
     if (!createNewProduct.dataValues)
       throw { code: 400, message: 'Gagal membuat obat racikan' };
+
+    const createProductCategories = await Promise.all(
+      kategori.map(async (data) => {
+        const createProductCategory = await productCategory.create(
+          {
+            productId: createNewProduct.dataValues.productId,
+            categoryId: data.categoryId,
+          },
+          { transaction: t },
+        );
+        return createProductCategory;
+      }),
+    );
+
+    // console.log(createProductCategories);
+
+    if (!createProductCategories.length)
+      throw { code: 400, message: 'Gagal memasukkan product category' };
+
     await t.commit();
-    res.send({ message: 'Berhasil membuat obat racikan' });
+    res.send({ status: 'Success', message: 'Berhasil membuat obat racikan' });
   } catch (error) {
     next(error);
     await t.rollback();
@@ -247,7 +269,7 @@ const uploadImage = async (req, res, next) => {
   }
 };
 
-router.post('/racikan', postObatRacikan);
+router.post('/racikan', auth, postObatRacikan);
 router.post('/', auth, addNewProduct);
 router.post('/upload', auth, uploadProduct.single('gambar'), uploadImage);
 

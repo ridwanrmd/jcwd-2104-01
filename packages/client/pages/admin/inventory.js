@@ -204,49 +204,32 @@ export default function Inventory(props) {
                   </InputRightElement>
                 </InputGroup>
                 <Spacer />
-                <Box position="relative" width="50%">
-                  <select
-                    name="category"
-                    value={categories}
-                    placeholder="Semua Kategori"
-                    onChange={onSelectChange}
-                    // w="fit-content"
-                    style={{
-                      width: 'fit-content',
-                      height: 'fit-content',
-                      padding: '5px',
-                      background: '#F5F6F6',
-                      position: 'absolute',
-                      right: '10px',
-                    }}
-                    size={size}
-                    onFocus={() => setSize(5)}
-                    onBlur={() => setSize(1)}
-                    onClick={() => setSize(1)}
-                  >
-                    <option value="">Semua Kategori</option>
-                    {renderCategory()}
-                  </select>
-                  {/* {!router.asPath.includes('isRacikan') && (
-                   
-                  )} */}
-                </Box>
-                <Box>
-                  <Select
-                    onChange={onClickOrder}
-                    w="fit-content"
-                    variant="outline"
-                    defaultValue=""
-                  >
-                    <option hidden disabled value="">
-                      Urutkan
-                    </option>
-                    <option value="price ASC">Harga: Rendah ke Tinggi</option>
-                    <option value="price DESC">Harga: Tinggi ke Rendah</option>
-                    <option value="productName ASC">Nama: A ke Z</option>
-                    <option value="productName DESC">Nama: Z ke A</option>
-                  </Select>
-                </Box>
+
+                <Select
+                  name="category"
+                  value={categories}
+                  placeholder="Semua Kategori"
+                  onChange={onSelectChange}
+                  w="fit-content"
+                >
+                  <option value="">Semua Kategori</option>
+                  {renderCategory()}
+                </Select>
+
+                <Select
+                  onChange={onClickOrder}
+                  w="fit-content"
+                  variant="outline"
+                  defaultValue=""
+                >
+                  <option hidden disabled value="">
+                    Urutkan
+                  </option>
+                  <option value="price ASC">Harga: Rendah ke Tinggi</option>
+                  <option value="price DESC">Harga: Tinggi ke Rendah</option>
+                  <option value="productName ASC">Nama: A ke Z</option>
+                  <option value="productName DESC">Nama: Z ke A</option>
+                </Select>
               </Flex>
               <Box h="55vh">{renderProduct()}</Box>
               <Flex justifyContent={'flex-end'}>
@@ -263,6 +246,7 @@ export default function Inventory(props) {
                       onClose={onRacikClose}
                       category={props.category}
                       productList={productList}
+                      getSession={getSession}
                     />
                   </Button>
                 )}
