@@ -17,7 +17,7 @@ const { auth } = require('../../helpers/auth');
 const confirmTransaction = async (req, res, next) => {
   try {
     const { transactionId } = req.query;
-    const { userId } = req.user;
+
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
@@ -63,6 +63,7 @@ const confirmTransaction = async (req, res, next) => {
     });
     getDTData.rows.map(async (data) => {
       // console.log(data.dataValues.productId);
+      console.log(data.dataValues.transaction.dataValues.userId);
       const updateProduct = await product.findOne({
         where: { productId: data.dataValues.productId },
       });
@@ -79,7 +80,7 @@ const confirmTransaction = async (req, res, next) => {
 
       // console.log(totalPrice);
       await logHistory.create({
-        userId,
+        userId: data.dataValues.transaction.dataValues.userId,
         productId: data.dataValues.productId,
         quantity: data.dataValues.quantity,
         totalPrice,
@@ -284,5 +285,5 @@ const SalesReport = async (req, res, next) => {
 router.post('/declineTransaction', cancelTransaction);
 router.post('/salesReportUser', SalesReport);
 router.post('/sendTransaction', sendOrder);
-router.post('/confirmTransaction', auth, confirmTransaction);
+router.post('/confirmTransaction', confirmTransaction);
 module.exports = router;

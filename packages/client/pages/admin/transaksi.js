@@ -17,6 +17,8 @@ import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import AdminHistory from '../../components/HistoryTransaction/AdminHistory';
+import AdminProofPayment from '../../components/HistoryTransaction/AdminProofPayment';
+import AdminSendOrder from '../../components/HistoryTransaction/AdminSendOrder';
 import Navbar from '../../components/Navbar';
 import axiosInstance from '../../src/config/api';
 import styles from './Product.module.css';
@@ -60,10 +62,22 @@ export default function Transaksi(props) {
       console.log(error);
     }
   };
+
   function selectedStatus() {
     return data?.map((x, i) => {
       // console.log(x);
       return <AdminHistory data={x} selected={selected} key={i} />;
+    });
+  }
+
+  function confirmPayment() {
+    return data?.map((x, i) => {
+      return <AdminProofPayment data={x} selected={selected} key={i} />;
+    });
+  }
+  function sendItem() {
+    return data?.map((x, i) => {
+      return <AdminSendOrder data={x} selected={selected} key={i} />;
     });
   }
 
@@ -106,10 +120,10 @@ export default function Transaksi(props) {
                     <div>{selectedStatus()}</div>
                   </TabPanel>
                   <TabPanel>
-                    <div>{selectedStatus()}</div>
+                    <div>{confirmPayment()}</div>
                   </TabPanel>
                   <TabPanel>
-                    <div>{selectedStatus()}</div>
+                    <div>{sendItem()}</div>
                   </TabPanel>
                   <TabPanel>
                     <div>{selectedStatus()}</div>

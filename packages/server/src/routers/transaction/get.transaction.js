@@ -144,6 +144,56 @@ const getTransactionUser = async (req, res, next) => {
     console.log(error);
   }
 };
+const getTransactionUserByAdmin = async (req, res, next) => {
+  try {
+    const { transactionId } = req.query;
+
+    const getTransactData = await detailTransaction.findAll({
+      where: { transactionId },
+      attributes: ['dtId', 'productId', 'quantity'],
+      include: [
+        {
+          model: product,
+
+          attributes: [
+            'productId',
+            'productName',
+            'productImage',
+            'price',
+            'unit',
+            'stock',
+            'desc',
+          ],
+        },
+        {
+          model: transaction,
+          attributes: [
+            'userId',
+            'transactionId',
+            'addressId',
+            'total',
+            'transactionStatus',
+            'createdAt',
+            'kurir',
+            'biaya',
+            'estimasi',
+          ],
+        },
+      ],
+    });
+
+    res.send({
+      status: 'Succsess',
+      message: 'data transaction',
+      data: {
+        getTransactData,
+      },
+    });
+  } catch (error) {
+    next(error);
+    console.log(error);
+  }
+};
 
 const getTransactionSelected = async (req, res, next) => {
   try {
@@ -265,4 +315,5 @@ const getTransactionSelected = async (req, res, next) => {
 router.get('/historyTransaction', auth, getTransactionSelected);
 router.get('/allTransByAdmin', allTransactionByAdmin);
 router.get('/dataTransaction/:transactionId', auth, getTransactionUser);
+router.get('/dataTransactionByAdmin', getTransactionUserByAdmin);
 module.exports = router;

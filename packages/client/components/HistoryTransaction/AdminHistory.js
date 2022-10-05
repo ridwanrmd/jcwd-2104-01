@@ -38,17 +38,6 @@ const AdminTransHistory = ({ data, selected }) => {
       >
         <Box w="180px">No.Pembelian: {data.transactionId}</Box>
         <Box w="180px">Status: {data.transactionStatus}</Box>
-
-        <Box w="180px">
-          Payment Proof:{' '}
-          <Image
-            src={api_origin + data.paymentProof}
-            alt="Payment Proof"
-            // h="40"
-            width="full"
-          />
-        </Box>
-
         <Box w="180px">Total Price: Rp. {data.total.toLocaleString('id')}</Box>
         <Box w="180px">
           Shiping Price: Rp. {data.biaya.toLocaleString('id')}
