@@ -24,9 +24,9 @@ const getCategory = async (req, res, next) => {
       limit,
     });
 
-    if (!result.length) {
-      throw { code: 404, message: 'Kategory tidak ditemukan' };
-    }
+    // if (!result.length) {
+    //   throw { code: 404, message: 'Kategory tidak ditemukan' };
+    // }
 
     res.send({
       status: 'Success',
