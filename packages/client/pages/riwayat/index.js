@@ -98,14 +98,13 @@ function Riwayat(props) {
   };
   function selectedStatus() {
     return data?.map((x, i) => {
-      // console.log(x);
       return <History data={x} selected={selected} key={i} />;
     });
   }
   return (
     <div>
       <div>
-        <Navbar session={session} user={user} />
+        <Navbar session={session} user={props.user} />
       </div>
       <Text fontSize={30} fontWeight={'semibold'} my={8} ml={20}>
         Riwayat Pemesanan
@@ -236,7 +235,6 @@ export async function getServerSideProps(context) {
       config,
       { params: context.query },
     );
-    // console.log(restransactionUser);
 
     return {
       props: {

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 
       product.hasMany(models.detailTransaction, { foreignKey: 'productId' });
       product.hasMany(models.logHistory, { foreignKey: 'productId' });
-      product.hasMany(models.detailProduct, { foreignKey: 'productId' });
+      product.hasOne(models.detailProduct, { foreignKey: 'productId' });
       product.belongsToMany(models.Category, {
         through: models.productCategory,
         foreignKey: 'productId',
@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-
       productName: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -37,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
       satuanUnit: {
         type: DataTypes.STRING(100),
         allowNull: false,
+      },
+      isRacikan: {
+        type: DataTypes.TINYINT(1),
+        defaultValue: '0',
+      },
+      formula: {
+        type: DataTypes.JSON,
+        allowNull: true,
       },
       desc: {
         allowNull: false,
@@ -63,11 +70,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING(150),
       },
+      deletedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize,
       modelName: 'product',
       tableName: 'products',
+      paranoid: true,
     },
   );
   return product;

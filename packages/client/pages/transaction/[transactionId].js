@@ -66,7 +66,6 @@ function Transaction(props) {
       const session = await getSession();
       const { accessToken } = session.user;
       const { transactionId } = router.query;
-      // console.log(transactionId);
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
@@ -75,7 +74,6 @@ function Transaction(props) {
         `/transactions/dataTransaction/${transactionId}`,
         config,
       );
-      // console.log(get.data.data.getTransactData);
       setTransactionList(get.data.data.getTransactData);
     } catch (error) {
       console.log(error);
@@ -190,21 +188,15 @@ export default Transaction;
 export async function getServerSideProps(context) {
   try {
     const session = await getSession({ req: context.req });
-    // console.log(session);
     if (!session) return { redirect: { destination: '/' } };
-
-    // console.log(session);
 
     const userId = session.user.userId;
     const accessToken = session.user.accessToken;
     const { transactionId } = context.params;
-    // console.log(transactionId);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
-    // console.log(config);
     const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
-    // console.log(resGetUser.data.data);
     const restransactionUser = await axiosInstance.get(
       `/transactions/dataTransaction/${transactionId}`,
       config,

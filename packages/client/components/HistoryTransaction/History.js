@@ -26,8 +26,8 @@ const TransactionHistory = ({ data, selected }) => {
         bg={'gray.50'}
         h={100}
         spacing="95"
-        my={'8'}
-        ml={'10'}
+        my={'10'}
+        ml={'20'}
         mr={'20'}
         px={6}
         rounded={6}

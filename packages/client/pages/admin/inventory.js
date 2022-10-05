@@ -10,6 +10,7 @@ import {
   Spacer,
   Stack,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import React from 'react';
 import AdminProduct from '../../components/AdminProduct';
@@ -20,13 +21,32 @@ import axiosInstance from '../../src/config/api';
 import ReactPaginate from 'react-paginate';
 import styles from './Admin.module.css';
 import { useEffect, useState } from 'react';
+import AddRacikan from '../../components/AddRacikan';
+import AddProduct from '../../components/AddProduct';
 
 export default function Inventory(props) {
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [page, setPage] = useState(0);
   const [categories, setCategories] = useState('');
   const [order, setOrder] = useState('');
   const [search, setSearch] = useState('');
+  const [size, setSize] = useState(1);
+  const [productList, setProductList] = useState();
+
+  const {
+    isOpen: isRacikOpen,
+    onOpen: onRacikOpen,
+    onClose: onRacikClose,
+  } = useDisclosure();
+
+  useEffect(() => {
+    const getProductList = async () => {
+      const result = await axiosInstance.get('/product/all');
+      setProductList(result.data.result);
+    };
+    getProductList();
+  }, []);
 
   useEffect(() => {
     setPage(router.query.page - 1);
@@ -55,7 +75,13 @@ export default function Inventory(props) {
 
   const renderProduct = () => {
     return props.product.map((products) => {
-      return <AdminProduct key={products.productId} product={products} />;
+      return (
+        <AdminProduct
+          key={products.productId}
+          product={products}
+          categories={props.category}
+        />
+      );
     });
   };
   const handlePageClick = (e) => {
@@ -178,6 +204,7 @@ export default function Inventory(props) {
                   </InputRightElement>
                 </InputGroup>
                 <Spacer />
+
                 <Select
                   name="category"
                   value={categories}
@@ -185,14 +212,19 @@ export default function Inventory(props) {
                   onChange={onSelectChange}
                   w="fit-content"
                 >
+                  <option value="">Semua Kategori</option>
                   {renderCategory()}
                 </Select>
+
                 <Select
-                  value={order}
-                  placeholder="Urutkan"
                   onChange={onClickOrder}
                   w="fit-content"
+                  variant="outline"
+                  defaultValue=""
                 >
+                  <option hidden disabled value="">
+                    Urutkan
+                  </option>
                   <option value="price ASC">Harga: Rendah ke Tinggi</option>
                   <option value="price DESC">Harga: Tinggi ke Rendah</option>
                   <option value="productName ASC">Nama: A ke Z</option>
@@ -201,7 +233,23 @@ export default function Inventory(props) {
               </Flex>
               <Box h="55vh">{renderProduct()}</Box>
               <Flex justifyContent={'flex-end'}>
-                <Button colorScheme={'twitter'}>Tambah</Button>
+                {!router.asPath.includes('isRacikan') ? (
+                  <Button colorScheme={'twitter'} onClick={onOpen}>
+                    Tambah
+                    <AddProduct isOpen={isOpen} onClose={onClose} />
+                  </Button>
+                ) : (
+                  <Button colorScheme={'twitter'} onClick={onRacikOpen}>
+                    Racik Obat
+                    <AddRacikan
+                      isOpen={isRacikOpen}
+                      onClose={onRacikClose}
+                      category={props.category}
+                      productList={productList}
+                      getSession={getSession}
+                    />
+                  </Button>
+                )}
               </Flex>
               <ReactPaginate
                 forcePage={page}

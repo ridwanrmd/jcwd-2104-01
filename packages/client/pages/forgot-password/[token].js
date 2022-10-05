@@ -18,7 +18,6 @@ import {
 } from '@chakra-ui/react';
 
 function ForgotPassword(props) {
-  // console.log({ props });
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -131,22 +130,16 @@ export default ForgotPassword;
 export async function getServerSideProps(context) {
   try {
     const session = await getSession({ req: context.req });
-    // console.log(session);
     if (session) return { redirect: { destination: '/' } };
 
-    // console.log(session);
     const accessToken = context.params.token;
-    // console.log(accessToken);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
-    // console.log(config);
     const resGetUser = await axiosInstance.get(
       `/users/forgot/password`,
       config,
     );
-    // console.log(resGetUser);
-
     return {
       props: resGetUser.data.user,
     };

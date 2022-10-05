@@ -16,7 +16,6 @@ const fs = require('fs');
 const path = require('path');
 const appRoot = require('app-root-path');
 
-// register endpoint
 const registerUserHandler = async (req, res, next) => {
   try {
     const { first_name, last_name, email, phone, password, confirmPassword } =
@@ -80,7 +79,6 @@ const registerUserHandler = async (req, res, next) => {
       last_name,
       email,
       phone,
-      // image: "/public/avatar/default-avatar.png",
       password: encryptedPassword,
     });
 
@@ -196,7 +194,6 @@ const loginUserController = async (req, res, next) => {
       const resGetLoginUser = await user.findOne({
         where: { email: email },
       });
-      // console.log(resGetLoginUser);
 
       if (!resGetLoginUser) {
         throw {
@@ -245,7 +242,6 @@ const loginUserController = async (req, res, next) => {
 const forgotPasswordController = async (req, res, next) => {
   try {
     const { email } = req.body;
-    // console.log(email);
     const fiundUser = await user.findOne({ where: { email: email } });
 
     if (!fiundUser) return res.status(400).send('Email Tidak Terdaftar');

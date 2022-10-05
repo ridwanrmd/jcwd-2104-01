@@ -96,7 +96,6 @@ const uploadPrescription = multer({
   fileFilter(req, file, cb) {
     const allowedExtension = ['.png', '.jpg'];
     const extname = path.extname(file.originalname);
-    console.log('disini');
     if (!allowedExtension.includes(extname)) {
       const error = new Error(
         'Bentuk file yang diterima hanya dalam format (.jpg & .png) ',
@@ -108,4 +107,78 @@ const uploadPrescription = multer({
   },
 });
 
-module.exports = { uploadUser, uploadPrescription, uploadCategory };
+const paymentPath = path.join(
+  appRoot.path,
+  'packages',
+  'server',
+  'public',
+  'payment',
+);
+
+const storagePayment = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, paymentPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
+const uploadPayment = multer({
+  storage: storagePayment,
+  limits: {
+    fileSize: 2097152,
+  },
+  fileFilter(req, file, cb) {
+    const allowedExtension = ['.png', '.jpg'];
+    const extname = path.extname(file.originalname);
+    if (!allowedExtension.includes(extname)) {
+      const error = new Error(
+        'Bentuk file yang diterima hanya dalam format (.jpg & .png) ',
+      );
+      return cb(error);
+    }
+    cb(null, true);
+  },
+});
+
+const productPath = path.join(
+  appRoot.path,
+  'packages',
+  'server',
+  'public',
+  'product',
+);
+
+const storageProduct = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, productPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
+const uploadProduct = multer({
+  storage: storageProduct,
+  fileFilter(req, file, cb) {
+    const allowedExtension = ['.png', '.jpg', '.svg'];
+
+    const extname = path.extname(file.originalname);
+
+    if (!allowedExtension.includes(extname)) {
+      const error = new Error('Please upload image file (jpg, png, svg)');
+      return cb(error);
+    }
+
+    cb(null, true);
+  },
+});
+
+module.exports = {
+  uploadUser,
+  uploadPrescription,
+  uploadPayment,
+  uploadCategory,
+  uploadProduct,
+};

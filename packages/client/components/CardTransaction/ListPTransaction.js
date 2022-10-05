@@ -19,13 +19,11 @@ import { api_origin } from '../../constraint';
 import OrderStatus from '../../components/CardTransaction/OrderStatus';
 import PaymentAndAddress from '../../components/CardTransaction/PaymentAndAddress';
 const TransactionList = ({ data, address, statusTrans }) => {
-  console.log(data);
   return (
     <div key={data.dtId}>
       <Flex>
         <Flex gap="1rem" direction={'column'} maxW="600px">
           {data.map((v, i) => {
-            // console.log(v);
             return (
               <div key={i}>
                 <Box

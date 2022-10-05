@@ -15,10 +15,7 @@ const addToCart = async (req, res, next) => {
         userId,
       },
       plain: true,
-      // bikin si obj jadi pecah object /property
     });
-    // console.log(typeof quantity);
-    // console.log(findCartExist);
 
     if (findCartExist) {
       const respons = await cart.update(

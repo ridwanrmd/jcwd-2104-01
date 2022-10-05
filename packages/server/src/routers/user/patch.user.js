@@ -11,10 +11,6 @@ const { isFieldEmpties, passwordValidator } = require('../../helpers');
 const changePassController = async (req, res, next) => {
   try {
     const { oldPassword, newPassword, ConfirmPassword, userId } = req.body;
-    // console.log(req.body);
-    // const { token } = req.params;
-    // console.log(userId);
-    // console.log(userId);
 
     const equalizePass = await user.findOne({ where: { userId } });
     const userData = equalizePass.dataValues;
@@ -39,7 +35,6 @@ const changePassController = async (req, res, next) => {
 
     const resChangePass = await user.findOne({ where: { userId } });
 
-    //hashing pass and update DB
     const passwordHash = hash(newPassword);
     await resChangePass.update({ password: passwordHash });
     const resUpdated = await resChangePass.save();
@@ -51,7 +46,6 @@ const changePassController = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-    // console.log(error);
   }
 };
 
@@ -94,7 +88,6 @@ const updateUserController = async (req, res, next) => {
     req.body;
 
   try {
-    // Checking email and phone number
     const getUser = await user.findAll({
       where: {
         userId: { [Op.ne]: req.user.userId },
