@@ -49,6 +49,7 @@ const getAllProduct = async (req, res, next) => {
         'stock',
         'unit',
         'url',
+        'satuanUnit',
         'createdAt',
       ],
       order: Sequelize.literal(`${orderBy} ${order}`),
@@ -66,6 +67,7 @@ const getAllProduct = async (req, res, next) => {
         },
         {
           model: detailProduct,
+          attributes: ['quantity'],
         },
       ],
       offset,
@@ -135,9 +137,26 @@ const getAllProductNoLimit = async (req, res, next) => {
   });
   res.send({ status: 'Success', message: 'bismillah', result: getAllProduct });
 };
+const getQuantityDetailProduct = async (req, res, next) => {
+  const { productId } = req.params;
+  try {
+    const result = await detailProduct.findOne({
+      attributes: ['quantity'],
+      where: { productId },
+    });
+    res.send({
+      status: 'Success',
+      message: 'Success get quantity detail product',
+      result: result.dataValues,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 router.get('/', getAllProduct);
 router.get('/all', getAllProductNoLimit);
 router.get('/:url', getDetailProduct);
+router.get('/quantity/:productId', getQuantityDetailProduct);
 
 module.exports = router;

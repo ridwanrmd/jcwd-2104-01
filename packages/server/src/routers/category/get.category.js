@@ -40,6 +40,17 @@ const getCategory = async (req, res, next) => {
   }
 };
 
+const getAllCategory = async (req, res, next) => {
+  const resGetCategory = await Category.findAll();
+
+  res.send({
+    status: 'Success',
+    message: 'Success get category list',
+    data: resGetCategory,
+  });
+};
+
 router.get('/', getCategory);
+router.get('/allCategory', getAllCategory);
 
 module.exports = router;

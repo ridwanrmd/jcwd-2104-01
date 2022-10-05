@@ -27,7 +27,6 @@ function ShippingMethod(props) {
   const [getOngkir, setGetOngkir] = useState([]);
   const [selectedKurir, setSelectedKurir] = useState('');
   const [selectedOngkir, setSelectedOngkir] = useState('');
-  // console.log(selectedKurir);
   const toast = useToast();
 
   useEffect(() => {
@@ -42,7 +41,6 @@ function ShippingMethod(props) {
       const destination = props.destination;
       const weight = 1000;
       const courier = selectedKurir;
-      console.log(destination);
 
       const resGetOngkir = await axiosInstance.get(
         `rajaongkir/ongkos/${origin}/${destination}/${weight}/${courier}`,
@@ -54,14 +52,29 @@ function ShippingMethod(props) {
   };
 
   const renderOngkir = () => {
-    return getOngkir.map((ongkir) => (
-      <option
-        key={ongkir.service}
-        value={`${ongkir.service},${ongkir.cost[0].value},${ongkir.cost[0].etd}`}
-      >
-        {`${ongkir.description} (${ongkir.service}), Biaya: ${ongkir.cost[0].value}, Estimasi: ${ongkir.cost[0].etd} hari`}
-      </option>
-    ));
+    if (selectedKurir == 'pos') {
+      return getOngkir.map((ongkir) => (
+        <option
+          key={ongkir.service}
+          value={`${ongkir.service},${ongkir.cost[0].value},${ongkir.cost[0].etd}`}
+        >
+          {`${ongkir.description} (${ongkir.service}), Biaya: Rp ${Number(
+            ongkir.cost[0].value,
+          ).toLocaleString('id')}, Estimasi: ${ongkir.cost[0].etd}`}
+        </option>
+      ));
+    } else {
+      return getOngkir.map((ongkir) => (
+        <option
+          key={ongkir.service}
+          value={`${ongkir.service},${ongkir.cost[0].value},${ongkir.cost[0].etd}`}
+        >
+          {`${ongkir.description} (${ongkir.service}), Biaya: Rp ${Number(
+            ongkir.cost[0].value,
+          ).toLocaleString('id')}, Estimasi: ${ongkir.cost[0].etd} hari`}
+        </option>
+      ));
+    }
   };
 
   const onHandleChangeKurir = (e) => {

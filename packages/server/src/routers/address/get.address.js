@@ -30,8 +30,8 @@ const getUserMainAddress = async (req, res, next) => {
     const resGetUserMainAddress = await Address.findOne({
       where: { userId, isMain: true },
     });
-    if (!resGetUserMainAddress)
-      throw { message: 'Alamat utama tidak ditemukan' };
+    // if (!resGetUserMainAddress)
+    //   throw { message: 'Alamat utama tidak ditemukan' };
 
     res.send({
       status: 'Success',

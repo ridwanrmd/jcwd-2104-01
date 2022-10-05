@@ -40,16 +40,6 @@ const Cartlist = ({
 }) => {
   const [selected, setSelected] = useState(false);
   const [input, setInput] = useState(quantity);
-  const [render, setRender] = useState(props.render);
-
-  // console.log(input);
-
-  const formik = useFormik({
-    initialValues: { input },
-    validationSchema: Yup.object().shape({
-      quantity: Yup.number().required().min(1).max(input),
-    }),
-  });
 
   useEffect(() => {
     if (quantity <= stock) {
@@ -73,9 +63,7 @@ const Cartlist = ({
   const editQuantity = async () => {
     const session = await getSession();
     const { accessToken } = session.user;
-    // console.log(input);
 
-    // console.log(accessToken);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
@@ -87,7 +75,6 @@ const Cartlist = ({
       );
       fetchCartList();
       totalPrice();
-      // console.log(respon);
     } catch (error) {
       console.log(error);
     }
@@ -96,7 +83,6 @@ const Cartlist = ({
   const onDelete = async () => {
     const session = await getSession();
     const { accessToken } = session.user;
-    // console.log(accessToken);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
@@ -127,7 +113,6 @@ const Cartlist = ({
       <GridItem colSpan={5}>
         <Box width="100%" justifyContent="space-between">
           <Box display="flex" justifyContent="left">
-            {/* <Checkbox value={props} mr={2} onChange={() => se()} /> */}
             <Img
               width={['71px', '86px', '86px']}
               height={['71px', '86px', '86px']}

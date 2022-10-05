@@ -19,7 +19,6 @@ router.get('/provinsi', (req, res) => {
 //get city endpoint
 router.get('/kota/:provId', (req, res) => {
   const id = req.params.provId;
-  // console.log(id);
   axios
     .get(`/city?province=${id}`)
     .then((response) => res.json(response.data))

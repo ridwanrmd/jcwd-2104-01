@@ -22,9 +22,11 @@ import ReactPaginate from 'react-paginate';
 import styles from './Admin.module.css';
 import { useEffect, useState } from 'react';
 import AddRacikan from '../../components/AddRacikan';
+import AddProduct from '../../components/AddProduct';
 
 export default function Inventory(props) {
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [page, setPage] = useState(0);
   const [categories, setCategories] = useState('');
   const [order, setOrder] = useState('');
@@ -73,7 +75,13 @@ export default function Inventory(props) {
 
   const renderProduct = () => {
     return props.product.map((products) => {
-      return <AdminProduct key={products.productId} product={products} />;
+      return (
+        <AdminProduct
+          key={products.productId}
+          product={products}
+          categories={props.category}
+        />
+      );
     });
   };
   const handlePageClick = (e) => {
@@ -242,7 +250,10 @@ export default function Inventory(props) {
               <Box h="55vh">{renderProduct()}</Box>
               <Flex justifyContent={'flex-end'}>
                 {!router.asPath.includes('isRacikan') ? (
-                  <Button colorScheme={'twitter'}>Tambah</Button>
+                  <Button colorScheme={'twitter'} onClick={onOpen}>
+                    Tambah
+                    <AddProduct isOpen={isOpen} onClose={onClose} />
+                  </Button>
                 ) : (
                   <Button colorScheme={'twitter'} onClick={onRacikOpen}>
                     Racik Obat
