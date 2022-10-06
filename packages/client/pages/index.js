@@ -31,7 +31,7 @@ export default function Home(props) {
   const { data: session } = useSession();
 
   const renderCard = () => {
-    return props.product.map((products) => {
+    return props.product?.map((products) => {
       return <ProductCard key={products.productId} product={products} />;
     });
   };

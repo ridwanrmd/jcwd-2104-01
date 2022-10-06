@@ -18,6 +18,14 @@ export default function Prescription(props) {
   const toast = useToast();
 
   const protectPrescription = () => {
+    if (!props.user)
+      return toast({
+        description: 'Silahkan Login Terlebih Dahulu',
+        position: 'top',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
     if (!props.user.isVerified) {
       toast({
         description: 'Silahkan Verifikasi Akun Anda Terlebih Dahulu',

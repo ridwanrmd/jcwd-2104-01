@@ -78,9 +78,15 @@ export default function AdminProduct(props) {
           <Button variant="outline" colorScheme="red" onClick={onDeleteOpen}>
             Hapus
           </Button>
-          <Button variant="outline" colorScheme="twitter" onClick={onEditOpen}>
-            Edit
-          </Button>
+          {!router.asPath.includes('isRacikan') && (
+            <Button
+              variant="outline"
+              colorScheme="twitter"
+              onClick={onEditOpen}
+            >
+              Edit
+            </Button>
+          )}
         </Flex>
       </Flex>
       <EditProduct

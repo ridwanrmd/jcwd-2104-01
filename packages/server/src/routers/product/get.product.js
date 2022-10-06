@@ -4,8 +4,8 @@ const { Op, Sequelize } = require('sequelize');
 const {
   product,
   Category,
-  detailProduct,
   productCategory,
+  detailProduct,
 } = require('../../../models');
 
 const getAllProduct = async (req, res, next) => {
@@ -16,7 +16,7 @@ const getAllProduct = async (req, res, next) => {
     pageSize = 12,
     orderBy = 'price',
     order = 'ASC',
-    // isRacikan = false,
+    isRacikan = false,
   } = req.query;
 
   const limit = Number(pageSize);
@@ -28,7 +28,7 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
-        // isRacikan,
+        isRacikan,
       },
       include: [
         {
@@ -57,6 +57,7 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
+        isRacikan,
       },
       include: [
         {
@@ -73,6 +74,14 @@ const getAllProduct = async (req, res, next) => {
       limit,
     });
 
+    // if (!amount.length) {
+    //   return res.status(404).send({
+    //     message: 'Not Found',
+    //     result: result,
+    //     totalPage: amount.length,
+    //   });
+    // }
+
     res.send({
       status: 'Success',
       message: 'Success get product list',
@@ -80,7 +89,7 @@ const getAllProduct = async (req, res, next) => {
       totalPage: amount.length,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
@@ -119,6 +128,15 @@ const getDetailProduct = async (req, res, next) => {
   }
 };
 
+const getAllProductNoLimit = async (req, res, next) => {
+  const getAllProduct = await product.findAll({
+    attributes: ['productId', 'productName', 'unit', 'satuanUnit'],
+    where: {
+      isRacikan: false,
+    },
+  });
+  res.send({ status: 'Success', message: 'bismillah', result: getAllProduct });
+};
 const getQuantityDetailProduct = async (req, res, next) => {
   const { productId } = req.params;
   try {
@@ -137,6 +155,7 @@ const getQuantityDetailProduct = async (req, res, next) => {
 };
 
 router.get('/', getAllProduct);
+router.get('/all', getAllProductNoLimit);
 router.get('/:url', getDetailProduct);
 router.get('/quantity/:productId', getQuantityDetailProduct);
 
