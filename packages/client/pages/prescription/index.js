@@ -104,7 +104,7 @@ function Prescription(props) {
   return (
     <ChakraProvider theme={theme}>
       <Navbar session={session} user={props.user} />
-      <Box mx={{ base: '24px', md: '120px' }} mt="24px" height={'170vh'}>
+      <Box mx={{ base: '24px', md: '120px' }} mt="24px" pb="2%">
         <HStack>
           <NextLink href="/">
             <Link
@@ -224,14 +224,19 @@ function Prescription(props) {
               </>
             ) : (
               <>
-                <Box width="350px" height="250" mt="20px">
-                  <Image
-                    width="350px"
-                    height="250"
-                    src={prescriptionSource}
-                    alt="gambar resep"
-                  />
-                </Box>
+                <HStack ml="5.5%" align="start">
+                  <Box width="350px" height="250" mt="20px">
+                    <Image
+                      width="350px"
+                      height="250"
+                      src={prescriptionSource}
+                      alt="gambar resep"
+                    />
+                  </Box>
+                  <Button variant="ghost" onClick={cancelImage}>
+                    X
+                  </Button>
+                </HStack>
                 {prescriptionImage?.size >= 201792 ? (
                   <Flex direction={'column'}>
                     <Text fontSize={'xs'} color="red">
