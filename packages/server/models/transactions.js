@@ -47,10 +47,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       transactionStatus: {
         type: DataTypes.ENUM(
-          'Menuggu Pembayaran',
-          'Menuggu Konfirmasi Pembayaran',
+          'Menunggu Pembayaran',
+          'Menunggu Konfirmasi Pembayaran',
           'Menunggu Konfirmasi Resep',
-          'Resep Ditolak',
           'Diproses',
           'Dibatalkan',
           'Dikirim',
