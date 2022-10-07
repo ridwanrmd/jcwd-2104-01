@@ -237,7 +237,7 @@ const Sales = async (req, res, next) => {
   let result, MetaData;
   try {
     if (timeReport === 'Mingguan') {
-      [result, MetaData] = await S;
+      [result, MetaData] = await Sequelize.query(' ');
     }
   } catch (error) {
     next(error);

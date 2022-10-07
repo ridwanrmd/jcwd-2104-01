@@ -56,7 +56,7 @@ const createTransaction = async (req, res, next) => {
       kurir,
       biaya,
       estimasi,
-      transactionStatus: 'Menuggu Pembayaran',
+      transactionStatus: 'Menunggu Pembayaran',
     });
     const dueDate = moment(newTransaction.dataValues.createdAt).add(1, 'days');
 
@@ -79,7 +79,7 @@ const createTransaction = async (req, res, next) => {
       const checkStatus = await transaction.findOne({
         where: {
           transactionId: newTransaction.dataValues.transactionId,
-          transactionStatus: 'Menuggu Pembayaran',
+          transactionStatus: 'Menunggu Pembayaran',
         },
       });
 
@@ -187,8 +187,8 @@ const CancelTransaction = async (req, res, next) => {
     findTransaction.forEach(async (data) => {
       statusTR = data.dataValues.transactionStatus;
       if (
-        statusTR == 'Menuggu Pembayaran' ||
-        statusTR == 'Menuggu Konfirmasi Pembayaran'
+        statusTR == 'Menunggu Pembayaran' ||
+        statusTR == 'Menunggu Konfirmasi Pembayaran'
       ) {
         await transaction.update(
           { transactionStatus: 'Dibatalkan' },

@@ -62,11 +62,11 @@ const allTransactionByAdmin = async (req, res, next) => {
     switch (Number(selected)) {
       case 1:
         // StatusTransaction = 'Menuggu Pembayaran';
-        getSelectData('Menuggu Pembayaran');
+        getSelectData('Menunggu Pembayaran');
         break;
       case 2:
         // StatusTransaction = 'Menuggu Konfirmasi Pembayaran';
-        getSelectData('Menuggu Konfirmasi Pembayaran');
+        getSelectData('Menunggu Konfirmasi Pembayaran');
         break;
       case 3:
         // StatusTransaction = 'Diproses';
@@ -250,10 +250,10 @@ const getTransactionSelected = async (req, res, next) => {
     };
     switch (Number(selected)) {
       case 1:
-        getSelectData('Menuggu Pembayaran');
+        getSelectData('Menunggu Pembayaran');
         break;
       case 2:
-        getSelectData('Menuggu Konfirmasi Pembayaran');
+        getSelectData('Menunggu Konfirmasi Pembayaran');
         break;
       case 3:
         getSelectData('Diproses');
