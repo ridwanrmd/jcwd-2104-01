@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-const Sequelize = require('sequelize');
-const { Op } = require('sequelize');
+
+const { Op, Sequelize } = require('sequelize');
 
 const {
   transaction,
@@ -232,8 +232,20 @@ const cancelTransaction = async (req, res, next) => {
     console.log(error);
   }
 };
+const Sales = async (req, res, next) => {
+  const { timeReport = 'Bulanan' } = req.body;
+  let result, MetaData;
+  try {
+    if (timeReport === 'Mingguan') {
+      [result, MetaData] = await S;
+    }
+  } catch (error) {
+    next(error);
+    console.log(error);
+  }
+};
 
-const SalesReport = async (req, res, next) => {
+const CountTransactionReport = async (req, res, next) => {
   const { timeReport } = req.body;
   const time = moment().startOf('day');
   const now = moment().format('YYYY-MM-DD HH:mm');
@@ -259,7 +271,7 @@ const SalesReport = async (req, res, next) => {
         },
         group: ['transactionStatus'],
       });
-    } else if (timeReport === 'Mingguan') {
+    } else if (timeReport === 'Bulanan') {
       countOrder = await transaction.count({
         where: {
           updatedAt: {
@@ -282,8 +294,9 @@ const SalesReport = async (req, res, next) => {
     console.log(error);
   }
 };
+
 router.post('/declineTransaction', cancelTransaction);
-router.post('/salesReportUser', SalesReport);
+router.post('/salesReportUser', CountTransactionReport);
 router.post('/sendTransaction', sendOrder);
 router.post('/confirmTransaction', confirmTransaction);
 module.exports = router;

@@ -96,7 +96,11 @@ function Transaction(props) {
   // console.log(transactionList);
   const renderListTransaction = () => {
     return (
-      <ListPTransaction data={transactionList} statusTrans={statusTrans} />
+      <ListPTransaction
+        data={transactionList}
+        statusTrans={statusTrans}
+        user={props.user}
+      />
     );
   };
 
