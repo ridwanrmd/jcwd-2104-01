@@ -42,13 +42,14 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       total: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.INTEGER,
       },
       transactionStatus: {
         type: DataTypes.ENUM(
-          'Menuggu Pembayaran',
-          'Menuggu Konfirmasi Pembayaran',
+          'Menunggu Pembayaran',
+          'Menunggu Konfirmasi Pembayaran',
+          'Menunggu Konfirmasi Resep',
           'Diproses',
           'Dibatalkan',
           'Dikirim',
