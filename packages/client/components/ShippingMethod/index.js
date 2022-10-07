@@ -91,7 +91,6 @@ function ShippingMethod(props) {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Pilih Metode Pengiriman</ModalHeader>
-        <ModalCloseButton />
         <ModalBody>
           <FormControl>
             <FormLabel fontSize={'sm'}>Kurir Pengiriman</FormLabel>
@@ -125,6 +124,17 @@ function ShippingMethod(props) {
           </FormControl>
         </ModalBody>
         <ModalFooter>
+          <Button
+            colorScheme="red"
+            mr={3}
+            onClick={() => {
+              setSelectedKurir('');
+              setSelectedOngkir('');
+              onClose();
+            }}
+          >
+            Cancel
+          </Button>
           <Button
             colorScheme="twitter"
             mr={3}

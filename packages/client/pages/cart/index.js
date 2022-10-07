@@ -12,7 +12,6 @@ import {
   Text,
   VStack,
   useDisclosure,
-  Link,
 } from '@chakra-ui/react';
 import Navbar from '../../components/Navbar';
 import ProductCart from '../../components/ProductCart/ProductCart';

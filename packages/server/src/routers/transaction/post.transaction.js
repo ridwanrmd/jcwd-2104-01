@@ -257,7 +257,28 @@ const CancelTransaction = async (req, res, next) => {
     console.log(error);
   }
 };
+
+const CreateNewPrescriptionTransaction = async (req, res, next) => {
+  const { userId } = req.user;
+  const { addressId, kurir, biaya, estimasi } = req.body;
+
+  const resCreatePrescriptionTransaction = await transaction.create({
+    userId,
+    addressId,
+    transactionStatus: 'Menunggu Konfirmasi Resep',
+    kurir,
+    biaya,
+    estimasi,
+  });
+
+  res.send({
+    status: 'Berhasil',
+    message: 'Berhasil membuat transaksi resep',
+  });
+};
 router.post('/cancelTransaction/:transactionId', CancelTransaction);
 router.post('/confirmTransaction/:transactionId', ConfrimDeliveryTransaction);
 router.post('/newTransaction', auth, createTransaction);
+router.post('/newPrescription', auth, CreateNewPrescriptionTransaction);
+
 module.exports = router;
