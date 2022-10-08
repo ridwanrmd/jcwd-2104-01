@@ -20,7 +20,8 @@ import NextLink from 'next/link';
 import Image from 'next/image';
 import theme from '../../components/theme';
 import PrescriptInfo from '../../components/PrescriptInfo';
-import { useSession, signOut, getSession } from 'next-auth/react';
+import { useSession, getSession } from 'next-auth/react';
+import ShippingCard from '../../components/ShippingCard';
 
 import { useRouter } from 'next/router';
 
@@ -28,6 +29,9 @@ function Prescription(props) {
   const router = useRouter();
   const [prescriptionSource, setPrescriptionSource] = useState();
   const [prescriptionImage, setPrescriptionImage] = useState();
+  const [selectedAddress, setSelectedAddress] = useState(props.addresses[0]);
+  const [selectedShipper, setSelectedShipper] = useState();
+  const [selectedShippingCost, setSelectedShippingCost] = useState();
 
   const toast = useToast();
   const { data: session } = useSession();
@@ -58,6 +62,24 @@ function Prescription(props) {
         config,
       );
 
+      try {
+        const splitKurir = selectedShippingCost.split(',');
+        const kurir = `${selectedShipper},${splitKurir[0]}`;
+        const biaya = splitKurir[1];
+        const estimasi = splitKurir[2];
+        const body = {
+          addressId: selectedAddress.addressId,
+          kurir,
+          biaya,
+          estimasi,
+        };
+
+        await axiosInstance.post('/transactions/newPrescription', body, config);
+      } catch (error) {
+        console.log(error);
+        alert(error.response.data.message);
+      }
+
       toast({
         description: resPostPrescription.data.message,
         position: 'top',
@@ -82,7 +104,7 @@ function Prescription(props) {
   return (
     <ChakraProvider theme={theme}>
       <Navbar session={session} user={props.user} />
-      <Box mx={{ base: '24px', md: '120px' }} mt="24px" height={'145vh'}>
+      <Box mx={{ base: '24px', md: '120px' }} mt="24px" pb="2%">
         <HStack>
           <NextLink href="/">
             <Link
@@ -137,6 +159,18 @@ function Prescription(props) {
             </HStack>
           </Flex>
         </Box>
+        {prescriptionSource && (
+          <ShippingCard
+            selectedAddress={selectedAddress}
+            selectedShipper={selectedShipper}
+            selectedShippingCost={selectedShippingCost}
+            setSelectedAddress={setSelectedAddress}
+            setSelectedShipper={setSelectedShipper}
+            setSelectedShippingCost={setSelectedShippingCost}
+            addresses={props.addresses}
+            user={props.user}
+          />
+        )}
         <Box
           align="center"
           width="794px"
@@ -190,14 +224,19 @@ function Prescription(props) {
               </>
             ) : (
               <>
-                <Box width="350px" height="250" mt="20px">
-                  <Image
-                    width="350px"
-                    height="250"
-                    src={prescriptionSource}
-                    alt="gambar resep"
-                  />
-                </Box>
+                <HStack ml="5.5%" align="start">
+                  <Box width="350px" height="250" mt="20px">
+                    <Image
+                      width="350px"
+                      height="250"
+                      src={prescriptionSource}
+                      alt="gambar resep"
+                    />
+                  </Box>
+                  <Button variant="ghost" onClick={cancelImage}>
+                    X
+                  </Button>
+                </HStack>
                 {prescriptionImage?.size >= 201792 ? (
                   <Flex direction={'column'}>
                     <Text fontSize={'xs'} color="red">
@@ -264,6 +303,7 @@ function Prescription(props) {
             )}
           </VStack>
         </Box>
+
         <PrescriptInfo />
       </Box>
     </ChakraProvider>
@@ -284,9 +324,15 @@ export async function getServerSideProps(context) {
     const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
     if (!resGetUser.data.data.isVerified)
       return { redirect: { destination: '/' } };
+
+    const getUserAddresses = await axiosInstance.get(
+      `/addresses/userAddress`,
+      config,
+    );
     return {
       props: {
         user: resGetUser.data.data,
+        addresses: getUserAddresses.data.data,
       },
     };
   } catch (error) {
