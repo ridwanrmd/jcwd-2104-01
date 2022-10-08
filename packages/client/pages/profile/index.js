@@ -298,7 +298,7 @@ export default function Profile(props) {
               lineHeight={'6'}
               color="#878686"
             >
-              Isi nama dan profilmuz
+              Isi nama dan profilmu
             </Text>
             <Button colorScheme={'twitter'} w="full" onClick={onOpen}>
               Lengkapi Profil

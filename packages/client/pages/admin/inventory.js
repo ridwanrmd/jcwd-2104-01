@@ -34,6 +34,8 @@ export default function Inventory(props) {
   const [size, setSize] = useState(1);
   const [productList, setProductList] = useState();
 
+  console.log(props.product);
+
   const {
     isOpen: isRacikOpen,
     onOpen: onRacikOpen,
@@ -293,7 +295,6 @@ export async function getServerSideProps(context) {
 
     if (!resGetUser.data.data.isAdmin)
       return { redirect: { destination: '/' } };
-
     return {
       props: {
         product: resGetProduct.data.result,

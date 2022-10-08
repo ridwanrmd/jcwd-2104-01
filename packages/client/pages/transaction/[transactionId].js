@@ -91,15 +91,19 @@ function Transaction(props) {
             mt="2rem"
             justifyContent={'center'}
           >
-            <NextLink href={'/riwayat'}>
-              <Button
-                size={'xs'}
-                colorScheme={'twitter'}
-                onClick={confrimOrder}
-              >
-                Delivered Order
-              </Button>
-            </NextLink>
+            {transactionList[0]?.transaction?.transactionStatus ==
+              'Dikirim' && (
+              <NextLink href={'/riwayat'}>
+                <Button
+                  size={'xs'}
+                  colorScheme={'twitter'}
+                  onClick={confrimOrder}
+                >
+                  Delivered Order
+                </Button>
+              </NextLink>
+            )}
+
             <NextLink href={'/riwayat'}>
               <Button size={'xs'} colorScheme={'twitter'} onClick={CancelOrder}>
                 Cancel Order

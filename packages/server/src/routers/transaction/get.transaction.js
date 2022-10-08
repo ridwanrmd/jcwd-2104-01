@@ -102,10 +102,10 @@ const getTransactionSelected = async (req, res, next) => {
     };
     switch (Number(selected)) {
       case 1:
-        getSelectData('Menuggu Pembayaran');
+        getSelectData('Menunggu Pembayaran');
         break;
       case 2:
-        getSelectData('Menuggu Konfirmasi Pembayaran');
+        getSelectData('Menunggu Konfirmasi Pembayaran');
         break;
       case 3:
         getSelectData('Diproses');
@@ -122,7 +122,7 @@ const getTransactionSelected = async (req, res, next) => {
 
       default:
         getAlltData();
-        
+
         break;
     }
   } catch (error) {

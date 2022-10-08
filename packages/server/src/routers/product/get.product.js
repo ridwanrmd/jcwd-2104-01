@@ -14,8 +14,8 @@ const getAllProduct = async (req, res, next) => {
     productName,
     page = 1,
     pageSize = 12,
-    orderBy = 'price',
-    order = 'ASC',
+    orderBy = 'createdAt',
+    order = 'DESC',
     isRacikan = false,
   } = req.query;
 
@@ -74,14 +74,6 @@ const getAllProduct = async (req, res, next) => {
       limit,
     });
 
-    // if (!amount.length) {
-    //   return res.status(404).send({
-    //     message: 'Not Found',
-    //     result: result,
-    //     totalPage: amount.length,
-    //   });
-    // }
-
     res.send({
       status: 'Success',
       message: 'Success get product list',
@@ -130,12 +122,23 @@ const getDetailProduct = async (req, res, next) => {
 
 const getAllProductNoLimit = async (req, res, next) => {
   const getAllProduct = await product.findAll({
-    attributes: ['productId', 'productName', 'unit', 'satuanUnit'],
+    attributes: [
+      'productId',
+      'productName',
+      'unit',
+      'satuanUnit',
+      'stock',
+      'url',
+    ],
     where: {
       isRacikan: false,
     },
   });
-  res.send({ status: 'Success', message: 'bismillah', result: getAllProduct });
+  res.send({
+    status: 'Success',
+    message: 'Success get all products',
+    result: getAllProduct,
+  });
 };
 const getQuantityDetailProduct = async (req, res, next) => {
   const { productId } = req.params;
