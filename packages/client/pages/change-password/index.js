@@ -38,11 +38,21 @@ function ChangePassword(props) {
   };
 
   const onClick = async () => {
-    const response = await axiosInstance.patch(`/user/updatePassword/`, body);
-    if (response.data.code == 400) {
-      setErrorMessage(response.data.message);
-    } else {
-      router.replace('/');
+    try {
+      const response = await axiosInstance.patch(
+        `/users/updatePassword/`,
+        body,
+      );
+      if (response.data.code == 400) {
+        setErrorMessage(response.data.message);
+      } else {
+        router.replace('/');
+        // console.log(response.error.message);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response) return alert(error.response.data.message);
+      alert(error.message);
     }
   };
 
@@ -146,13 +156,14 @@ export async function getServerSideProps(context) {
     const session = await getSession({ req: context.req });
     if (!session) return { redirect: { destination: '/' } };
 
-    const userId = session.user.userId;
+    const { userId } = session.user;
 
-    const accessToken = session.user.accessToken;
+    const { accessToken } = session.user;
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };
-    const resGetUser = await axiosInstance.get(`/user/${userId}`, config);
+
+    const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
 
     return {
       props: resGetUser.data.data,

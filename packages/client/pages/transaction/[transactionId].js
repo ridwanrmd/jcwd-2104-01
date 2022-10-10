@@ -1,24 +1,40 @@
-import { Alert, Box, Button, Flex, Stack } from '@chakra-ui/react';
+import {
+  Alert,
+  Box,
+  Button,
+  Flex,
+  Stack,
+  Link,
+  Select,
+} from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import { getSession, useSession } from 'next-auth/react';
 import Navbar from '../../components/Navbar';
 import { useRouter } from 'next/router';
 import ListPTransaction from '../../components/CardTransaction/ListPTransaction';
+import AdminListPTrans from '../../components/CardTransaction/AdminListPTrans';
 import NextLink from 'next/link';
 
 function Transaction(props) {
   const { data: session } = useSession();
+  const { getTransactData } = props.transaction.data;
+  console.log(props.user.IsAdmin);
 
   const [transactionList, setTransactionList] = useState([]);
+  const [transactionListAdmin, setTransactionListAdmin] = useState([]);
   const [statusTrans, setStatusTrans] = useState([]);
   const router = useRouter();
+  // console.log(statusTrans);
   const CancelOrder = async () => {
     try {
       const { transactionId } = router.query;
+      // console.log(transactionId);
       const cancel = await axiosInstance.post(
-        `/transactions/cancelTransaction/${transactionId}`,
+        `/transactions/cancelTransaction/${transactionId}?transactionId=${transactionId}`,
       );
+      fetchTransactionList();
+      // console.log(cancel);
     } catch (error) {
       console.log(error);
     }
@@ -28,16 +44,21 @@ function Transaction(props) {
     try {
       const { transactionId } = router.query;
       const updateStatus = await axiosInstance.post(
-        `/transactions/confirmTransaction/${transactionId}`,
+        `/transactions/confirmTransaction/${transactionId}?transactionId=${transactionId}`,
       );
-      setStatusTrans(updateStatus.data.data.updatedTransaction);
+      // console.log(updateStatus.data.data.updatedTransaction);
+      fetchTransactionList();
     } catch (error) {
       console.log(error);
     }
   };
 
+  // console.log(router.query.transactionId);
   useEffect(() => {
     fetchTransactionList();
+  }, []);
+  useEffect(() => {
+    fetchTransactionListByAdmin;
   }, []);
 
   const fetchTransactionList = async () => {
@@ -58,42 +79,91 @@ function Transaction(props) {
       console.log(error);
     }
   };
+  const fetchTransactionListByAdmin = async () => {
+    try {
+      const { transactionId } = router.query;
+      // console.log(transactionId);
+
+      const get = await axiosInstance.get(
+        `/transactions/dataTransactionByAdmin?${transactionId}`,
+      );
+      // console.log(get.data.data.getTransactData);
+      setTransactionListAdmin(get.data.data.getTransactData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // console.log(transactionList);
   const renderListTransaction = () => {
     return (
-      <ListPTransaction data={transactionList} statusTrans={statusTrans} />
+      <ListPTransaction
+        data={transactionList}
+        statusTrans={statusTrans}
+        user={props.user}
+      />
     );
   };
 
   return (
-    <>
-      <Navbar session={session} user={props.user} />
-      <Box
-        display={['block', 'block', 'block']}
-        mb={['100px', '200px', '59px']}
-        justifyContent="center"
-        mt="66px"
-      >
-        {renderListTransaction()}
-
-        <Stack
-          mt="56px"
-          w="826px"
-          direction={['column', 'column', 'row']}
-          spacing="16px"
-        >
-          <Button w="405px" variant="main-outline">
-            Kembali Ke Beranda
-          </Button>
-          <Flex
-            direction={'row'}
-            align="center"
-            gap="1rem"
-            mt="2rem"
-            justifyContent={'center'}
+    <Flex>
+      {/* admin */}
+      {props.user.isAdmin ? (
+        <div>
+          <Box
+            display={['block', 'block', 'block']}
+            // //   mx={[5, 0, 235]}
+            // w={['40%', '40%', '40%']}
+            mb={['100px', '200px', '59px']}
+            justifyContent="center"
+            mt="66px"
           >
-            {transactionList[0]?.transaction?.transactionStatus ==
-              'Dikirim' && (
-              <NextLink href={'/riwayat'}>
+            {renderListTransaction()}
+
+            <Stack
+              mt="56px"
+              w="826px"
+              direction={['column', 'column', 'row']}
+              spacing="16px"
+            >
+              <Link href={`/admin/transaksi`}>
+                {' '}
+                <Button w="405px" variant="main-outline">
+                  Kembali
+                </Button>
+              </Link>
+            </Stack>
+          </Box>
+        </div>
+      ) : (
+        // user
+        <div>
+          {' '}
+          <Navbar session={session} user={props.user} />
+          <Box
+            display={['block', 'block', 'block']}
+            // //   mx={[5, 0, 235]}
+            // w={['40%', '40%', '40%']}
+            mb={['100px', '200px', '59px']}
+            justifyContent="center"
+            mt="66px"
+          >
+            {renderListTransaction()}
+
+            <Stack
+              mt="56px"
+              w="826px"
+              direction={['column', 'column', 'row']}
+              spacing="16px"
+            >
+              <Flex
+                direction={'row'}
+                align="center"
+                gap="1rem"
+                mt="2rem"
+                p={20}
+                justifyContent={'center'}
+                // width={'100%'}
+              >
                 <Button
                   size={'xs'}
                   colorScheme={'twitter'}
@@ -101,18 +171,20 @@ function Transaction(props) {
                 >
                   Delivered Order
                 </Button>
-              </NextLink>
-            )}
 
-            <NextLink href={'/riwayat'}>
-              <Button size={'xs'} colorScheme={'twitter'} onClick={CancelOrder}>
-                Cancel Order
-              </Button>
-            </NextLink>
-          </Flex>
-        </Stack>
-      </Box>
-    </>
+                <Button
+                  size={'xs'}
+                  colorScheme={'twitter'}
+                  onClick={CancelOrder}
+                >
+                  Cancel Order
+                </Button>
+              </Flex>
+            </Stack>
+          </Box>
+        </div>
+      )}
+    </Flex>
   );
 }
 export default Transaction;

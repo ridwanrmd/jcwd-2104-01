@@ -11,9 +11,10 @@ const addressRouter = require('./routers/address');
 const rajaongkirRouter = require('./routers/rajaongkir');
 const cartRouter = require('./routers/cart');
 const productRouter = require('./routers/product');
-const prescriptionRouter = require('./routers/prescription');
 const transactionRouter = require('./routers/transaction');
 const categoryRouter = require('./routers/category');
+const prescriptionRouter = require('./routers/prescription');
+const reportRouter = require('./routers/report');
 
 // Config
 app.use(cors());
@@ -24,6 +25,7 @@ app.use(express.json());
 // router
 
 app.use('/transactions', transactionRouter);
+
 app.use('/carts', cartRouter);
 app.use('/users', userRouter);
 app.use('/addresses', addressRouter);
@@ -32,6 +34,7 @@ app.use('/product', productRouter);
 app.use('/transactions', transactionRouter);
 app.use('/category', categoryRouter);
 app.use('/prescriptions', prescriptionRouter);
+app.use('/report', reportRouter);
 
 app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);

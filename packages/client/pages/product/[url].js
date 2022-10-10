@@ -26,7 +26,9 @@ export default function ProductDetail({ product, user }) {
     if (!session) return alert('Anda perlu melakukan login terlebih dahulu');
     if (!user.isVerified)
       return alert('Anda perlu melakukan verifikasi akun terlebih dahulu');
+    const userId = session.user.userId;
     const { accessToken } = session.user;
+    // console.log(token);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
     };

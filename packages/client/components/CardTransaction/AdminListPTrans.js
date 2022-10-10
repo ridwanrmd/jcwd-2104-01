@@ -16,15 +16,15 @@ import { TbClock } from 'react-icons/tb';
 import { MdArrowDropDown } from 'react-icons/md';
 import axiosInstance from '../../src/config/api';
 import { api_origin } from '../../constraint';
-import OrderStatus from '../../components/CardTransaction/OrderStatus';
-import PaymentAndAddress from '../../components/CardTransaction/PaymentAndAddress';
-const TransactionList = ({ data, address, statusTrans, user }) => {
-  console.log(user);
+
+const AdminTransactionList = ({ data, address, statusTrans }) => {
+  //   console.log(data);
   return (
     <div key={data.dtId}>
       <Flex>
         <Flex gap="1rem" direction={'column'} maxW="600px">
           {data.map((v, i) => {
+            // console.log(v);
             return (
               <div key={i}>
                 <Box
@@ -66,32 +66,11 @@ const TransactionList = ({ data, address, statusTrans, user }) => {
           <Text fontSize={'20px'} fontWeight={'700'} mb="1rem">
             Order Detail
           </Text>
-          <Grid templateColumns="repeat(4, 1fr)" gap="1rem">
-            <GridItem colSpan={2} p="1rem">
-              <OrderStatus
-                data={data}
-                address={address}
-                statusTrans={statusTrans}
-                user={user}
-              />
-            </GridItem>
-          </Grid>
         </Box>
         <Divider orientation="vertical" />
-
-        <Box w="full" px="1rem">
-          <Text fontSize={'20px'} fontWeight={'700'} mb="1rem">
-            Payment
-          </Text>
-          <Grid gap="1rem">
-            <GridItem colSpan={2} p="1rem">
-              <PaymentAndAddress data={data} user={user} />
-            </GridItem>
-          </Grid>
-        </Box>
       </Flex>
     </div>
   );
 };
 
-export default TransactionList;
+export default AdminTransactionList;

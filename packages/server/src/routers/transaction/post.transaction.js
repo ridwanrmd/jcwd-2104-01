@@ -149,10 +149,11 @@ const createTransaction = async (req, res, next) => {
 
 const ConfrimDeliveryTransaction = async (req, res, next) => {
   try {
-    const { transactionId } = req.params;
+    const { transactionId } = req.query;
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
+
     const finishTransaction = await transaction.update(
       { transactionStatus: 'Pesanan Dikonfirmasi' },
       {
@@ -179,10 +180,11 @@ const ConfrimDeliveryTransaction = async (req, res, next) => {
 
 const CancelTransaction = async (req, res, next) => {
   try {
-    const { transactionId } = req.params;
+    const { transactionId } = req.query;
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
+
     let statusTR;
     findTransaction.forEach(async (data) => {
       statusTR = data.dataValues.transactionStatus;
@@ -244,23 +246,13 @@ const CancelTransaction = async (req, res, next) => {
             },
           );
         });
-        findTransaction.forEach(async (data) => {
-          await detailTransaction.destroy({
-            where: { transactionId: data.dataValues.transactionId },
-          });
-          await transaction.destroy({
-            where: { transactionId: data.dataValues.transactionId },
-          });
-        });
+
         res.send({
           status: 'Succsess',
           message: 'Cancel Transaction',
         });
       }
-      res.send({
-        status: 'Rejected',
-        message: 'Transaction Status In Prosess',
-      });
+      //kasih alert di FE kalau gabisa di Cancel
     });
   } catch (error) {
     next(error);
