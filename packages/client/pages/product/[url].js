@@ -2,6 +2,7 @@ import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import { api_origin } from '../../constraint';
 import {
+  Alert,
   Box,
   Button,
   Collapse,
@@ -22,6 +23,9 @@ export default function ProductDetail({ product, user }) {
 
   const addToCart = async () => {
     const session = await getSession();
+    if (!session) return alert('Anda perlu melakukan login terlebih dahulu');
+    if (!user.isVerified)
+      return alert('Anda perlu melakukan verifikasi akun terlebih dahulu');
     const { accessToken } = session.user;
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },

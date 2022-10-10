@@ -107,6 +107,10 @@ const getDetailProduct = async (req, res, next) => {
           model: Category,
           attributes: ['category'],
         },
+        {
+          model: detailProduct,
+          attributes: ['quantity'],
+        },
       ],
     });
 
