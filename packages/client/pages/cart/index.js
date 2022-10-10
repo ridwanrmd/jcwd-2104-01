@@ -1,6 +1,9 @@
 import {
   Box,
   Button,
+  Checkbox,
+  Spinner,
+  useToast,
   Divider,
   Grid,
   GridItem,
@@ -18,6 +21,7 @@ import { getSession, useSession } from 'next-auth/react';
 import { ImLocation2 } from 'react-icons/im';
 import ShippingAddress from '../../components/ShippingAddress';
 import ShippingMethod from '../../components/ShippingMethod';
+import { useRouter } from 'next/router';
 import AddAddressNew from '../../components/AddAddressNew';
 
 function Cart(props) {
@@ -27,6 +31,7 @@ function Cart(props) {
   const [cartList, setCartList] = useState([]);
   const [changes, setChanges] = useState(0);
   const [modalKurir, setModalKurir] = useState(false);
+  const router = useRouter();
   const [modalAdd, setModalAdd] = useState();
 
   const [userAddresses, setUserAddresses] = useState([]);
@@ -219,6 +224,8 @@ function Cart(props) {
         body,
         config,
       );
+
+      router.replace(`/transaction/${res.data.data.ID}`);
     } catch (error) {
       console.log(error);
     }
@@ -412,6 +419,7 @@ function Cart(props) {
                 >
                   Bayar
                 </Button>
+                {/* </Link> */}
               </Stack>
             </Box>
           </Box>

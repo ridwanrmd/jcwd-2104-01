@@ -4,7 +4,8 @@ import moment from 'moment';
 import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 
-const StatusTransaction = ({ data, statusTrans }) => {
+const StatusTransaction = ({ data, statusTrans, user }) => {
+  console.log(user);
   const [addressUser, setAddressUser] = useState({});
   let dtId;
   let status;
@@ -46,53 +47,98 @@ const StatusTransaction = ({ data, statusTrans }) => {
 
   return (
     <>
-      <div>
-        <Flex>
-          <Text minW="140px">Order Number </Text>:
-          <Spacer />
-          <Text textAlign={'end'}>{dtId}</Text>
-        </Flex>
-        <Flex>
-          <Text minW="140px">Order Status </Text>:
-          <Spacer />
-          <Text textAlign={'end'}>{status}</Text>
-        </Flex>
-        <Flex>
-          <Text minW="140px">Order Time </Text>:
-          <Spacer />
-          <Text textAlign={'end'} minW="160px">
-            {moment(createdAt).format('LLL')}
-          </Text>
-        </Flex>
-        <Flex>
-          <Text minW="140px">ShippingAddress </Text>:
-          <Spacer />
-          <Text textAlign={'end'} minW="170px">
-            {' '}
-            {addressUser.address} {addressUser.city_name} {addressUser.province}
-          </Text>
-        </Flex>
-        <Flex mt="2rem">
-          <Text minW="140px">Total Price </Text>:
-          <Spacer />
-          <Text textAlign={'end'}>Rp.{NumPrice.toLocaleString('id-ID')}</Text>
-        </Flex>
-        <Flex>
-          <Text minW="140px">Delivery Fee </Text>:
-          <Spacer />
-          <Text textAlign={'end'}>Rp.{NumOnkir.toLocaleString('id-ID')}</Text>
-        </Flex>
-        <Flex>
-          <Text minW="140px" fontWeight={'700'}>
-            Total Payment{' '}
-          </Text>
-          :
-          <Spacer />
-          <Text textAlign={'end'} fontWeight={'700'}>
-            Rp.{grandTotal.toLocaleString('id-ID')}
-          </Text>
-        </Flex>{' '}
-      </div>
+      {user.isAdmin ? (
+        // admin
+        <div>
+          <Flex>
+            <Text minW="140px">Order Number </Text>:
+            <Spacer />
+            <Text textAlign={'end'}>{dtId}</Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px">Order Status </Text>:
+            <Spacer />
+            <Text textAlign={'end'}>{status}</Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px">Order Time </Text>:
+            <Spacer />
+            <Text textAlign={'end'} minW="160px">
+              {moment(createdAt).format('LLL')}
+            </Text>
+          </Flex>
+          <Flex mt="2rem">
+            <Text minW="140px">Total Price </Text>:
+            <Spacer />
+            <Text textAlign={'end'}>Rp.{NumPrice.toLocaleString('id-ID')}</Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px">Delivery Fee </Text>:
+            <Spacer />
+            <Text textAlign={'end'}>Rp.{NumOnkir.toLocaleString('id-ID')}</Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px" fontWeight={'700'}>
+              Total Payment{' '}
+            </Text>
+            :
+            <Spacer />
+            <Text textAlign={'end'} fontWeight={'700'}>
+              Rp.{grandTotal.toLocaleString('id-ID')}
+            </Text>
+          </Flex>{' '}
+        </div>
+      ) : (
+        //user
+        <div>
+          <Flex>
+            <Text minW="140px">Order Number </Text>:
+            <Spacer />
+            <Text textAlign={'end'}>{dtId}</Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px">Order Status </Text>:
+            <Spacer />
+            <Text textAlign={'end'}>{status}</Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px">Order Time </Text>:
+            <Spacer />
+            <Text textAlign={'end'} minW="160px">
+              {moment(createdAt).format('LLL')}
+            </Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px">ShippingAddress </Text>:
+            <Spacer />
+            <Text textAlign={'end'} minW="170px">
+              {' '}
+              {addressUser.address} {addressUser.city_name}{' '}
+              {addressUser.province}
+            </Text>
+          </Flex>
+          <Flex mt="2rem">
+            <Text minW="140px">Total Price </Text>:
+            <Spacer />
+            <Text textAlign={'end'}>Rp.{NumPrice.toLocaleString('id-ID')}</Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px">Delivery Fee </Text>:
+            <Spacer />
+            <Text textAlign={'end'}>Rp.{NumOnkir.toLocaleString('id-ID')}</Text>
+          </Flex>
+          <Flex>
+            <Text minW="140px" fontWeight={'700'}>
+              Total Payment{' '}
+            </Text>
+            :
+            <Spacer />
+            <Text textAlign={'end'} fontWeight={'700'}>
+              Rp.{grandTotal.toLocaleString('id-ID')}
+            </Text>
+          </Flex>{' '}
+        </div>
+      )}
     </>
   );
 };
