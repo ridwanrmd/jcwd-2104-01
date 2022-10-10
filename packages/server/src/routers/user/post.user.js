@@ -26,35 +26,35 @@ const registerUserHandler = async (req, res, next) => {
       email,
       phone,
       password,
-      confirmPassword,
+      // confirmPassword,
     });
-    if (emptyFields.length) {
-      throw {
-        code: 400,
-        message: `Empty fields: ${emptyFields}`,
-        data: { result: emptyFields },
-      };
-    }
+    // if (emptyFields.length) {
+    //   throw {
+    //     code: 400,
+    //     message: `Empty fields: ${emptyFields}`,
+    //     data: { result: emptyFields },
+    //   };
+    // }
     // checking email
-    const emailValidator = validator.validate(email);
-    if (!emailValidator) {
-      throw {
-        code: 400,
-        message: 'Wrong email format',
-      };
-    }
+    // const emailValidator = validator.validate(email);
+    // if (!emailValidator) {
+    //   throw {
+    //     code: 400,
+    //     message: 'Wrong email format',
+    //   };
+    // }
 
     //checking password
-    const validatePassword = passwordValidator(password);
-    if (validatePassword)
-      throw {
-        code: 400,
-        message: validatePassword,
-      };
+    // const validatePassword = passwordValidator(password);
+    // if (validatePassword)
+    //   throw {
+    //     code: 400,
+    //     message: validatePassword,
+    //   };
 
     // match password
-    if (password !== confirmPassword)
-      throw { code: 400, message: "Password didn't match" };
+    // if (password !== confirmPassword)
+    //   throw { code: 400, message: "Password didn't match" };
 
     // check exist email
     const resGetUser = await user.findOne({
@@ -106,6 +106,7 @@ const registerUserHandler = async (req, res, next) => {
 const resendEmailVerification = async (req, res, next) => {
   try {
     const { email, userId } = req.body;
+    console.log(req.body);
 
     // create new token
     const token = createToken({ userId });

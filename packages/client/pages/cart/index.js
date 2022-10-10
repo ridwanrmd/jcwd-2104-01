@@ -267,7 +267,7 @@ function Cart(props) {
                 <Text alignItems="left" as="b">
                   {recipient}
                 </Text>
-                <Text>{user.phone}</Text>
+                <Text>{`+62 ${user.phone}`}</Text>
                 {!selectedAddress ? (
                   <Text color="red.500">
                     Anda belum memiliki alamat pengiriman

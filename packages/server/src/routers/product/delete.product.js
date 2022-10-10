@@ -4,6 +4,7 @@ const {
   product,
   detailProduct,
   productCategory,
+  logHistory,
   sequelize,
 } = require('../../../models');
 const fs = require('fs');
@@ -58,6 +59,46 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+const deleteUpdateProductStock = async (req, res, next) => {
+  try {
+    const { productId, historyId } = req.body;
+    const resGetLoghistory = await logHistory.findOne({
+      where: { historyId },
+      attributes: ['quantity'],
+    });
+    const resGetProduct = await product.findOne({
+      where: { productId },
+      attributes: ['stock'],
+    });
+    const newStock =
+      resGetProduct.dataValues.stock - resGetLoghistory.dataValues.quantity;
+    console.log(newStock);
+
+    const result = await sequelize.transaction(async (t) => {
+      await product.update(
+        { stock: newStock },
+        { where: { productId } },
+        { transaction: t },
+      );
+
+      const resDeleteUpdateStock = await logHistory.destroy(
+        { where: { historyId } },
+        { transaction: t },
+      );
+
+      return resDeleteUpdateStock;
+    });
+
+    res.send({
+      status: 'Berhasil',
+      message: 'Berhasil hapus update stok produk',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 router.delete('/:productId', deleteProduct);
+router.delete('/', deleteUpdateProductStock);
 
 module.exports = router;

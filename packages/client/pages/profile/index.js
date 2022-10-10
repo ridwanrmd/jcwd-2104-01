@@ -26,15 +26,16 @@ export default function Profile(props) {
   const [modalAdd, setModalAdd] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  console.log(currentAddress);
 
   const toast = useToast();
   useEffect(() => {
     fetchUserAddresses();
   }, []);
 
-  useEffect(() => {
-    setCurrentAddress(userAddresses[0]);
-  }, []);
+  // useEffect(() => {
+  //   setCurrentAddress(userAddresses[0]);
+  // }, []);
 
   const fetchUserAddresses = async () => {
     try {
@@ -318,13 +319,20 @@ export default function Profile(props) {
             fontSize={{ base: 'md', md: 'md' }}
             fontWeight="medium"
             lineHeight={'6'}
-            // as="u"
           >
             Alamat
           </Text>
-          <Box overflow="scroll" height="23vh">
-            {renderAddress()}
-          </Box>
+          {userAddresses.length == false ? (
+            <Box height="23vh">
+              <Text te mx="24%" pt="10%">
+                Anda belum memiliki alamat...
+              </Text>
+            </Box>
+          ) : (
+            <Box overflow="scroll" height="23vh">
+              {renderAddress()}
+            </Box>
+          )}
         </Box>
         <Box mb="4" mt="3.5" mx="6">
           <Button

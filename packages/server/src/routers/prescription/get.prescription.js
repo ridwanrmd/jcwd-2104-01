@@ -15,7 +15,7 @@ const getUserPrescriptions = async (req, res, next) => {
 
     res.send({
       status: 'Success',
-      message: 'berhasil mendapatkan daftar resep',
+      message: 'Berhasil mendapatkan daftar resep',
       data: resGetUserPrescriptions,
     });
   } catch (error) {
@@ -24,3 +24,5 @@ const getUserPrescriptions = async (req, res, next) => {
 };
 
 router.get('/allUserPrescriptions', auth, getUserPrescriptions);
+
+module.exports = router;

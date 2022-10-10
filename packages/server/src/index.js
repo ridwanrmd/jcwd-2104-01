@@ -14,6 +14,7 @@ const productRouter = require('./routers/product');
 const prescriptionRouter = require('./routers/prescription');
 const transactionRouter = require('./routers/transaction');
 const categoryRouter = require('./routers/category');
+const logHistoryRouter = require('./routers/logHistory');
 
 // Config
 app.use(cors());
@@ -32,6 +33,7 @@ app.use('/product', productRouter);
 app.use('/transactions', transactionRouter);
 app.use('/category', categoryRouter);
 app.use('/prescriptions', prescriptionRouter);
+app.use('/logHistories', logHistoryRouter);
 
 app.get('/api', (req, res) => {
   res.send(`Hello, this is my API`);
