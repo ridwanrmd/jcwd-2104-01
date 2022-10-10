@@ -11,35 +11,31 @@ import {
   TabPanel,
   Tab,
   Link,
+  Image,
 } from '@chakra-ui/react';
-import Image from 'next/image';
+// import Image from 'next/image';
+import { api_origin } from '../../constraint';
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../src/config/api';
 import { DeleteIcon, AddIcon, WarningIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 
-const TransactionHistory = ({ data, selected }) => {
+const AdminTransHistory = ({ data, selected }) => {
   // console.log(data);
+
   return (
     <div>
       <HStack
         bg={'gray.50'}
         h={100}
-        spacing="95"
-        my={'10'}
-        ml={'20'}
+        spacing="45"
+        my={'8'}
+        ml={'10'}
         mr={'20'}
-        px={6}
+        px={4}
         rounded={6}
         boxShadow="lg"
       >
-        <Image
-          unoptimized
-          alt="Pembelian"
-          width={70}
-          height={70}
-          src={'/login.png'}
-        />
         <Box w="180px">No.Pembelian: {data.transactionId}</Box>
         <Box w="180px">Status: {data.transactionStatus}</Box>
         <Box w="180px">Total Price: Rp. {data.total.toLocaleString('id')}</Box>
@@ -55,4 +51,4 @@ const TransactionHistory = ({ data, selected }) => {
     </div>
   );
 };
-export default TransactionHistory;
+export default AdminTransHistory;

@@ -12,7 +12,7 @@ const updateNewPayment = async (req, res, next) => {
     const paymentProof = req.body.name;
 
     const resAddPayment = await transaction.update(
-      { paymentProof },
+      { paymentProof, transactionStatus: 'Menunggu Konfirmasi Pembayaran' },
       { where: { transactionId, userId } },
     );
     if (!resAddPayment) throw { message: 'Gagal unggah bukti pembayaran' };

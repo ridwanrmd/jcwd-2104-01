@@ -56,7 +56,7 @@ const createTransaction = async (req, res, next) => {
       kurir,
       biaya,
       estimasi,
-      transactionStatus: 'Menuggu Pembayaran',
+      transactionStatus: 'Menunggu Pembayaran',
     });
     const dueDate = moment(newTransaction.dataValues.createdAt).add(1, 'days');
 
@@ -79,7 +79,7 @@ const createTransaction = async (req, res, next) => {
       const checkStatus = await transaction.findOne({
         where: {
           transactionId: newTransaction.dataValues.transactionId,
-          transactionStatus: 'Menuggu Pembayaran',
+          transactionStatus: 'Menunggu Pembayaran',
         },
       });
 
@@ -147,10 +147,11 @@ const createTransaction = async (req, res, next) => {
 
 const ConfrimDeliveryTransaction = async (req, res, next) => {
   try {
-    const { transactionId } = req.params;
+    const { transactionId } = req.query;
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
+
     const finishTransaction = await transaction.update(
       { transactionStatus: 'Pesanan Dikonfirmasi' },
       {
@@ -177,16 +178,17 @@ const ConfrimDeliveryTransaction = async (req, res, next) => {
 
 const CancelTransaction = async (req, res, next) => {
   try {
-    const { transactionId } = req.params;
+    const { transactionId } = req.query;
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
+
     let statusTR;
     findTransaction.forEach(async (data) => {
       statusTR = data.dataValues.transactionStatus;
       if (
-        statusTR == 'Menuggu Pembayaran' ||
-        statusTR == 'Menuggu Konfirmasi Pembayaran'
+        statusTR == 'Menunggu Pembayaran' ||
+        statusTR == 'Menunggu Konfirmasi Pembayaran'
       ) {
         await transaction.update(
           { transactionStatus: 'Dibatalkan' },
@@ -242,23 +244,13 @@ const CancelTransaction = async (req, res, next) => {
             },
           );
         });
-        findTransaction.forEach(async (data) => {
-          await detailTransaction.destroy({
-            where: { transactionId: data.dataValues.transactionId },
-          });
-          await transaction.destroy({
-            where: { transactionId: data.dataValues.transactionId },
-          });
-        });
+
         res.send({
           status: 'Succsess',
           message: 'Cancel Transaction',
         });
       }
-      res.send({
-        status: 'Rejected',
-        message: 'Transaction Status In Prosess',
-      });
+      //kasih alert di FE kalau gabisa di Cancel
     });
   } catch (error) {
     next(error);
