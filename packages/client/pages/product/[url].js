@@ -21,6 +21,8 @@ export default function ProductDetail({ product, user }) {
   const { data: session } = useSession();
   const [show, setShow] = useState(false);
 
+  console.log(product);
+
   const addToCart = async () => {
     const session = await getSession();
     if (!session) return alert('Anda perlu melakukan login terlebih dahulu');
@@ -94,7 +96,11 @@ export default function ProductDetail({ product, user }) {
           <Text
             fontSize="sm"
             fontWeight="normal"
-          >{`Per ${product.unit} - Stock ${product.stock}`}</Text>
+          >{`Stock ${product.stock}`}</Text>
+          <Text
+            fontSize="sm"
+            fontWeight="normal"
+          >{`Per ${product.unit} - ${product.detailProduct.quantity} ${product.satuanUnit}`}</Text>
           <Text fontSize={{ base: 'md', md: 'xl' }}>Kategori : </Text>
           {renderCategory()}
           <Text

@@ -247,7 +247,7 @@ export default function Profile(props) {
         marginInline={{ base: '2', md: '35%' }}
         shadow={{ base: 'unset', md: 'md' }}
       >
-        <Box marginInline={'6'} borderBottom="1px solid #C2CED6">
+        <Box marginInline={'6'}>
           <Text
             mt="9"
             fontSize={{ base: 'md', md: 'md' }}
@@ -285,7 +285,7 @@ export default function Profile(props) {
         </Box>
         <Box mt="2" mx="6" borderBottom="1px solid #C2CED6">
           <VStack mb="3">
-            <Text
+            {/* <Text
               fontSize={{ base: 'md', md: 'md' }}
               fontWeight="medium"
               lineHeight={'6'}
@@ -299,9 +299,9 @@ export default function Profile(props) {
               color="#878686"
             >
               Isi nama dan profilmu
-            </Text>
+            </Text> */}
             <Button colorScheme={'twitter'} w="full" onClick={onOpen}>
-              Lengkapi Profil
+              Ubah Profil
               <EditProfile
                 isOpen={isOpen}
                 onClose={onClose}

@@ -31,7 +31,6 @@ export default function Inventory(props) {
   const [categories, setCategories] = useState('');
   const [order, setOrder] = useState('');
   const [search, setSearch] = useState('');
-  const [size, setSize] = useState(1);
   const [productList, setProductList] = useState();
 
   console.log(props.product);

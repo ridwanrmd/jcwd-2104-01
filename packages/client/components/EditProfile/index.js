@@ -215,7 +215,7 @@ function EditProfile(props) {
             <FormLabel fontSize={'sm'}>Tanggal Lahir :</FormLabel>
             <Input
               name="birthDate"
-              // value={birthDate.slice(0, 10)}
+              value={birthDate.slice(0, 10)}
               onChange={onHandleChange}
               type="date"
               max="2017-01-01"
@@ -224,6 +224,9 @@ function EditProfile(props) {
         </ModalBody>
 
         <ModalFooter>
+          <Button textColor={'red'} mr={3} onClick={onCancel}>
+            Reset
+          </Button>
           <Button
             isDisabled={!isEmailError || isError}
             colorScheme="green"
@@ -231,9 +234,6 @@ function EditProfile(props) {
             onClick={() => onSaveProfile(user)}
           >
             Save
-          </Button>
-          <Button textColor={'red'} mr={3} onClick={onCancel}>
-            Reset
           </Button>
         </ModalFooter>
       </ModalContent>

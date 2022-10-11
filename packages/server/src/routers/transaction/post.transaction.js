@@ -293,6 +293,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
     let harga = 0;
     const wrap = await Promise.all(
       products.map(async (data) => {
+        const kuantiti = Number(data.quantity);
         const getProductId = await product.findOne({
           where: { productName: data.productName },
           attributes: ['productId', 'price', 'stock'],
@@ -300,7 +301,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
         });
         const { productId, price, stock } = getProductId.dataValues;
 
-        if (stock < data.quantity)
+        if (stock < kuantiti)
           throw {
             code: 400,
             message: `Kuantiti maksimal product ${data.productName} adalah ${stock}`,
@@ -308,7 +309,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
 
         const mengurangiStockProduct = await product.update(
           {
-            stock: stock - data.quantity,
+            stock: stock - kuantiti,
           },
           { where: { productId }, transaction: t },
         );
@@ -322,7 +323,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
           {
             productId,
             transactionId,
-            quantity: data.quantity,
+            quantity: kuantiti,
           },
           { transaction: t },
         );
@@ -331,7 +332,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
             code: 400,
             message: 'Gagal input barang',
           };
-        harga += price * data.quantity;
+        harga += price * kuantiti;
       }),
     );
 
@@ -348,7 +349,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
       { where: { transactionId }, transaction: t },
     );
     await t.commit();
-    res.send({ message: 'mantap' });
+    res.send({ message: 'Berhasil input product' });
   } catch (error) {
     await t.rollback();
     next(error);

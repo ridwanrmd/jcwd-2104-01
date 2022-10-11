@@ -98,6 +98,7 @@ const getDetailProduct = async (req, res, next) => {
         'stock',
         'unit',
         'url',
+        'satuanUnit',
       ],
       where: {
         url,
@@ -125,6 +126,7 @@ const getDetailProduct = async (req, res, next) => {
 };
 
 const getAllProductNoLimit = async (req, res, next) => {
+  const { isRacikan = false } = req.query;
   const getAllProduct = await product.findAll({
     attributes: [
       'productId',
@@ -135,7 +137,7 @@ const getAllProductNoLimit = async (req, res, next) => {
       'url',
     ],
     where: {
-      isRacikan: false,
+      isRacikan,
     },
   });
   res.send({

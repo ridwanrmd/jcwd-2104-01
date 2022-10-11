@@ -5,7 +5,6 @@ import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 
 const StatusTransaction = ({ data, statusTrans, user }) => {
-  console.log(user);
   const [addressUser, setAddressUser] = useState({});
   let dtId;
   let status;

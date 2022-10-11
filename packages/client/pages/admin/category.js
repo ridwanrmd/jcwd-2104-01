@@ -76,13 +76,24 @@ export default function Category(props) {
           isClosable: true,
         });
       } catch (error) {
-        return alert(error.response.data.message);
+        return toast({
+          title: error.response.data.message,
+          status: 'error',
+          position: 'top',
+          duration: 2000,
+          isClosable: true,
+        });
       }
       onClose();
       router.push(path);
     } catch (error) {
-      console.log({ error });
-      return alert(error.response.data.message);
+      return toast({
+        title: error.response.data.message,
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -95,7 +106,7 @@ export default function Category(props) {
           fontWeight="semibold"
           marginStart="20"
         >
-          Inventory
+          Kategori
         </Text>
         <Box h="90%" w="90%" bg="#F5F6F6" mx="auto">
           <Flex direction="column" w="100%" h="100%">
