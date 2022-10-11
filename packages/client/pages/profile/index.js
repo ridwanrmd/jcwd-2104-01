@@ -285,21 +285,6 @@ export default function Profile(props) {
         </Box>
         <Box mt="2" mx="6" borderBottom="1px solid #C2CED6">
           <VStack mb="3">
-            {/* <Text
-              fontSize={{ base: 'md', md: 'md' }}
-              fontWeight="medium"
-              lineHeight={'6'}
-            >
-              Yuk lengkapi data dulu
-            </Text>
-            <Text
-              fontSize={{ base: 'md', md: 'md' }}
-              fontWeight="medium"
-              lineHeight={'6'}
-              color="#878686"
-            >
-              Isi nama dan profilmu
-            </Text> */}
             <Button colorScheme={'twitter'} w="full" onClick={onOpen}>
               Ubah Profil
               <EditProfile
