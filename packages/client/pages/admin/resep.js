@@ -35,6 +35,7 @@ export default function Resep(props) {
   const renderPrescription = () => {
     return prescription?.map((data) => (
       <AdminResep
+        key={data.prescriptionId}
         productRacikanList={productRacikanList}
         productList={productList}
         data={data}
