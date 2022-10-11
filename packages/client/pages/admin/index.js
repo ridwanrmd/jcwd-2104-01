@@ -28,11 +28,7 @@ export async function getServerSideProps(context) {
     if (!resGetUser.data.data.isAdmin)
       return { redirect: { destination: '/' } };
 
-    return {
-      props: {
-        user: resGetUser.data.data,
-      },
-    };
+    return { redirect: { destination: '/admin/inventory?page=1' } };
   } catch (error) {
     const errorMessage = error.message;
     return { props: { errorMessage } };

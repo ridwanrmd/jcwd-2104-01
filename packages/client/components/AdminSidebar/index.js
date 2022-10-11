@@ -3,7 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { api_origin } from '../../constraint';
 import { signOut } from 'next-auth/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, EditIcon } from '@chakra-ui/icons';
 
 export default function AdminSidebar({ user }) {
   const router = useRouter();
@@ -59,6 +59,21 @@ export default function AdminSidebar({ user }) {
           <HamburgerIcon color="white" h="5" w="5" />
           <Text color="white" ms="2">
             Kategori
+          </Text>
+        </Flex>
+      </Box>
+
+      <Box
+        h="10"
+        cursor="pointer"
+        p="2"
+        bg={router.pathname.includes('resep') ? '#005E9D' : 'unset'}
+        onClick={() => router.push('/admin/resep')}
+      >
+        <Flex justifyContent="center">
+          <EditIcon color="white" h="5" w="5" />
+          <Text color="white" ms="2">
+            Resep
           </Text>
         </Flex>
       </Box>

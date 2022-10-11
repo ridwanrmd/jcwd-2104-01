@@ -71,7 +71,7 @@ function Login() {
             height="32px"
             left="56px"
             top="56px"
-            src="/vector.svg"
+            src="/Vector.svg"
           />
 
           <Image

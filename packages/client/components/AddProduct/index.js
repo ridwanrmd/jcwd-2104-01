@@ -47,7 +47,7 @@ export default function AddProduct(props) {
 
   const fetchCategory = async () => {
     try {
-      const getAllCategory = await axiosInstance('/category/allCategory');
+      const getAllCategory = await axiosInstance.get('/category/allCategory');
       setGetCategory(getAllCategory.data.data);
     } catch (error) {
       console.log({ error });
