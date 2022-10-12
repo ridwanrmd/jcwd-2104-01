@@ -61,18 +61,18 @@ const deleteProduct = async (req, res, next) => {
 
 const deleteUpdateProductStock = async (req, res, next) => {
   try {
-    const { productId, historyId } = req.body;
+    const { historyId } = req.params;
     const resGetLoghistory = await logHistory.findOne({
       where: { historyId },
-      attributes: ['quantity'],
+      attributes: ['quantity', 'productId'],
     });
+    const productId = resGetLoghistory.dataValues.productId;
     const resGetProduct = await product.findOne({
       where: { productId },
       attributes: ['stock'],
     });
     const newStock =
       resGetProduct.dataValues.stock - resGetLoghistory.dataValues.quantity;
-    console.log(newStock);
 
     const result = await sequelize.transaction(async (t) => {
       await product.update(
@@ -99,6 +99,6 @@ const deleteUpdateProductStock = async (req, res, next) => {
 };
 
 router.delete('/:productId', deleteProduct);
-router.delete('/', deleteUpdateProductStock);
+router.delete('/stock/:historyId', deleteUpdateProductStock);
 
 module.exports = router;

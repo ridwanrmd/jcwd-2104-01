@@ -67,11 +67,12 @@ const patchProduct = async (req, res, next) => {
 
 const editProductStock = async (req, res, next) => {
   try {
-    // const { userId } = req.user;
-    const { productId, updateStock, defaultStock, totalPrice, userId } =
-      req.body;
+    const { userId } = req.user;
+    const { productId, updateStock, defaultStock, totalPrice } = req.body;
 
-    const addStock = updateStock + defaultStock;
+    const addStock = Number(updateStock) + defaultStock;
+    console.log(addStock);
+    // console.log(`ini updateStock: ${defaultStock}`);
 
     const result = await sequelize.transaction(async (t) => {
       const resUpdateStock = await product.update(
@@ -102,6 +103,6 @@ const editProductStock = async (req, res, next) => {
 };
 
 router.patch('/', auth, patchProduct);
-router.patch('/stock', editProductStock);
+router.patch('/stock', auth, editProductStock);
 
 module.exports = router;
