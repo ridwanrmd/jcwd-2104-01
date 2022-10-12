@@ -3,6 +3,7 @@ import AdminSidebar from '../../../components/AdminSidebar';
 import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import NextLink from 'next/link';
 import {
   Box,
   Flex,
@@ -26,6 +27,7 @@ import {
   useDisclosure,
   Center,
   useToast,
+  Link,
 } from '@chakra-ui/react';
 import AddProductStock from '../../../components/AddProductStock';
 
@@ -41,6 +43,7 @@ export default function DetailStock(props) {
   const [formEnd, setFormEnd] = useState();
 
   const toast = useToast();
+  const router = useRouter();
 
   const getDate = new Date();
   const year = getDate.getFullYear();
@@ -50,6 +53,7 @@ export default function DetailStock(props) {
 
   useEffect(() => {
     fetchproductStock();
+    fetchproductStockNoFilter();
   }, [sorting, order, formStart, formEnd]);
 
   useEffect(() => {
@@ -81,7 +85,7 @@ export default function DetailStock(props) {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
       const resGetStockHistories = await axiosInstance.get(
-        `/logHistories/noFilter/${props.product.productId}`,
+        `/logHistories/noFilter/${props.product.productId}?sorting=${sorting}&order=${order}`,
       );
       setProductHistoriesNoFilter(resGetStockHistories.data.data);
     } catch (error) {
@@ -243,12 +247,26 @@ export default function DetailStock(props) {
         >
           <Box ml="56.75px" h="20px">
             <HStack>
-              <Image
+              <NextLink href="/admin/inventory?page=1">
+                <Link
+                  _hover={{
+                    textDecoration: 'none',
+                  }}
+                >
+                  <Image
+                    width={'10px'}
+                    height="20px"
+                    src="/leftArrow.svg"
+                    alt="arrow icon"
+                  />
+                </Link>
+              </NextLink>
+              {/* <Image
                 width={'10px'}
                 height="20px"
                 src="/leftArrow.svg"
                 alt="arrow icon"
-              />
+              /> */}
               <Text
                 fontWeight={700}
                 fontSize="20px"
@@ -319,7 +337,7 @@ export default function DetailStock(props) {
                             color="white"
                             fontSize={'15px'}
                             borderRight={'1px'}
-                            px="5.6%"
+                            // px="5.6%"
                           >
                             Date
                           </Th>
@@ -327,7 +345,7 @@ export default function DetailStock(props) {
                             color="white"
                             fontSize={'15px'}
                             borderRight={'1px'}
-                            px="9%"
+                            // px="9%"
                           >
                             Product
                           </Th>
@@ -335,7 +353,7 @@ export default function DetailStock(props) {
                             color="white"
                             fontSize={'15px'}
                             borderRight={'1px'}
-                            px="2.5%"
+                            // px="2.5%"
                           >
                             Unit
                           </Th>
@@ -343,7 +361,7 @@ export default function DetailStock(props) {
                             color="white"
                             fontSize={'15px'}
                             borderRight={'1px'}
-                            px="2.9%"
+                            // px="2.9%"
                           >
                             Quantity
                           </Th>
@@ -351,19 +369,19 @@ export default function DetailStock(props) {
                             color="white"
                             fontSize={'15px'}
                             borderRight={'1px'}
-                            px="8.6%"
+                            // px="8.6%"
                           >
                             Type
                           </Th>
                           <Th
                             color="white"
                             fontSize={'15px'}
-                            px="2.2%"
+                            // px="2.2%"
                             borderRight={'1px'}
                           >
                             Status
                           </Th>
-                          <Th color="white" fontSize={'15px'} px="3.8%">
+                          <Th color="white" fontSize={'15px'}>
                             Action
                           </Th>
                         </Tr>
@@ -392,6 +410,7 @@ export default function DetailStock(props) {
     </Flex>
   );
 }
+
 export async function getServerSideProps(context) {
   try {
     const session = await getSession({ req: context.req });

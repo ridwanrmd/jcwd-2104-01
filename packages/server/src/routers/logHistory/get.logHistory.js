@@ -47,8 +47,15 @@ const getProductStockHistory = async (req, res, next) => {
 const getProductStockHistoryNoFilter = async (req, res, next) => {
   try {
     const { productId } = req.params;
+    const {
+      sorting = 'createdAt',
+      order = 'ASC',
+      formStart,
+      formEnd,
+    } = req.query;
 
     const resGetProductStockHistory = await logHistory.findAll({
+      order: Sequelize.literal(`${sorting} ${order}`),
       where: {
         productId,
       },
