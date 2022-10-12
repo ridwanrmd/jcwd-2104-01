@@ -72,7 +72,6 @@ const editProductStock = async (req, res, next) => {
 
     const addStock = Number(updateStock) + defaultStock;
     console.log(addStock);
-    // console.log(`ini updateStock: ${defaultStock}`);
 
     const result = await sequelize.transaction(async (t) => {
       const resUpdateStock = await product.update(
@@ -99,6 +98,8 @@ const editProductStock = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
 
 const updateStockRacikan = async (req, res, next) => {
   const { productId, quantity } = req.body;
