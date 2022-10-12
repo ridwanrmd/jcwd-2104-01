@@ -58,7 +58,7 @@ export default function SidebarProduct({ setPage, category, user }) {
 
   const onClickLink = (e) => {
     router.push(
-      `/product?page=1&category=${e.target.value}&orderBy=price&order=ASC`,
+      `/product?page=1&category=${e.target.value}&orderBy=createdAt&order=DESC`,
     );
   };
 

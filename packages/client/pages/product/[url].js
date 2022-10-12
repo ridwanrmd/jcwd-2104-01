@@ -2,6 +2,7 @@ import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import { api_origin } from '../../constraint';
 import {
+  Alert,
   Box,
   Button,
   Collapse,
@@ -20,8 +21,13 @@ export default function ProductDetail({ product, user }) {
   const { data: session } = useSession();
   const [show, setShow] = useState(false);
 
+  console.log(product);
+
   const addToCart = async () => {
     const session = await getSession();
+    if (!session) return alert('Anda perlu melakukan login terlebih dahulu');
+    if (!user.isVerified)
+      return alert('Anda perlu melakukan verifikasi akun terlebih dahulu');
     const userId = session.user.userId;
     const { accessToken } = session.user;
     // console.log(token);
@@ -90,7 +96,11 @@ export default function ProductDetail({ product, user }) {
           <Text
             fontSize="sm"
             fontWeight="normal"
-          >{`Per ${product.unit} - Stock ${product.stock}`}</Text>
+          >{`Stock ${product.stock}`}</Text>
+          <Text
+            fontSize="sm"
+            fontWeight="normal"
+          >{`Per ${product.unit} - ${product.detailProduct.quantity} ${product.satuanUnit}`}</Text>
           <Text fontSize={{ base: 'md', md: 'xl' }}>Kategori : </Text>
           {renderCategory()}
           <Text

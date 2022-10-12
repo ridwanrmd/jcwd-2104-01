@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { transaction } = require('../../../models');
+const { transaction, prescription } = require('../../../models');
 const { auth } = require('../../helpers/auth');
 const { uploadPayment } = require('../../lib/multer');
 
@@ -38,6 +38,32 @@ const uploadPaymentImage = (req, res) => {
   }
 };
 
+const rejectTransactionPrescription = async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    const getTransaction = await transaction.findOne({
+      where: { userId, transactionStatus: 'Menunggu Konfirmasi Resep' },
+    });
+    const { transactionId } = getTransaction.dataValues;
+
+    await transaction.update(
+      {
+        transactionStatus: 'Dibatalkan',
+        total: 0,
+      },
+      { where: { transactionId } },
+    );
+
+    await prescription.update(
+      { status: 'rejected' },
+      { where: { userId, status: 'waiting' } },
+    );
+    res.send({ message: 'Berhasil menolak resep dokter' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 router.patch('/:transactionId', auth, updateNewPayment);
 router.patch(
   '/upload/payment',
@@ -45,5 +71,6 @@ router.patch(
   uploadPayment.single('gambar'),
   uploadPaymentImage,
 );
+router.patch('/reject/prescription', auth, rejectTransactionPrescription);
 
 module.exports = router;

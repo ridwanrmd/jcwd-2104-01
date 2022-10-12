@@ -7,7 +7,7 @@ export default function Category({ category }) {
   const router = useRouter();
 
   const renderCategory = () => {
-    return category.map((data) => {
+    return category?.map((data) => {
       return (
         <Stack
           minWidth={{ base: '25vw', md: '20vw' }}

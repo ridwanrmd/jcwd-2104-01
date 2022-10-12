@@ -49,11 +49,16 @@ export default function AdminCategory(props) {
         duration: 2000,
         isClosable: true,
       });
-      // alert(result.data.message);
       onDeleteClose();
       router.push(path);
     } catch (error) {
-      console.log(error);
+      return toast({
+        title: error.response.data.message,
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -96,13 +101,25 @@ export default function AdminCategory(props) {
           isClosable: true,
         });
       } catch (error) {
-        return alert(error.response?.data?.message);
+        return toast({
+          title: error.response.data.message,
+          status: 'error',
+          position: 'top',
+          duration: 2000,
+          isClosable: true,
+        });
       }
       onEditClose();
       router.push(path);
     } catch (error) {
       console.log({ error });
-      return alert(error.response?.data?.message);
+      return toast({
+        title: error.response.data.message,
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
   return (
