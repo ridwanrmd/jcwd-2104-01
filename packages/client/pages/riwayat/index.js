@@ -34,7 +34,7 @@ function Riwayat(props) {
   const [page, setPage] = useState(0);
   const [sorting, setSorting] = useState('transactionId');
   const [order, setOrder] = useState('ASC');
-  const [filteredTransactions, setFilteredTransactions] = useState([]);
+
   const [formState, setFormState] = useState({ transactionId: '' });
   console.log(formState);
 
@@ -42,19 +42,6 @@ function Riwayat(props) {
     setPage(e.selected);
   };
 
-  // console.log(sorting);
-
-  const btnSearchHandler = () => {
-    // console.log('1');
-    const filteredTransactions = data.filter((transaction) => {
-      // console.log(transaction);
-      return transaction.transactionId
-        .toString()
-        .includes(formState.transactionId);
-    });
-    // console.log(filteredTransactions);
-    setFilteredTransactions(filteredTransactions);
-  };
   const onHandleChange = (event) => {
     setFormState({ [event.target.name]: event.target.value });
   };
@@ -126,7 +113,7 @@ function Riwayat(props) {
         <HStack>
           <Input
             name="transactionId"
-            type="text"
+            type="Date"
             placeholder="No. TransactionId"
             fontSize={14}
             fontWeight={400}
@@ -134,15 +121,6 @@ function Riwayat(props) {
             width={200}
             ml={1}
           />
-          <HStack>
-            <Button
-              fontSize={14}
-              colorScheme="twitter"
-              onClick={btnSearchHandler}
-            >
-              Cari
-            </Button>
-          </HStack>
         </HStack>
       </Flex>
 
@@ -182,11 +160,7 @@ function Riwayat(props) {
           </TabPanels>
         ) : (
           <VStack marginTop={105}>
-            <Image
-              src="/empty-cart-png-transparent-png"
-              width={250}
-              height={250}
-            />
+            <Image src="/pana.png" width={250} height={250} />
             <Text paddingTop={6} fontSize={18}>
               Tidak Ada Transaksi
             </Text>

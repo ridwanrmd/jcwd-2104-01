@@ -40,7 +40,13 @@ export default function AdminSidebar({ user }) {
           </Text>
         </Flex>
       </Box>
-      <Box h="10" cursor="pointer" p="2">
+      <Box
+        h="10"
+        cursor="pointer"
+        p="2"
+        bg={router.pathname.includes('Laporan') ? '#005E9D' : 'unset'}
+        onClick={() => router.push('/admin/laporan')}
+      >
         <Flex justifyContent="center">
           <Image src="/laporan.svg" alt="laporan" />
           <Text color="white" ms="2">

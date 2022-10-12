@@ -123,6 +123,7 @@ const getTransactionUser = async (req, res, next) => {
             'transactionId',
             'addressId',
             'total',
+            'paymentProof',
             'transactionStatus',
             'createdAt',
             'kurir',

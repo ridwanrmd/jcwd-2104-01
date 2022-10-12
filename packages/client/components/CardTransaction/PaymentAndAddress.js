@@ -16,11 +16,14 @@ import { useState } from 'react';
 import { getSession } from 'next-auth/react';
 import Image from 'next/image';
 import axiosInstance from '../../src/config/api';
+import { useRouter } from 'next/router';
 import next from 'next';
+import { api_origin } from '../../constraint';
 
 const AddressAndPayment = ({ data, user }) => {
   const [paymentImage, setPaymentImage] = useState();
   const [paymentSource, setPaymentSource] = useState();
+  const router = useRouter();
 
   const toast = useToast();
 
@@ -30,6 +33,8 @@ const AddressAndPayment = ({ data, user }) => {
   let ongkir;
   let status;
   let transactionId;
+  let buktibayar;
+
   data.forEach((v, i) => {
     key = i;
     dtId = v.transaction.transactionId;
@@ -37,6 +42,7 @@ const AddressAndPayment = ({ data, user }) => {
     totalPrice = v.transaction.total;
     status = v.transaction.transactionStatus;
     transactionId = v.transaction.transactionId;
+    buktibayar = v.transaction.paymentProof;
   });
   let NumOnkir = Number(ongkir);
   let NumPrice = Number(totalPrice);
@@ -61,11 +67,13 @@ const AddressAndPayment = ({ data, user }) => {
       const name = `/public/payment/${fileName}`;
 
       try {
-        await axiosInstance.patch(
+        const res = await axiosInstance.patch(
           `/transactions/upload/payment`,
           data1,
           config,
         );
+        // console.log(res);
+        router.replace(`/riwayat/`);
       } catch (error) {
         console.log(error);
         alert(error.response.data.message);
@@ -170,20 +178,37 @@ const AddressAndPayment = ({ data, user }) => {
           <Flex direction={'column'} align="center" gap="1rem" mt="2rem">
             {!paymentSource ? (
               <FormControl>
-                <FormLabel
-                  pt="2"
-                  ml="115px"
-                  bg="#008DEB"
-                  width="230px"
-                  height="40px"
-                  borderRadius="5px"
-                  htmlFor="image"
-                  cursor={'pointer'}
-                  color="white"
-                  textAlign={'center'}
-                >
-                  Unggah Bukti Pembayaran
-                </FormLabel>
+                {status === 'Menunggu Pembayaran' ? (
+                  <FormLabel
+                    pt="2"
+                    ml="115px"
+                    bg="#008DEB"
+                    width="230px"
+                    height="40px"
+                    borderRadius="5px"
+                    htmlFor="image"
+                    cursor={'pointer'}
+                    color="white"
+                    textAlign={'center'}
+                  >
+                    Unggah Bukti Pembayaran
+                  </FormLabel>
+                ) : // <FormLabel
+                //   pt="2"
+                //   ml="115px"
+                //   bg="#008DEB"
+                //   width="230px"
+                //   height="40px"
+                //   borderRadius="5px"
+                //   htmlFor="image"
+                //   cursor={'pointer'}
+                //   color="white"
+                //   textAlign={'center'}
+                // >
+                //   Unggah Bukti Pembayaran
+                // </FormLabel>
+                null}
+
                 <input
                   style={{ display: 'none' }}
                   type="file"
