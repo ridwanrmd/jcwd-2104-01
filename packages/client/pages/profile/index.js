@@ -26,16 +26,11 @@ export default function Profile(props) {
   const [modalAdd, setModalAdd] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  console.log(currentAddress);
 
   const toast = useToast();
   useEffect(() => {
     fetchUserAddresses();
   }, []);
-
-  // useEffect(() => {
-  //   setCurrentAddress(userAddresses[0]);
-  // }, []);
 
   const fetchUserAddresses = async () => {
     try {

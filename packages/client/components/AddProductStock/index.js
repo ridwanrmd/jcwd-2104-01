@@ -48,10 +48,14 @@ export default function AddProductStock(props) {
         totalPrice: updateStock * product.price,
       };
 
-      const res = await axiosInstance.patch('/product/stock', body, config);
+      if (product.unit != 'Racikan') {
+        var resss = await axiosInstance.patch('/product/stock', body, config);
+      } else {
+        var resss = await axiosInstance.patch('/product/racikan', body, config);
+      }
 
       toast({
-        description: res.data.message,
+        description: resss.data.message,
         position: 'top',
         status: 'success',
         duration: 3000,

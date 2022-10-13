@@ -177,16 +177,22 @@ export default function DetailStock(props) {
             {history.status}
           </Td>
           <Td fontSize={'15px'} pl="3.3%">
-            <Button
-              isDisabled={disabled}
-              size="sm"
-              colorScheme="red"
-              onClick={() => {
-                onDeleteStockHistory(history.historyId);
-              }}
-            >
-              Hapus
-            </Button>
+            {history.product.unit != 'Racikan' ? (
+              <Button
+                isDisabled={disabled}
+                size="sm"
+                colorScheme="red"
+                onClick={() => {
+                  onDeleteStockHistory(history.historyId);
+                }}
+              >
+                Hapus
+              </Button>
+            ) : (
+              <Button isDisabled={true} size="sm" colorScheme="red">
+                Hapus
+              </Button>
+            )}
           </Td>
         </Tr>
       );
@@ -216,16 +222,22 @@ export default function DetailStock(props) {
             {history.status}
           </Td>
           <Td fontSize={'15px'} pl="3.3%">
-            <Button
-              isDisabled={disabled}
-              size="sm"
-              colorScheme="red"
-              onClick={() => {
-                onDeleteStockHistory(history.historyId);
-              }}
-            >
-              Hapus
-            </Button>
+            {history.product.unit != 'Racikan' ? (
+              <Button
+                isDisabled={disabled}
+                size="sm"
+                colorScheme="red"
+                onClick={() => {
+                  onDeleteStockHistory(history.historyId);
+                }}
+              >
+                Hapus
+              </Button>
+            ) : (
+              <Button disabled size="sm" colorScheme="red">
+                Hapus
+              </Button>
+            )}
           </Td>
         </Tr>
       );
