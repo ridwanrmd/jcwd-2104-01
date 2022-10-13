@@ -128,6 +128,7 @@ const createTransaction = async (req, res, next) => {
       });
     });
     findCart.forEach(async (data) => {
+      // console.log(data);
       const updateProduct = await product.findOne({
         where: { productId: data.dataValues.productId },
       });
@@ -146,6 +147,9 @@ const createTransaction = async (req, res, next) => {
         quantity: data.dataValues.quantity,
         totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
         status: 'out',
+      });
+      await cart.destroy({
+        where: { userId },
       });
     });
 

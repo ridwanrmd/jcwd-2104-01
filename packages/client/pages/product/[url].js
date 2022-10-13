@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 export default function ProductDetail({ product, user }) {
   const toast = useToast();
   const router = useRouter();
+  const toast = useToast();
   const { data: session } = useSession();
   const [show, setShow] = useState(false);
 
@@ -45,7 +46,15 @@ export default function ProductDetail({ product, user }) {
       quantity: 1,
       productId: product.productId,
     };
-    await axiosInstance.post('/carts/add-to-cart', body, config);
+    const res = await axiosInstance.post('/carts/add-to-cart', body, config);
+    // console.log(res);
+    toast({
+      description: res.data.message,
+      position: 'top',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
   };
   const handleToggle = () => setShow(!show);
   const renderCategory = () => {

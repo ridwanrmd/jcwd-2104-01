@@ -42,8 +42,7 @@ const TransactionHistory = ({ data, selected }) => {
         <Box w="180px">No.Pembelian: {data.transactionId}</Box>
         <Box w="180px">Status: {data.transactionStatus}</Box>
         <Box w="180px">
-          Total Price: Rp.{' '}
-          {data.total?.toLocaleString('id') || 'Menunggu Proses Admin'}
+          Total Price: Rp. {data?.total?.toLocaleString('id')}
         </Box>
         <Box w="180px">
           Shiping Price: Rp. {data.biaya.toLocaleString('id')}

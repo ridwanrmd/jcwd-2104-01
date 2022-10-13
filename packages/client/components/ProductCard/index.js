@@ -24,7 +24,14 @@ export default function ProductCard(props) {
       quantity: 1,
       productId: props.product.productId,
     };
-    await axiosInstance.post('/carts/add-to-cart', body, config);
+    const res = await axiosInstance.post('/carts/add-to-cart', body, config);
+    toast({
+      description: res.data.message,
+      position: 'top',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
   };
   const router = useRouter();
   return (

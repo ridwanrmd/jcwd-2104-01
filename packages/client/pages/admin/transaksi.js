@@ -19,7 +19,7 @@ import { useState, useEffect } from 'react';
 import AdminHistory from '../../components/HistoryTransaction/AdminHistory';
 import AdminProofPayment from '../../components/HistoryTransaction/AdminProofPayment';
 import AdminSendOrder from '../../components/HistoryTransaction/AdminSendOrder';
-import Navbar from '../../components/Navbar';
+
 import axiosInstance from '../../src/config/api';
 import styles from './Product.module.css';
 import ReactPaginate from 'react-paginate';

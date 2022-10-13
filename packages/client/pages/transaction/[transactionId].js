@@ -19,13 +19,20 @@ import NextLink from 'next/link';
 function Transaction(props) {
   const { data: session } = useSession();
   const { getTransactData } = props.transaction.data;
-  console.log(props.user.IsAdmin);
+  // console.log(getTransactData);
 
   const [transactionList, setTransactionList] = useState([]);
   const [transactionListAdmin, setTransactionListAdmin] = useState([]);
   const [statusTrans, setStatusTrans] = useState([]);
   const router = useRouter();
-  // console.log(statusTrans);
+  // console.log(transactionList);
+  let status;
+  getTransactData.forEach((x, i) => {
+    status = x.transaction.transactionStatus;
+  });
+  const buttDis1 = 'Menunggu Pembayaran';
+  const buttDis2 = 'Menunggu Konfirmasi Pembayaran';
+
   const CancelOrder = async () => {
     try {
       const { transactionId } = router.query;
@@ -174,21 +181,53 @@ function Transaction(props) {
                 justifyContent={'center'}
                 // width={'100%'}
               >
-                <Button
-                  size={'xs'}
-                  colorScheme={'twitter'}
-                  onClick={confrimOrder}
-                >
-                  Delivered Order
-                </Button>
+                {status == 'Dikirim' ? (
+                  <Button
+                    size={'xs'}
+                    colorScheme={'twitter'}
+                    onClick={confrimOrder}
+                  >
+                    Delivered Order
+                  </Button>
+                ) : (
+                  <Button
+                    size={'xs'}
+                    colorScheme={'twitter'}
+                    onClick={confrimOrder}
+                    isDisabled={true}
+                  >
+                    Delivered Order
+                  </Button>
+                )}
 
-                <Button
-                  size={'xs'}
-                  colorScheme={'twitter'}
-                  onClick={CancelOrder}
-                >
-                  Cancel Order
-                </Button>
+                {status == buttDis1 ? (
+                  <Button
+                    size={'xs'}
+                    colorScheme={'twitter'}
+                    onClick={CancelOrder}
+                    // isDisabled={status !== buttDis1 }
+                  >
+                    Cancel Order
+                  </Button>
+                ) : status == buttDis2 ? (
+                  <Button
+                    size={'xs'}
+                    colorScheme={'twitter'}
+                    onClick={CancelOrder}
+                    // isDisabled={status !== buttDis2}
+                  >
+                    Cancel Order
+                  </Button>
+                ) : (
+                  <Button
+                    size={'xs'}
+                    colorScheme={'twitter'}
+                    onClick={CancelOrder}
+                    isDisabled={true}
+                  >
+                    Cancel Order
+                  </Button>
+                )}
               </Flex>
             </Stack>
           </Box>
