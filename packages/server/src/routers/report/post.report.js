@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-
+// const Sequelize = require('sequelize');
 const { Op, Sequelize } = require('sequelize');
 
 const {
@@ -63,7 +63,7 @@ const confirmTransaction = async (req, res, next) => {
     });
     getDTData.rows.map(async (data) => {
       // console.log(data.dataValues.productId);
-      console.log(data.dataValues.transaction.dataValues.userId);
+      // console.log(data.dataValues.transaction.dataValues.userId);
       const updateProduct = await product.findOne({
         where: { productId: data.dataValues.productId },
       });
@@ -208,7 +208,7 @@ const cancelTransaction = async (req, res, next) => {
       );
     });
     const sendTransaction = await transaction.update(
-      { transactionStatus: 'Dibatalkan' },
+      { transactionStatus: 'Menunggu Pembayaran' },
       {
         where: {
           transactionId: transactionId,
@@ -232,13 +232,70 @@ const cancelTransaction = async (req, res, next) => {
     console.log(error);
   }
 };
-const Sales = async (req, res, next) => {
+
+const SalesItem = async (req, res, next) => {
   const { timeReport = 'Bulanan' } = req.body;
-  let result, MetaData;
+  let results, metadata;
   try {
     if (timeReport === 'Mingguan') {
-      [result, MetaData] = await Sequelize.query(' ');
+      [results, metadata] = await logHistory.sequelize.query(
+        'SELECT WEEK(createdAt) as `week`, sum(`quantity`) AS `sum_quantity` FROM `logHistories` AS `Transaction_items` GROUP BY WEEK(createdAt) ORDER BY WEEK(createdAt) ASC',
+      );
+    } else if (timeReport === 'Bulanan') {
+      [results, metadata] = await logHistory.sequelize.query(
+        'SELECT createdAt as `month`, sum(`quantity`) AS `sum_quantity` FROM `logHistories` AS `Transaction_items` WHERE YEAR (createdAt) = ' +
+          moment().format('YYYY') +
+          ' GROUP BY MONTH(createdAt) ORDER BY MONTH(createdAt) ASC',
+      );
+    } else if (timeReport === 'Tahunan') {
+      [results, metadata] = await logHistory.sequelize.query(
+        'SELECT createdAt as `year`, sum(`quantity`) AS `sum_quantity` FROM `logHistories` AS `Transaction_items` GROUP BY YEAR(createdAt) ORDER BY YEAR(createdAt) ASC',
+      );
     }
+    let data = { results };
+    res.send({
+      status: 'Succsess',
+      message: 'Sales Report',
+      data: {
+        data,
+      },
+    });
+  } catch (error) {
+    next(error);
+    console.log(error);
+  }
+};
+
+const ProfitReport = async (req, res, next) => {
+  const { timeReport = 'Bulanan' } = req.body;
+  let SaleTotal, metadata;
+  try {
+    if (timeReport === 'Mingguan') {
+      const [resultsSaleTotal, metadata] = await logHistory.sequelize.query(
+        'SELECT WEEK(createdAt) as `week`, sum(totalPrice) AS `sum` FROM `logHistories` AS `Total` GROUP BY WEEK(createdAt) ORDER BY WEEK(createdAt) ASC',
+      );
+      SaleTotal = resultsSaleTotal;
+    } else if (timeReport === 'Bulanan') {
+      const [resultsSaleTotal, metadata] = await logHistory.sequelize.query(
+        'SELECT createdAt as `month`, sum(totalPrice) AS `sum` FROM `logHistories` AS `Total` WHERE YEAR (createdAt) = ' +
+          moment().format('YYYY') +
+          ' GROUP BY MONTH(createdAt) ORDER BY MONTH(createdAt) ASC',
+      );
+      SaleTotal = resultsSaleTotal;
+    } else if (timeReport === 'Tahunan') {
+      const [resultsSaleTotal, metadata] = await logHistory.sequelize.query(
+        'SELECT createdAt as `year`, sum(totalPrice) AS `sum` FROM `logHistories` AS `Total` GROUP BY YEAR(createdAt) ORDER BY YEAR(createdAt) ASC',
+      );
+      SaleTotal = resultsSaleTotal;
+    }
+    let data = { SaleTotal };
+    res.send({
+      status: 'Succsess',
+      message: 'Sales Report',
+      data: {
+        data,
+      },
+    });
   } catch (error) {
     next(error);
     console.log(error);
@@ -251,35 +308,59 @@ const CountTransactionReport = async (req, res, next) => {
   const now = moment().format('YYYY-MM-DD HH:mm');
   try {
     let countOrder;
-    if (timeReport === 'Harian') {
-      countOrder = await transaction.count({
+    if (timeReport === 'Mingguan') {
+      countOrder = await logHistory.count({
         where: {
           updatedAt: {
             [Op.gt]: time,
             [Op.lt]: now,
           },
         },
-        group: ['transactionStatus'],
+        // attributes: ['historyId'],
+        // include: [
+        //   {
+        //     model: product,
+
+        //     attributes: ['productName'],
+        //   },
+        // ],
+        group: ['productId'],
       });
-    } else if (timeReport === 'Mingguan') {
-      countOrder = await transaction.count({
+    } else if (timeReport === 'Bulanan') {
+      countOrder = await logHistory.count({
         where: {
           updatedAt: {
             [Op.gt]: moment(time).subtract(1, 'week'),
             [Op.lt]: now,
           },
         },
-        group: ['transactionStatus'],
+        // attributes: ['historyId'],
+        // include: [
+        //   {
+        //     model: product,
+
+        //     attributes: ['productName'],
+        //   },
+        // ],
+        group: ['productId'],
       });
-    } else if (timeReport === 'Bulanan') {
-      countOrder = await transaction.count({
+    } else if (timeReport === 'Tahunan') {
+      countOrder = await logHistory.count({
         where: {
           updatedAt: {
             [Op.gt]: moment(time).subtract(1, 'month'),
             [Op.lt]: now,
           },
         },
-        group: ['transactionStatus'],
+        // attributes: ['historyId'],
+        // include: [
+        //   {
+        //     model: product,
+
+        //     attributes: ['productName'],
+        //   },
+        // ],
+        group: ['productId'],
       });
     }
     res.send({
@@ -287,6 +368,8 @@ const CountTransactionReport = async (req, res, next) => {
       message: 'Sales Report',
       data: {
         countOrder,
+        // countOrder: countOrder.rows,
+        // dataCount: countOrder.count,
       },
     });
   } catch (error) {
@@ -297,6 +380,8 @@ const CountTransactionReport = async (req, res, next) => {
 
 router.post('/declineTransaction', cancelTransaction);
 router.post('/salesReportUser', CountTransactionReport);
+router.post('/salesItem', SalesItem);
+router.post('/salesTotal', ProfitReport);
 router.post('/sendTransaction', sendOrder);
 router.post('/confirmTransaction', confirmTransaction);
 module.exports = router;
