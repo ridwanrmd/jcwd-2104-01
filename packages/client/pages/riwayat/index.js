@@ -168,8 +168,8 @@ function Riwayat(props) {
       <Tabs onChange={(i) => setSelected(i)} mx={90}>
         <TabList justifyContent={'center'}>
           <Tab>Semua</Tab>
-          <Tab>Menuggu Pembayaran</Tab>
-          <Tab>Menuggu Konfimasi Pembayaran</Tab>
+          <Tab>Menunggu Pembayaran</Tab>
+          <Tab>Menunggu Konfimasi Pembayaran</Tab>
           <Tab>Diproses</Tab>
           <Tab>DiBatalkan</Tab>
           <Tab>Dikirim</Tab>

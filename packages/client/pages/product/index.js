@@ -35,7 +35,11 @@ export default function Product(props) {
     <>
       <Navbar session={session} user={props.user} />
       <Flex direction={{ md: 'row', base: 'column' }} marginTop="6">
-        <SidebarProduct setPage={setPage} category={props.category} />
+        <SidebarProduct
+          setPage={setPage}
+          category={props.category}
+          user={props.user}
+        />
         <Flex
           borderStart={{ md: '1px solid #C2CED6', base: 'unset' }}
           flexGrow={'1'}

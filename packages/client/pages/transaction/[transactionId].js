@@ -138,6 +138,16 @@ function Transaction(props) {
                   Kembali
                 </Button>
               </Link>
+              {transactionList[0]?.transaction?.transactionStatus ==
+                'Menunggu Pembayaran' && (
+                <Button
+                  size={'xs'}
+                  colorScheme={'twitter'}
+                  onClick={CancelOrder}
+                >
+                  Cancel Order
+                </Button>
+              )}
             </Stack>
           </Box>
         </div>

@@ -32,11 +32,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(250),
         defaultValue: '/public/category/category-default.svg',
       },
+      deletedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize,
       modelName: 'Category',
       tableName: 'categories',
+      paranoid: true,
     },
   );
   return Category;

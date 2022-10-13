@@ -18,16 +18,13 @@ import {
   useToast,
   InputGroup,
   InputRightElement,
+  Spacer,
 } from '@chakra-ui/react';
+import { TextField } from '../components/TextField';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 
 function Register() {
-  const [first_name, setFirst_name] = useState('');
-  const [last_name, setLast_name] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isRegisterProcess, setisRegisterProcess] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [sawPassword, setSawPassword] = useState(false);
   const [sawConfirmPassword, setSawConfirmPassword] = useState(false);
@@ -39,7 +36,42 @@ function Register() {
   const { data: session } = useSession();
   if (session) router.replace('/');
 
-  const onRegisterClick = async () => {
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+  const validate = Yup.object({
+    first_name: Yup.string()
+      .max(15, 'Must be 15 characters or less')
+      .required('First Name is Required')
+      .matches(/^[A-Za-z ]*$/, 'Please enter valid name'),
+    last_name: Yup.string()
+      .max(15, 'Must be 15 characters or less')
+      .required('Last Name is Required')
+      .matches(/^[A-Za-z ]*$/, 'Please enter valid name'),
+    email: Yup.string().email('Email is invalid').required('Email is Required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 charaters')
+      .required('Password is Required')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/,
+        'Min 8 Characters, a Number and a Letter',
+      ),
+    phone: Yup.string()
+      .matches(phoneRegExp, 'Phone number is not valid')
+      .max(15)
+      .required('A phone number is required'),
+    confirmPassword: Yup.string()
+      .required('Confirm Password Required')
+      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  });
+
+  const onRegisterClick = async ({
+    first_name,
+    last_name,
+    email,
+    password,
+    phone,
+  }) => {
     try {
       const body = {
         first_name,
@@ -47,7 +79,6 @@ function Register() {
         email,
         phone,
         password,
-        confirmPassword,
       };
 
       const res = await axiosInstance.post('/users/register', body);
@@ -64,6 +95,7 @@ function Register() {
     } catch (error) {
       console.log(error);
       if (error.response) return alert(error.response.data.message);
+      setDisabled(false);
       alert(error.message);
     } finally {
       setDisabled(false);
@@ -71,155 +103,177 @@ function Register() {
   };
 
   return (
-    <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
-      <Flex
-        flex={1}
-        justifyContent={'center'}
-        alignItems={'center'}
-        bgGradient="linear-gradient(153.41deg, #008DEB 0.81%, rgba(0, 141, 235, 0.56) 49.89%, rgba(0, 141, 235, 0.28) 95.87%)"
-      >
-        <Image
-          alt={'Medbox Image'}
-          objectFit={'cover'}
-          position="absolute"
-          width="136px"
-          height="32px"
-          left="56px"
-          top="56px"
-          src="/vector.svg"
-        />
+    <Formik
+      initialValues={{
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+      }}
+      validationSchema={validate}
+      onSubmit={(values) => {
+        onRegisterClick({
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          phone: values.phone,
+          password: values.password,
+        });
+        setDisabled(true);
+      }}
+    >
+      {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+        <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
+          <Flex
+            flex={1}
+            justifyContent={'center'}
+            alignItems={'center'}
+            bgGradient="linear-gradient(153.41deg, #008DEB 0.81%, rgba(0, 141, 235, 0.56) 49.89%, rgba(0, 141, 235, 0.28) 95.87%)"
+          >
+            <Image
+              alt={'Medbox Image'}
+              objectFit={'cover'}
+              position="absolute"
+              width="136px"
+              height="32px"
+              left="56px"
+              top="56px"
+              src="/vector.svg"
+            />
 
-        <Image
-          alt={'Register Image'}
-          objectFit={'cover'}
-          width="386.78px"
-          height="430.84px"
-          left="394.57px"
-          top="253.48px"
-          src="/login.png"
-        />
-      </Flex>
-      <Flex p={8} flex={1} align={'center'} justify={'center'}>
-        <Stack spacing={4} w={'full'} maxW={'md'}>
-          <Heading align={'center'} fontSize={'2xl'}>
-            Daftar Medbox
-          </Heading>
-          <FormControl>
-            <FormLabel>First Name</FormLabel>
-            <Input
-              type="name"
-              value={first_name}
-              placeholder="First Name"
-              variant="filled"
-              onChange={(event) => setFirst_name(event.target.value)}
+            <Image
+              alt={'Register Image'}
+              objectFit={'cover'}
+              width="386.78px"
+              height="430.84px"
+              left="394.57px"
+              top="253.48px"
+              src="/login.png"
             />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Last Name</FormLabel>
-            <Input
-              type="name"
-              value={last_name}
-              placeholder="Last Name"
-              variant="filled"
-              onChange={(event) => setLast_name(event.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="text"
-              value={email}
-              placeholder="Email"
-              variant="filled"
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Phone Number</FormLabel>
-            <Input
-              type="string"
-              value={phone}
-              placeholder="Phone Number"
-              variant="filled"
-              onChange={(event) => setPhone(event.target.value)}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Password</FormLabel>
-            <InputGroup>
-              <Input
-                type={sawPassword ? 'text' : 'password'}
-                value={password}
-                placeholder="Password"
-                variant="filled"
-                onChange={(event) => setPassword(event.target.value)}
-              />
-              <InputRightElement h={'full'}>
+          </Flex>
+          <Flex p={8} flex={1} align={'center'} justify={'center'}>
+            <Stack spacing={4} w={'full'} maxW={'md'}>
+              <Heading align={'center'} fontSize={'2xl'}>
+                Daftar Medbox
+              </Heading>
+              <Field name="first_name">
+                {({ field }) => (
+                  <TextField
+                    {...field}
+                    label="First Name"
+                    name="first_name"
+                    type="text"
+                  />
+                )}
+              </Field>
+              <Field name="last_name">
+                {({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Last Name"
+                    name="last_name"
+                    type="text"
+                  />
+                )}
+              </Field>
+              <Field name="email">
+                {({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Email"
+                    name="email"
+                    type="text"
+                  />
+                )}
+              </Field>
+              <Field name="phone">
+                {({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Phone Number"
+                    name="phone"
+                    type="number"
+                  />
+                )}
+              </Field>
+              <Field name="password">
+                {({ field }) => (
+                  <InputGroup>
+                    <TextField
+                      {...field}
+                      label="Password"
+                      name="password"
+                      type={sawPassword ? 'text' : 'password'}
+                      width="128%"
+                    />
+                    <Spacer />
+                    <Button
+                      alignSelf={'center'}
+                      variant={'ghost'}
+                      onClick={() =>
+                        setSawPassword((sawPassword) => !sawPassword)
+                      }
+                    >
+                      {sawPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputGroup>
+                )}
+              </Field>
+              <Field name="confirmPassword">
+                {({ field }) => (
+                  <InputGroup>
+                    <TextField
+                      {...field}
+                      label="Confirm Password"
+                      name="confirmPassword"
+                      type={sawConfirmPassword ? 'text' : 'password'}
+                      width="105%"
+                    />
+                    <Spacer />
+                    <Button
+                      alignSelf={'center'}
+                      variant={'ghost'}
+                      onClick={() =>
+                        setSawConfirmPassword(
+                          (sawConfirmPassword) => !sawConfirmPassword,
+                        )
+                      }
+                    >
+                      {sawPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputGroup>
+                )}
+              </Field>
+              <Stack spacing={1}>
+                <Stack
+                  direction={{ base: 'column', sm: 'row' }}
+                  align={'start'}
+                  justify={'space-between'}
+                ></Stack>
+                <Stack pt={'0.2'}>
+                  <Text pb={'1'} align={'center'}>
+                    Sudah memiliki akun?{' '}
+                    <NextLink href="/login">
+                      <Link color={'red.400'}>Sign In</Link>
+                    </NextLink>
+                  </Text>
+                </Stack>
                 <Button
-                  variant={'ghost'}
-                  onClick={() => setSawPassword((sawPassword) => !sawPassword)}
+                  colorScheme={'twitter'}
+                  variant={'solid'}
+                  disabled={disabled}
+                  onClick={handleSubmit}
                 >
-                  {sawPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  Buat akun
                 </Button>
-              </InputRightElement>
-            </InputGroup>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Confirm Password</FormLabel>
-            <InputGroup>
-              <Input
-                type={sawConfirmPassword ? 'text' : 'password'}
-                value={confirmPassword}
-                placeholder="Confirm password"
-                variant="filled"
-                onChange={(event) => setConfirmPassword(event.target.value)}
-              />
-              <InputRightElement h={'full'}>
-                <Button
-                  variant={'ghost'}
-                  onClick={() =>
-                    setSawConfirmPassword(
-                      (sawConfirmPassword) => !sawConfirmPassword,
-                    )
-                  }
-                >
-                  {sawConfirmPassword ? <ViewIcon /> : <ViewOffIcon />}
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-          </FormControl>
-          <Stack spacing={1}>
-            <Stack
-              direction={{ base: 'column', sm: 'row' }}
-              align={'start'}
-              justify={'space-between'}
-            ></Stack>
-            <Stack pt={'0.2'}>
-              <Text pb={'1'} align={'center'}>
-                Sudah memiliki akun?{' '}
-                <NextLink href="/login">
-                  <Link color={'red.400'}>Sign In</Link>
-                </NextLink>
-              </Text>
+              </Stack>
             </Stack>
-            <Button
-              colorScheme={'twitter'}
-              variant={'solid'}
-              disabled={disabled}
-              onClick={() => {
-                onRegisterClick();
-                setDisabled(true);
-                // setTimeout(() => {
-                //   setDisabled(false);
-                // }, 5000);
-              }}
-            >
-              Buat akun
-            </Button>
-          </Stack>
+          </Flex>
         </Stack>
-      </Flex>
-    </Stack>
+      )}
+    </Formik>
   );
 }
 

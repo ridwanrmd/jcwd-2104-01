@@ -14,9 +14,9 @@ const getAllProduct = async (req, res, next) => {
     productName,
     page = 1,
     pageSize = 12,
-    orderBy = 'price',
-    order = 'ASC',
-    // isRacikan = false,
+    orderBy = 'createdAt',
+    order = 'DESC',
+    isRacikan = false,
   } = req.query;
 
   const limit = Number(pageSize);
@@ -28,7 +28,7 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
-        // isRacikan,
+        isRacikan,
       },
       include: [
         {
@@ -57,7 +57,7 @@ const getAllProduct = async (req, res, next) => {
         productName: productName
           ? { [Op.substring]: productName }
           : { [Op.ne]: null },
-        // isRacikan,
+        isRacikan,
       },
       include: [
         {
@@ -73,14 +73,6 @@ const getAllProduct = async (req, res, next) => {
       offset,
       limit,
     });
-
-    // if (!amount.length) {
-    //   return res.status(404).send({
-    //     message: 'Not Found',
-    //     result: result,
-    //     totalPage: amount.length,
-    //   });
-    // }
 
     res.send({
       status: 'Success',
@@ -106,6 +98,7 @@ const getDetailProduct = async (req, res, next) => {
         'stock',
         'unit',
         'url',
+        'satuanUnit',
       ],
       where: {
         url,
@@ -114,6 +107,10 @@ const getDetailProduct = async (req, res, next) => {
         {
           model: Category,
           attributes: ['category'],
+        },
+        {
+          model: detailProduct,
+          attributes: ['quantity'],
         },
       ],
     });
@@ -129,13 +126,25 @@ const getDetailProduct = async (req, res, next) => {
 };
 
 const getAllProductNoLimit = async (req, res, next) => {
+  const { isRacikan = false } = req.query;
   const getAllProduct = await product.findAll({
-    attributes: ['productId', 'productName', 'unit', 'satuanUnit'],
+    attributes: [
+      'productId',
+      'productName',
+      'unit',
+      'satuanUnit',
+      'stock',
+      'url',
+    ],
     where: {
-      isRacikan: false,
+      isRacikan,
     },
   });
-  res.send({ status: 'Success', message: 'bismillah', result: getAllProduct });
+  res.send({
+    status: 'Success',
+    message: 'Success get all products',
+    result: getAllProduct,
+  });
 };
 const getQuantityDetailProduct = async (req, res, next) => {
   const { productId } = req.params;
@@ -154,9 +163,28 @@ const getQuantityDetailProduct = async (req, res, next) => {
   }
 };
 
+const getProductStockDetail = async (req, res, next) => {
+  const productId = req.params.productId;
+  try {
+    const result = await product.findOne({
+      attributes: ['productId', 'productName', 'unit', 'stock', 'price'],
+      where: { productId },
+    });
+
+    res.send({
+      status: 'Success',
+      message: 'Success get product detail',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 router.get('/', getAllProduct);
 router.get('/all', getAllProductNoLimit);
 router.get('/:url', getDetailProduct);
 router.get('/quantity/:productId', getQuantityDetailProduct);
+router.get('/stock/:productId', getProductStockDetail);
 
 module.exports = router;

@@ -9,6 +9,9 @@ const {
   product,
   address,
   detailTransaction,
+  sequelize,
+  prescription,
+  logHistory,
 } = require('../../../models');
 const { auth } = require('../../helpers/auth');
 
@@ -103,6 +106,14 @@ const createTransaction = async (req, res, next) => {
             },
             { where: { productId: data.dataValues.productId } },
           );
+          await logHistory.create({
+            userId,
+            productId: data.dataValues.productId,
+            quantity: data.dataValues.quantity,
+            totalPrice:
+              updateProduct.dataValues.price * data.dataValues.quantity,
+            status: 'in',
+          });
           await cart.destroy({
             where: { userId },
           });
@@ -130,6 +141,13 @@ const createTransaction = async (req, res, next) => {
           where: { productId: data.dataValues.productId },
         },
       );
+      await logHistory.create({
+        userId,
+        productId: data.dataValues.productId,
+        quantity: data.dataValues.quantity,
+        totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
+        status: 'out',
+      });
       await cart.destroy({
         where: { userId },
       });
@@ -280,9 +298,91 @@ const CreateNewPrescriptionTransaction = async (req, res, next) => {
     message: 'Berhasil membuat transaksi resep',
   });
 };
+
+const inputProductFromPrescriptionController = async (req, res, next) => {
+  const { products, userId } = req.body;
+  const t = await sequelize.transaction();
+
+  try {
+    const getTransaction = await transaction.findOne({
+      where: { userId, transactionStatus: 'Menunggu Konfirmasi Resep' },
+      transaction: t,
+    });
+    const { transactionId } = getTransaction.dataValues;
+
+    let harga = 0;
+    const wrap = await Promise.all(
+      products.map(async (data) => {
+        const kuantiti = Number(data.quantity);
+        const getProductId = await product.findOne({
+          where: { productName: data.productName },
+          attributes: ['productId', 'price', 'stock'],
+          transaction: t,
+        });
+        const { productId, price, stock } = getProductId.dataValues;
+
+        if (stock < kuantiti)
+          throw {
+            code: 400,
+            message: `Kuantiti maksimal product ${data.productName} adalah ${stock}`,
+          };
+
+        const mengurangiStockProduct = await product.update(
+          {
+            stock: stock - kuantiti,
+          },
+          { where: { productId }, transaction: t },
+        );
+
+        if (!mengurangiStockProduct[0])
+          throw {
+            code: 400,
+            message: 'Gagal mengurangi stock product',
+          };
+        const inputToDetailTransaction = await detailTransaction.create(
+          {
+            productId,
+            transactionId,
+            quantity: kuantiti,
+          },
+          { transaction: t },
+        );
+        if (!inputToDetailTransaction.dataValues)
+          throw {
+            code: 400,
+            message: 'Gagal input barang',
+          };
+        harga += price * kuantiti;
+      }),
+    );
+
+    await prescription.update(
+      { status: 'processed' },
+      { where: { userId, status: 'waiting' }, transaction: t },
+    );
+
+    await transaction.update(
+      {
+        transactionStatus: 'Menunggu Pembayaran',
+        total: harga,
+      },
+      { where: { transactionId }, transaction: t },
+    );
+    await t.commit();
+    res.send({ message: 'Berhasil input product' });
+  } catch (error) {
+    await t.rollback();
+    next(error);
+  }
+};
 router.post('/cancelTransaction/:transactionId', CancelTransaction);
 router.post('/confirmTransaction/:transactionId', ConfrimDeliveryTransaction);
 router.post('/newTransaction', auth, createTransaction);
 router.post('/newPrescription', auth, CreateNewPrescriptionTransaction);
+router.post(
+  '/inputProductFromPrescription',
+  auth,
+  inputProductFromPrescriptionController,
+);
 
 module.exports = router;

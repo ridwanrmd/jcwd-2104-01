@@ -32,10 +32,6 @@ export default function Profile(props) {
     fetchUserAddresses();
   }, []);
 
-  useEffect(() => {
-    setCurrentAddress(userAddresses[0]);
-  }, []);
-
   const fetchUserAddresses = async () => {
     try {
       const session = await getSession();
@@ -247,7 +243,7 @@ export default function Profile(props) {
         marginInline={{ base: '2', md: '35%' }}
         shadow={{ base: 'unset', md: 'md' }}
       >
-        <Box marginInline={'6'} borderBottom="1px solid #C2CED6">
+        <Box marginInline={'6'}>
           <Text
             mt="9"
             fontSize={{ base: 'md', md: 'md' }}
@@ -285,23 +281,8 @@ export default function Profile(props) {
         </Box>
         <Box mt="2" mx="6" borderBottom="1px solid #C2CED6">
           <VStack mb="3">
-            <Text
-              fontSize={{ base: 'md', md: 'md' }}
-              fontWeight="medium"
-              lineHeight={'6'}
-            >
-              Yuk lengkapi data dulu
-            </Text>
-            <Text
-              fontSize={{ base: 'md', md: 'md' }}
-              fontWeight="medium"
-              lineHeight={'6'}
-              color="#878686"
-            >
-              Isi nama dan profilmuz
-            </Text>
             <Button colorScheme={'twitter'} w="full" onClick={onOpen}>
-              Lengkapi Profil
+              Ubah Profil
               <EditProfile
                 isOpen={isOpen}
                 onClose={onClose}
@@ -318,13 +299,20 @@ export default function Profile(props) {
             fontSize={{ base: 'md', md: 'md' }}
             fontWeight="medium"
             lineHeight={'6'}
-            // as="u"
           >
             Alamat
           </Text>
-          <Box overflow="scroll" height="23vh">
-            {renderAddress()}
-          </Box>
+          {userAddresses.length == false ? (
+            <Box height="23vh">
+              <Text te mx="24%" pt="10%">
+                Anda belum memiliki alamat...
+              </Text>
+            </Box>
+          ) : (
+            <Box overflow="scroll" height="23vh">
+              {renderAddress()}
+            </Box>
+          )}
         </Box>
         <Box mb="4" mt="3.5" mx="6">
           <Button

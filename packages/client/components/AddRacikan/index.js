@@ -113,15 +113,7 @@ export default function AddRacikan(props) {
   };
 
   const onHandleChange = (e) => {
-    //   setCategory({ ...category, [e.target.name]: e.target.value });
-    // console.log(e.target.value);
     setProduct({ ...product, [e.target.name]: e.target.value });
-  };
-
-  const onCancel = () => {
-    //   setCategory({ category: '' });
-    //   setImageSource();
-    // delete category.categoryImages;
   };
 
   const onSubmitHandler = async (e) => {
@@ -165,7 +157,6 @@ export default function AddRacikan(props) {
         <ModalCloseButton />
         <form onSubmit={onSubmitHandler} method="post">
           <ModalBody>
-            {/* <FormControl isInvalid={isCategoryError} mb={3}> */}
             <FormLabel fontSize={'sm'}>Nama Obat :</FormLabel>
             <Input
               name="productName"
@@ -239,20 +230,6 @@ export default function AddRacikan(props) {
           </ModalBody>
 
           <ModalFooter>
-            {/* <Button textColor={'red'} mr={3} onClick={onCancel}>
-            Reset
-          </Button>
-          <Button
-            isDisabled={isError}
-            colorScheme="green"
-            mr={3}
-            onClick={() => {
-              onSaveCategory(category);
-              onCancel();
-            }}
-          >
-            Save
-          </Button> */}
             <Button type="submit" colorScheme="twitter">
               Submit
             </Button>

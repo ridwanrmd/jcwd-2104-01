@@ -13,6 +13,7 @@ const cartRouter = require('./routers/cart');
 const productRouter = require('./routers/product');
 const transactionRouter = require('./routers/transaction');
 const categoryRouter = require('./routers/category');
+const logHistoryRouter = require('./routers/logHistory');
 const prescriptionRouter = require('./routers/prescription');
 const reportRouter = require('./routers/report');
 
@@ -34,6 +35,7 @@ app.use('/product', productRouter);
 app.use('/transactions', transactionRouter);
 app.use('/category', categoryRouter);
 app.use('/prescriptions', prescriptionRouter);
+app.use('/logHistories', logHistoryRouter);
 app.use('/report', reportRouter);
 
 app.get('/api', (req, res) => {

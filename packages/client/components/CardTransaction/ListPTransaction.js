@@ -19,7 +19,6 @@ import { api_origin } from '../../constraint';
 import OrderStatus from '../../components/CardTransaction/OrderStatus';
 import PaymentAndAddress from '../../components/CardTransaction/PaymentAndAddress';
 const TransactionList = ({ data, address, statusTrans, user }) => {
-  // console.log(user);
   return (
     <div key={data.dtId}>
       <Flex>

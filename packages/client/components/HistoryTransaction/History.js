@@ -19,7 +19,6 @@ import { DeleteIcon, AddIcon, WarningIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 
 const TransactionHistory = ({ data, selected }) => {
-  // console.log(data);
   return (
     <div>
       <HStack

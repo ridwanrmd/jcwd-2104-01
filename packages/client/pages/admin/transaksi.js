@@ -179,6 +179,8 @@ export async function getServerSideProps(context) {
     // console.log(config);
     const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
     // console.log(resGetUser.data.data);
+    if (!resGetUser.data.data.isAdmin)
+      return { redirect: { destination: '/' } };
     const restransactionUser = await axiosInstance.get(
       `/transactions/allTransByAdmin`,
       { params: context.query },
