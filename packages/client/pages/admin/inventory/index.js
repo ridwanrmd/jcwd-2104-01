@@ -13,16 +13,16 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import React from 'react';
-import AdminProduct from '../../components/AdminProduct';
-import AdminSidebar from '../../components/AdminSidebar';
+import AdminProduct from '../../../components/AdminProduct';
+import AdminSidebar from '../../../components/AdminSidebar';
 import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import axiosInstance from '../../src/config/api';
+import axiosInstance from '../../../src/config/api';
 import ReactPaginate from 'react-paginate';
 import styles from './Admin.module.css';
 import { useEffect, useState } from 'react';
-import AddRacikan from '../../components/AddRacikan';
-import AddProduct from '../../components/AddProduct';
+import AddRacikan from '../../../components/AddRacikan';
+import AddProduct from '../../../components/AddProduct';
 
 export default function Inventory(props) {
   const router = useRouter();

@@ -4,6 +4,7 @@ const {
   product,
   detailProduct,
   productCategory,
+  logHistory,
   sequelize,
 } = require('../../../models');
 const { auth } = require('../../helpers/auth');
@@ -25,7 +26,6 @@ const patchProduct = async (req, res, next) => {
     const result = await sequelize.transaction(async (t) => {
       const resUpdateProduct = await product.update(
         {
-          productId,
           productName,
           desc,
           productImage,
@@ -65,20 +65,41 @@ const patchProduct = async (req, res, next) => {
   }
 };
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+const editProductStock = async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+    const { productId, updateStock, defaultStock, totalPrice } = req.body;
+
+    const addStock = Number(updateStock) + defaultStock;
+    console.log(addStock);
+
+    const result = await sequelize.transaction(async (t) => {
+      const resUpdateStock = await product.update(
+        { stock: addStock },
+        { where: { productId } },
+        { transaction: t },
+      );
+
+      await logHistory.create(
+        { userId, productId, quantity: updateStock, totalPrice, status: 'in' },
+        { transaction: t },
+      );
+
+      return resUpdateStock;
+    });
+
+    if (!result) {
+      throw { code: 400, message: 'Gagal update stok produk' };
+    }
+
+    res.send({
+      status: 'Berhasil',
+      message: 'Berhasil Update Stok Produk',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const updateStockRacikan = async (req, res, next) => {
   const { productId, quantity } = req.body;
@@ -89,7 +110,6 @@ const updateStockRacikan = async (req, res, next) => {
       where: { productId },
       transaction: t,
     });
-    // console.log(getExistingProduct.dataValues.formula);
     const { formula, stock } = getExistingProduct.dataValues;
 
     const getInitialStock = await Promise.all(
@@ -218,6 +238,7 @@ const updateStockRacikan = async (req, res, next) => {
 };
 
 router.patch('/', auth, patchProduct);
+router.patch('/stock', auth, editProductStock);
 router.patch('/racikan', updateStockRacikan);
 
 module.exports = router;

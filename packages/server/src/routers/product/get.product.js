@@ -163,9 +163,28 @@ const getQuantityDetailProduct = async (req, res, next) => {
   }
 };
 
+const getProductStockDetail = async (req, res, next) => {
+  const productId = req.params.productId;
+  try {
+    const result = await product.findOne({
+      attributes: ['productId', 'productName', 'unit', 'stock', 'price'],
+      where: { productId },
+    });
+
+    res.send({
+      status: 'Success',
+      message: 'Success get product detail',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 router.get('/', getAllProduct);
 router.get('/all', getAllProductNoLimit);
 router.get('/:url', getDetailProduct);
 router.get('/quantity/:productId', getQuantityDetailProduct);
+router.get('/stock/:productId', getProductStockDetail);
 
 module.exports = router;

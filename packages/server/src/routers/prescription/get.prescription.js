@@ -30,7 +30,7 @@ const getAllPrescripton = async (req, res, next) => {
 
     res.send({
       status: 'Success',
-      message: 'berhasil mendapatkan daftar resep',
+      message: 'Berhasil mendapatkan daftar resep',
       data: resGetUserPrescriptions,
     });
   } catch (error) {
