@@ -11,6 +11,7 @@ import {
 import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 const SalesItemChart = ({
+  key,
   column,
   cardTitle,
   cardCaption,
@@ -56,7 +57,9 @@ const SalesItemChart = ({
                 >
                   {chartSort.map((val) => {
                     return (
-                      <option value={val.sortValue}>{val.sortTitle}</option>
+                      <option key={val.sortValue} value={val.sortValue}>
+                        {val.sortTitle}
+                      </option>
                     );
                   })}
                 </Select>

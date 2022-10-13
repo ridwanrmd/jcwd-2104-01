@@ -11,7 +11,7 @@ import { Spinner } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
 import { useTable, usePagination } from 'react-table';
 
-const ProductTable = ({ columns, data, isLoading }) => {
+const ProductTable = ({ columns, data, isLoading, key }) => {
   const columnData = useMemo(() => columns, [columns]);
   const rowData = useMemo(() => data, [data]);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -36,10 +36,11 @@ const ProductTable = ({ columns, data, isLoading }) => {
           {...getTableProps()}
         >
           <Thead>
-            {headerGroups.map((headerGroup) => (
-              <Tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
+            {headerGroups.map((headerGroup, i) => (
+              <Tr key={i} {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, i) => (
                   <Th
+                    key={i}
                     py="4"
                     fontSize="small"
                     textAlign="center"
@@ -56,10 +57,11 @@ const ProductTable = ({ columns, data, isLoading }) => {
             {rows.map((row, i) => {
               prepareRow(row);
               return (
-                <Tr {...row.getRowProps()}>
+                <Tr key={i} {...row.getRowProps()}>
                   {row.cells.map((cell) => {
                     return (
                       <Td
+                        key={i}
                         py="4"
                         fontWeight="medium"
                         fontSize="13px"

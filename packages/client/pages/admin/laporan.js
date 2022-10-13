@@ -92,6 +92,7 @@ export default function Laporan(props) {
       convertItemDataByMonth();
     }
   }, [salesItem]);
+  // console.log(salesItem);
   const saleItemSeries = ItemSalesCate;
   const handleChangeItemSales = (event) => {
     setSortItem(event.target.value);
@@ -159,6 +160,7 @@ export default function Laporan(props) {
 
   const data1 = React.useMemo(() => [...transProduct], [transProduct]);
   const data = React.useMemo(() => [...transProduct1], [transProduct1]);
+
   const coloumFunction = () => [
     {
       Header: 'Tanggal',
@@ -229,10 +231,11 @@ export default function Laporan(props) {
       converProfitDataByMonth();
     }
   }, [profitData]);
+  console.log(profitData);
 
   const converProfitDataByMonth = () => {
     const { SaleTotal } = profitData.data;
-    // console.log(profitData);
+
     const dataArr = new Array(parseInt(moment().format('MM'))).fill(0);
     SaleTotal?.forEach((val) => {
       dataArr[parseInt(moment(val.month).format('MM')) - 1] = val.sum;
@@ -248,6 +251,7 @@ export default function Laporan(props) {
     setProfit(data);
   };
   const profitSeries = profit;
+
   const handleChangeProfit = (event) => {
     setSortProfit(event.target.value);
   };
@@ -259,6 +263,7 @@ export default function Laporan(props) {
       enabled: false,
     },
   };
+
   return (
     <Flex justifyContent="center">
       <AdminSidebar />

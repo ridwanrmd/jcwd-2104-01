@@ -16,12 +16,9 @@ import { useState } from 'react';
 import { getSession } from 'next-auth/react';
 import Image from 'next/image';
 import axiosInstance from '../../src/config/api';
-<<<<<<< HEAD
 import { useRouter } from 'next/router';
 import next from 'next';
 import { api_origin } from '../../constraint';
-=======
->>>>>>> 4972fc98a9b27f4466ac9a9b625aab2197bd0c60
 
 const AddressAndPayment = ({ data, user }) => {
   const [paymentImage, setPaymentImage] = useState();
