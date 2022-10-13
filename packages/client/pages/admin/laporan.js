@@ -42,55 +42,6 @@ export default function Laporan(props) {
   const [formState, setFormState] = useState();
   const [totalPage, setTotalPage] = useState(props.totalPage);
   const [totalPage1, setTotalPage1] = useState(props.totalPage1);
-  // console.log(p);
-  //Sales Item Charts
-
-  // useEffect(() => {
-  //   fetchSalesItem();
-  // }, [sortItem]);
-
-  // const fetchSalesItem = async () => {
-  //   try {
-  //     const body = { timeReport: sortItem };
-  //     const respons = await axiosInstance.post(`/report/salesItem`, body);
-  //     // console.log(respons);
-  //     setSalesItem(respons.data.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (Object.keys(salesItem).length) {
-  //     convertItemDataByMonth();
-  //   }
-  // }, [salesItem]);
-  // const convertItemDataByMonth = () => {
-  //   const { results } = salesItem.data;
-  //   // console.log(profitData);
-  //   const dataArr = new Array(parseInt(moment().format('MM'))).fill(0);
-  //   results?.forEach((val) => {
-  //     dataArr[parseInt(moment(val.month).format('MM')) - 1] = val.sum_quantity;
-  //     // console.log(val.month);
-  //   });
-  //   const data = [
-  //     {
-  //       name: 'Item Sales',
-  //       data: dataArr,
-  //     },
-  //   ];
-  //   console.log(data);
-  //   setCategoryItem(Month);
-  //   setItemSalesCate(data);
-  // };
-  // const saleItemSeries = ItemSalesCate;
-  // const handleChangeItemSales = (event) => {
-  //   setSortItem(event.target.value);
-  // };
-  // const salesItemOption = {
-  //   xaxis: {
-  //     categories: categoryItem,
-  //   },
-  // };
 
   // chart product byProductId
   useEffect(() => {
