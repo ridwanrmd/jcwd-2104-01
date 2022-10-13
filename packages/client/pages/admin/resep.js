@@ -5,22 +5,34 @@ import AdminResep from '../../components/AdminResep';
 import AdminSidebar from '../../components/AdminSidebar';
 import axiosInstance from '../../src/config/api';
 import { getSession } from 'next-auth/react';
+import ReactPaginate from 'react-paginate';
+import styles from './Product.module.css';
 
 export default function Resep(props) {
   const [prescription, setPrescription] = useState();
   const [productList, setProductList] = useState();
+  const [totalPage, setTotalPage] = useState();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const [productRacikanList, setProductRacikanList] = useState();
   const fetchPrescription = async () => {
     try {
-      const getAllPrescription = await axiosInstance.get('/prescriptions/');
+      const getAllPrescription = await axiosInstance.get('/prescriptions/', {
+        params: { page, pageSize },
+      });
       setPrescription(getAllPrescription.data.data);
+      setTotalPage(getAllPrescription.data.totalPage);
     } catch (error) {
       console.log({ error });
     }
   };
   useEffect(() => {
     fetchPrescription();
-  }, []);
+  }, [page]);
+
+  const handlePageClick = (e) => {
+    setPage(e.selected + 1);
+  };
 
   useEffect(() => {
     const getProductList = async () => {
@@ -55,11 +67,27 @@ export default function Resep(props) {
         >
           Resep dokter
         </Text>
-        <Box w="90%" mx="auto">
+        <Box w="90%" h="70vh" mx="auto">
           <Flex direction="column" w="100%" h="100%">
             {renderPrescription()}
           </Flex>
         </Box>
+        <ReactPaginate
+          forcePage={page - 1}
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={2}
+          pageCount={Math.ceil(totalPage / 5)}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          containerClassName={styles.pagination}
+          pageLinkClassName={styles.pagenum}
+          previousLinkClassName={styles.pagenum}
+          nextLinkClassName={styles.pagenum}
+          activeLinkClassName={styles.active}
+          disabledClassName={styles.disabled}
+        />
       </Flex>
     </Flex>
   );

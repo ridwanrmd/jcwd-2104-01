@@ -23,8 +23,19 @@ const getUserPrescriptions = async (req, res, next) => {
 };
 
 const getAllPrescripton = async (req, res, next) => {
+  const { page = 1, pageSize = 5 } = req.query;
+
+  const limit = Number(pageSize);
+  const offset = (Number(page) - 1) * Number(pageSize);
+
   try {
     const resGetUserPrescriptions = await prescription.findAll({
+      order: Sequelize.literal(`status DESC`),
+      offset,
+      limit,
+    });
+
+    const amount = await prescription.findAll({
       order: Sequelize.literal(`status DESC`),
     });
 
@@ -32,6 +43,7 @@ const getAllPrescripton = async (req, res, next) => {
       status: 'Success',
       message: 'Berhasil mendapatkan daftar resep',
       data: resGetUserPrescriptions,
+      totalPage: amount.length,
     });
   } catch (error) {
     next(error);
