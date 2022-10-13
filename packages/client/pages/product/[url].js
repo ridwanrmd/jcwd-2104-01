@@ -19,7 +19,6 @@ import { useRouter } from 'next/router';
 export default function ProductDetail({ product, user }) {
   const toast = useToast();
   const router = useRouter();
-  const toast = useToast();
   const { data: session } = useSession();
   const [show, setShow] = useState(false);
 
