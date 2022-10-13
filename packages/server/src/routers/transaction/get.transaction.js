@@ -220,7 +220,7 @@ const getTransactionSelected = async (req, res, next) => {
     } else {
       var waktu = createdAt;
     }
-    console.log({ peler: waktu });
+
     const { userId } = req.user;
 
     var StatusTransaction;
@@ -258,9 +258,9 @@ const getTransactionSelected = async (req, res, next) => {
         order: Sequelize.literal(`${sorting} ${order}`),
         where: {
           userId,
-          //   createdAt: createdAt
-          //     ? { [Op.between]: [createdAt, endDate] }
-          //     : { [Op.or]: null },
+          createdAt: createdAt
+            ? { [Op.between]: [createdAt, endDate] }
+            : { [Op.or]: null },
         },
         offset,
         limit,
