@@ -173,7 +173,7 @@ export default function Laporan(props) {
           page + 1
         }&sorting=${sorting}&order=${order}&createdAt=${formState}`,
       );
-      console.log('t');
+
       setTransProduct(respons.data.data.getTransactProduct);
       setTotalPage(respons.data.data.totalPage);
     } catch (error) {

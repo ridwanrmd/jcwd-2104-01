@@ -9,8 +9,6 @@ const {
   product,
   logHistory,
 } = require('../../../models');
-const { createLocalStorageManager } = require('@chakra-ui/react');
-const { date } = require('yup');
 
 const allTransactionProduct = async (req, res, next) => {
   try {
@@ -21,7 +19,7 @@ const allTransactionProduct = async (req, res, next) => {
       sorting = 'createdAt',
       order = 'ASC',
     } = req.query;
-    console.log(createdAt);
+    // console.log(createdAt);
     const limit = Number(pageSize);
     const offset = (Number(page) - 1) * Number(pageSize);
     // var startdate = moment(createdAt).format('DD-MM-YYYY');

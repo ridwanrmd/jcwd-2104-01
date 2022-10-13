@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Op, Sequelize } = require('sequelize');
+const moment = require('moment');
 
 const {
   Address,
@@ -13,6 +14,7 @@ const { auth } = require('../../helpers/auth');
 const allTransactionByAdmin = async (req, res, next) => {
   try {
     const {
+      createdAt = new Date().getTime(),
       selected,
       page = 1,
       pageSize = 4,
@@ -22,13 +24,14 @@ const allTransactionByAdmin = async (req, res, next) => {
     // console.log(req.query)
     var StatusTransaction;
     const limit = Number(pageSize);
-
     const offset = (Number(page) - 1) * Number(pageSize);
 
     const getSelectData = async (StatusTransaction) => {
       const restransactionStatus = await transaction.findAndCountAll({
         order: Sequelize.literal(`${sorting} ${order}`),
-        where: { transactionStatus: StatusTransaction },
+        where: {
+          transactionStatus: StatusTransaction,
+        },
         offset,
         limit,
       });
@@ -46,6 +49,7 @@ const allTransactionByAdmin = async (req, res, next) => {
     const getAllData = async () => {
       const restransactionStatus = await transaction.findAndCountAll({
         order: Sequelize.literal(`${sorting} ${order}`),
+
         offset,
         limit,
       });
@@ -100,7 +104,9 @@ const getTransactionUser = async (req, res, next) => {
     const { transactionId } = req.params;
 
     const getTransactData = await detailTransaction.findAll({
-      where: { transactionId },
+      where: {
+        transactionId,
+      },
       attributes: ['dtId', 'productId', 'quantity'],
       include: [
         {
@@ -199,26 +205,40 @@ const getTransactionUserByAdmin = async (req, res, next) => {
 
 const getTransactionSelected = async (req, res, next) => {
   try {
-    const {
+    let {
+      createdAt,
       selected,
       page = 1,
-      pageSize = 5,
+      pageSize = 4,
       sorting = 'transactionId',
       order = 'ASC',
     } = req.query;
-    // console.log(page);
+    // createdAt
+    // console.log(createdAt);
+    if (createdAt == 'undefined') {
+      var waktu = moment().format('YYYY-MM-DD HH:mm:ss');
+    } else {
+      var waktu = createdAt;
+    }
+    console.log({ peler: waktu });
     const { userId } = req.user;
 
     var StatusTransaction;
-
+    var endDate = new Date(moment(waktu).add(1, 'M').format('MM-DD-YYYY'));
     const limit = Number(pageSize);
-    // console.log(limit);
+    console.log(endDate);
     const offset = (Number(page) - 1) * Number(pageSize);
 
     const getSelectData = async (StatusTransaction) => {
       const restransactionStatus = await transaction.findAndCountAll({
         order: Sequelize.literal(`${sorting} ${order}`),
-        where: { userId, transactionStatus: StatusTransaction },
+        where: {
+          userId,
+          transactionStatus: StatusTransaction,
+          createdAt: waktu
+            ? { [Op.between]: [waktu, endDate] }
+            : { [Op.or]: null },
+        },
         offset,
         limit,
       });
@@ -232,10 +252,16 @@ const getTransactionSelected = async (req, res, next) => {
         },
       });
     };
+    console.log('tes');
     const getAlltData = async () => {
       const restransactionStatus = await transaction.findAndCountAll({
         order: Sequelize.literal(`${sorting} ${order}`),
-        where: { userId },
+        where: {
+          userId,
+          //   createdAt: createdAt
+          //     ? { [Op.between]: [createdAt, endDate] }
+          //     : { [Op.or]: null },
+        },
         offset,
         limit,
       });
@@ -280,7 +306,96 @@ const getTransactionSelected = async (req, res, next) => {
   }
 };
 
+const getTransactionSelected1 = async (req, res, next) => {
+  try {
+    const {
+      selected,
+      page = 1,
+      pageSize = 4,
+      sorting = 'transactionId',
+      order = 'ASC',
+    } = req.query;
+
+    const { userId } = req.user;
+
+    var StatusTransaction;
+
+    const limit = Number(pageSize);
+
+    const offset = (Number(page) - 1) * Number(pageSize);
+
+    const getSelectData = async (StatusTransaction) => {
+      const restransactionStatus = await transaction.findAndCountAll({
+        order: Sequelize.literal(`${sorting} ${order}`),
+        where: {
+          userId,
+          transactionStatus: StatusTransaction,
+        },
+        offset,
+        limit,
+      });
+
+      res.send({
+        status: 'success',
+        message: 'Fetch Transaction',
+        data: {
+          restransactionStatus: restransactionStatus.rows,
+          totalPage1: restransactionStatus.count,
+        },
+      });
+    };
+    const getAlltData = async () => {
+      const restransactionStatus = await transaction.findAndCountAll({
+        order: Sequelize.literal(`${sorting} ${order}`),
+        where: {
+          userId,
+        },
+        offset,
+        limit,
+      });
+
+      res.send({
+        status: 'success',
+        message: 'Fetch Transaction',
+        data: {
+          restransactionStatus: restransactionStatus.rows,
+          totalPage1: restransactionStatus.count,
+        },
+      });
+    };
+    switch (Number(selected)) {
+      case 1:
+        getSelectData('Menunggu Pembayaran');
+        break;
+      case 2:
+        getSelectData('Menunggu Konfirmasi Pembayaran');
+        break;
+      case 3:
+        getSelectData('Diproses');
+        break;
+      case 4:
+        getSelectData('Dibatalkan');
+        break;
+      case 5:
+        getSelectData('Dikirim');
+        break;
+      case 6:
+        getSelectData('Pesanan Dikonfirmasi');
+        break;
+
+      default:
+        getAlltData();
+
+        break;
+    }
+  } catch (error) {
+    next(error);
+    console.log(error);
+  }
+};
+
 router.get('/historyTransaction', auth, getTransactionSelected);
+router.get('/historyTransactionNorm', auth, getTransactionSelected1);
 router.get('/allTransByAdmin', allTransactionByAdmin);
 router.get('/dataTransaction/:transactionId', auth, getTransactionUser);
 router.get('/dataTransactionByAdmin', getTransactionUserByAdmin);
