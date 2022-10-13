@@ -84,7 +84,13 @@ export default function AdminCategory(props) {
         try {
           await axiosInstance.post('/category/upload', data, config);
         } catch (error) {
-          return alert(error.response.data.message);
+          return toast({
+            title: error.response.data.message,
+            status: 'error',
+            position: 'top',
+            duration: 2000,
+            isClosable: true,
+          });
         }
       }
       try {
@@ -112,7 +118,6 @@ export default function AdminCategory(props) {
       onEditClose();
       router.push(path);
     } catch (error) {
-      console.log({ error });
       return toast({
         title: error.response.data.message,
         status: 'error',

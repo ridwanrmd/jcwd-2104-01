@@ -8,6 +8,14 @@ export default function ProductCard(props) {
   const toast = useToast();
   const addToCart = async () => {
     const session = await getSession();
+    if (!session)
+      return toast({
+        title: 'Anda perlu melakukan login terlebih dahulu',
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
     const { accessToken } = session.user;
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },

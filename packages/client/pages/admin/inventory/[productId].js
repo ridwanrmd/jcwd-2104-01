@@ -131,7 +131,13 @@ export default function DetailStock(props) {
       fetchproductStockNoFilter();
       fetchProduct();
     } catch (error) {
-      alert(errorMessage);
+      toast({
+        title: error.response.data.message,
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
     } finally {
       setDisabled(false);
     }

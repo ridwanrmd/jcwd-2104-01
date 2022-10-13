@@ -19,7 +19,6 @@ import {
   Link,
   Hide,
   useToast,
-  Alert,
 } from '@chakra-ui/react';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { SearchIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
