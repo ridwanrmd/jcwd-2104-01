@@ -1,12 +1,21 @@
-import { Text, Image, Flex, Button, Box } from '@chakra-ui/react';
+import { Text, Image, Flex, Button, Box, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { api_origin } from '../../constraint';
 import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
 
 export default function ProductCard(props) {
+  const toast = useToast();
   const addToCart = async () => {
     const session = await getSession();
+    if (!session)
+      return toast({
+        title: 'Anda perlu melakukan login terlebih dahulu',
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
     const { accessToken } = session.user;
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },

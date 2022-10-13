@@ -9,11 +9,7 @@ import {
   Heading,
   Input,
   Stack,
-  useColorModeValue,
-  InputGroup,
-  InputRightElement,
   Text,
-  Alert,
 } from '@chakra-ui/react';
 
 function ForgotPassword() {

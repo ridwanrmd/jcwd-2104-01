@@ -2,7 +2,6 @@ import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
 import { api_origin } from '../../constraint';
 import {
-  Alert,
   Box,
   Button,
   Collapse,
@@ -10,6 +9,7 @@ import {
   Image,
   Show,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
@@ -17,6 +17,7 @@ import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 export default function ProductDetail({ product, user }) {
+  const toast = useToast();
   const router = useRouter();
   const { data: session } = useSession();
   const [show, setShow] = useState(false);
@@ -25,9 +26,15 @@ export default function ProductDetail({ product, user }) {
 
   const addToCart = async () => {
     const session = await getSession();
-    if (!session) return alert('Anda perlu melakukan login terlebih dahulu');
-    if (!user.isVerified)
-      return alert('Anda perlu melakukan verifikasi akun terlebih dahulu');
+    if (!session)
+      return toast({
+        title: 'Anda perlu melakukan login terlebih dahulu',
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
+
     const userId = session.user.userId;
     const { accessToken } = session.user;
     // console.log(token);
