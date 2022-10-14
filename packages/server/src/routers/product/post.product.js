@@ -238,6 +238,7 @@ const addNewProduct = async (req, res, next) => {
           quantity: stock,
           totalPrice: stock * price,
           status: 'in',
+          type: 'New product',
         },
         { transaction: t },
       );
