@@ -203,6 +203,7 @@ const ConfrimDeliveryTransaction = async (req, res, next) => {
 const CancelTransaction = async (req, res, next) => {
   try {
     const { transactionId } = req.query;
+    const { userId } = req.user;
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
@@ -267,6 +268,15 @@ const CancelTransaction = async (req, res, next) => {
               where: { productId: updateProduct.dataValues.productId },
             },
           );
+          await logHistory.create({
+            userId,
+            productId: data.dataValues.productId,
+            quantity: data.dataValues.quantity,
+            totalPrice:
+              updateProduct.dataValues.price * data.dataValues.quantity,
+            status: 'in',
+            type: 'Cancel order',
+          });
         });
 
         res.send({
@@ -389,7 +399,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
     next(error);
   }
 };
-router.post('/cancelTransaction/:transactionId', CancelTransaction);
+router.post('/cancelTransaction/:transactionId', auth, CancelTransaction);
 router.post('/confirmTransaction/:transactionId', ConfrimDeliveryTransaction);
 router.post('/newTransaction', auth, createTransaction);
 router.post('/newPrescription', auth, CreateNewPrescriptionTransaction);

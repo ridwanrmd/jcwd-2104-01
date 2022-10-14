@@ -142,6 +142,10 @@ const cancelTransaction = async (req, res, next) => {
   try {
     const { transactionId } = req.query;
 
+    const { userId } = req.user;
+
+    console.log(userId);
+
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
@@ -199,6 +203,14 @@ const cancelTransaction = async (req, res, next) => {
           // transaction: t,
         },
       );
+      await logHistory.create({
+        userId,
+        productId: data.dataValues.productId,
+        quantity: data.dataValues.quantity,
+        totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
+        status: 'in',
+        type: 'Cancel order',
+      });
     });
     const sendTransaction = await transaction.update(
       { transactionStatus: 'Menunggu Pembayaran' },
@@ -371,7 +383,7 @@ const CountTransactionReport = async (req, res, next) => {
   }
 };
 
-router.post('/declineTransaction', cancelTransaction);
+router.post('/declineTransaction', auth, cancelTransaction);
 router.post('/salesReportUser', CountTransactionReport);
 router.post('/salesItem', SalesItem);
 router.post('/salesTotal', ProfitReport);
