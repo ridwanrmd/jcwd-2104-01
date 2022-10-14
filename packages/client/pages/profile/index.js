@@ -279,7 +279,7 @@ export default function Profile(props) {
                 fontWeight="medium"
                 lineHeight={'6'}
               >
-                {user.phone}
+                {`+62 ${user.phone}`}
               </Text>
             </VStack>
           </HStack>

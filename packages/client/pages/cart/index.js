@@ -134,7 +134,7 @@ function Cart(props) {
     const splitCost = selectedShippingCost.split(',');
     const row1 = `${selectedShipper.toUpperCase()}, ${splitCost[0]}`;
     const row3 = `Rp ${Number(splitCost[1]).toLocaleString('id')}`;
-    const row4 = `Estimasi: ${splitCost[2]} hari`;
+    const row4 = `${splitCost[2]} hari`;
     const row4Post = `${splitCost[2]}`;
     return (
       <Box
