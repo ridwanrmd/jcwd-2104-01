@@ -63,23 +63,7 @@ const confirmTransaction = async (req, res, next) => {
     findTransaction.map((data) => {
       totalPrice = data.dataValues.total;
     });
-    getDTData.rows.map(async (data) => {
-      // console.log(data.dataValues.productId);
-      // console.log(data.dataValues.transaction.dataValues.userId);
-      const updateProduct = await product.findOne({
-        where: { productId: data.dataValues.productId },
-      });
 
-      // console.log(totalPrice);
-      await logHistory.create({
-        userId: data.dataValues.transaction.dataValues.userId,
-        productId: data.dataValues.productId,
-        quantity: data.dataValues.quantity,
-        totalPrice,
-        status: 'out',
-        type: 'Penjualan',
-      });
-    });
     const sendTransaction = await transaction.update(
       { transactionStatus: 'Diproses' },
       {
@@ -144,8 +128,6 @@ const cancelTransaction = async (req, res, next) => {
 
     const { userId } = req.user;
 
-    console.log(userId);
-
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
@@ -188,30 +170,7 @@ const cancelTransaction = async (req, res, next) => {
     findTransaction.map((data) => {
       totalPrice = data.dataValues.total;
     });
-    getDTData.rows.map(async (data) => {
-      // console.log(data.dataValues.productId);
-      const updateProduct = await product.findOne({
-        where: { productId: data.dataValues.productId },
-      });
 
-      await product.update(
-        {
-          stock: updateProduct.dataValues.stock + data.dataValues.quantity,
-        },
-        {
-          where: { productId: data.dataValues.productId },
-          // transaction: t,
-        },
-      );
-      await logHistory.create({
-        userId,
-        productId: data.dataValues.productId,
-        quantity: data.dataValues.quantity,
-        totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
-        status: 'in',
-        type: 'Cancel order',
-      });
-    });
     const sendTransaction = await transaction.update(
       { transactionStatus: 'Menunggu Pembayaran' },
       {
