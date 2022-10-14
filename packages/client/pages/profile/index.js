@@ -79,8 +79,17 @@ export default function Profile(props) {
   };
 
   const onUpdateisMain = async (addressId) => {
+    const session = await getSession();
+    const { accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
     try {
-      const res = await axiosInstance.patch(`/addresses/isMain/${addressId}`);
+      const res = await axiosInstance.patch(
+        `/addresses/isMain/${addressId}`,
+        {},
+        config,
+      );
 
       fetchUserAddresses();
     } catch (error) {

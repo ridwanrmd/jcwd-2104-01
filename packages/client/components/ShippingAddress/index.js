@@ -17,6 +17,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../src/config/api';
 import EditAddress from '../../components/EditAddress';
 import AddAddress from '../../components/AddAddress';
+import { getSession } from 'next-auth/react';
 
 function ShippingAddress(props) {
   const {
@@ -40,8 +41,17 @@ function ShippingAddress(props) {
   }, []);
 
   const onUpdateisMain = async (addressId) => {
+    const session = await getSession();
+    const { accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
     try {
-      const res = await axiosInstance.patch(`/addresses/isMain/${addressId}`);
+      const res = await axiosInstance.patch(
+        `/addresses/isMain/${addressId}`,
+        {},
+        config,
+      );
       toast({
         description: res.data.message,
         position: 'top',
