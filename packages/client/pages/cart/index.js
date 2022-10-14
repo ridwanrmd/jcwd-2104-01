@@ -25,6 +25,7 @@ import { useRouter } from 'next/router';
 import AddAddressNew from '../../components/AddAddressNew';
 
 function Cart(props) {
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { getCart } = props.cart.data;
   const [user, setUser] = useState(props.user);
@@ -207,6 +208,14 @@ function Cart(props) {
 
   const onClickBayar = async () => {
     try {
+      if (!user.isVerified)
+        return toast({
+          title: 'Anda perlu melakukan verifikasi terlebih dahulu',
+          status: 'error',
+          position: 'top',
+          duration: 2000,
+          isClosable: true,
+        });
       const splitCost = selectedShippingCost.split(',');
       const body = {
         addressId: selectedAddress.addressId,
@@ -274,7 +283,7 @@ function Cart(props) {
                 <Text alignItems="left" as="b">
                   {recipient}
                 </Text>
-                <Text>{user.phone}</Text>
+                <Text>{`+62 ${user.phone}`}</Text>
                 {!selectedAddress ? (
                   <Text color="red.500">
                     Anda belum memiliki alamat pengiriman

@@ -54,7 +54,10 @@ const AdminProofConfirm = ({ data }) => {
             alt="Payment User"
           />
         </Box>
-        <Box w="100px">Total Price: Rp. {data.total.toLocaleString('id')}</Box>
+        <Box w="100px">
+          Total Price: Rp.{' '}
+          {data?.total?.toLocaleString('id') || 'Menunggu Proses Admin'}
+        </Box>
         <Box w="100px">
           Shiping Price: Rp. {data.biaya.toLocaleString('id')}
         </Box>

@@ -30,38 +30,24 @@ function Riwayat(props) {
   const [user, setUser] = useState(props.user);
   const [selected, setSelected] = useState(0);
   const [data, setData] = useState([]);
+  const [data1, setData1] = useState([]);
   const router = useRouter();
   const [page, setPage] = useState(0);
   const [sorting, setSorting] = useState('transactionId');
   const [order, setOrder] = useState('ASC');
-  const [filteredTransactions, setFilteredTransactions] = useState([]);
-  const [formState, setFormState] = useState({ transactionId: '' });
+
+  const [formState, setFormState] = useState();
+  const [totalPage, setTotalPage] = useState(props.totalPage1);
+  const [totalPage1, setTotalPage1] = useState(props.totalPage);
   console.log(formState);
 
   const handlePageClick = (e) => {
     setPage(e.selected);
   };
 
-  // console.log(sorting);
-
-  const btnSearchHandler = () => {
-    // console.log('1');
-    const filteredTransactions = data.filter((transaction) => {
-      // console.log(transaction);
-      return transaction.transactionId
-        .toString()
-        .includes(formState.transactionId);
-    });
-    // console.log(filteredTransactions);
-    setFilteredTransactions(filteredTransactions);
-  };
   const onHandleChange = (event) => {
-    setFormState({ [event.target.name]: event.target.value });
+    setFormState(event.target.value);
   };
-
-  useEffect(() => {
-    fetchTransaction();
-  }, [selected, page, sorting, order]);
 
   const onClickOrder = (e) => {
     // console.log(e.target.value);
@@ -85,22 +71,64 @@ function Riwayat(props) {
       const res = await axiosInstance.get(
         `/transactions/historyTransaction?selected=${selected}&page=${
           page + 1
-        }&sorting=${sorting}&order=${order}`,
+        }&sorting=${sorting}&order=${order}&createdAt=${formState}`,
         config,
       );
       // console.log(res.data.data.restransactionStatus);
       setData(res.data.data.restransactionStatus);
-      setFilteredTransactions(res.data.data.restransactionStatus);
+      setTotalPage(res.data.data.totalPage);
+
       //   console.log(res.data.data.responseTransaction);
     } catch (error) {
       console.log(error);
     }
   };
+  const fetchTransaction1 = async () => {
+    try {
+      const session = await getSession();
+      const userId = session.user.userId;
+      const { accessToken } = session.user;
+      //   console.log(token);
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      //   console.log(config);
+      const res = await axiosInstance.get(
+        `/transactions/historyTransactionNorm?selected=${selected}&page=${
+          page + 1
+        }&sorting=${sorting}&order=${order}`,
+        config,
+      );
+      // console.log(res);
+      // console.log(res.data.data.restransactionStatus);
+      setData1(res.data.data.restransactionStatus);
+      setTotalPage1(res.data.data.totalPage1);
+
+      //   console.log(res.data.data.responseTransaction);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchTransaction1();
+  }, [selected, page, sorting, order, formState]);
+  useEffect(() => {
+    fetchTransaction();
+  }, [selected, page, sorting, order, formState]);
+
   function selectedStatus() {
     return data?.map((x, i) => {
+      console.log(x);
       return <History data={x} selected={selected} key={i} />;
     });
   }
+  function selectedStatus1() {
+    return data1?.map((y, i) => {
+      // console.log(y);
+      return <History data={y} selected={selected} key={i} />;
+    });
+  }
+
   return (
     <div>
       <div>
@@ -125,24 +153,15 @@ function Riwayat(props) {
         </Select>
         <HStack>
           <Input
-            name="transactionId"
-            type="text"
-            placeholder="No. TransactionId"
+            name="createdAt"
+            type="Date"
+            placeholder="Tanggal"
             fontSize={14}
             fontWeight={400}
             onChange={onHandleChange}
             width={200}
             ml={1}
           />
-          <HStack>
-            <Button
-              fontSize={14}
-              colorScheme="twitter"
-              onClick={btnSearchHandler}
-            >
-              Cari
-            </Button>
-          </HStack>
         </HStack>
       </Flex>
 
@@ -156,59 +175,113 @@ function Riwayat(props) {
           <Tab>Dikirim</Tab>
           <Tab>Pesanan Dikonfirmasi</Tab>
         </TabList>
-        {data.length ? (
-          <TabPanels>
-            <TabPanel>
-              <div>{selectedStatus()}</div>
-            </TabPanel>
-            <TabPanel>
-              <div>{selectedStatus()}</div>
-            </TabPanel>
-            <TabPanel>
-              <div>{selectedStatus()}</div>
-            </TabPanel>
-            <TabPanel>
-              <div>{selectedStatus()}</div>
-            </TabPanel>
-            <TabPanel>
-              <div>{selectedStatus()}</div>
-            </TabPanel>
-            <TabPanel>
-              <div>{selectedStatus()}</div>
-            </TabPanel>
-            <TabPanel>
-              <div>{selectedStatus()}</div>
-            </TabPanel>
-          </TabPanels>
+        {!formState ? (
+          <>
+            {data1.length ? (
+              <TabPanels>
+                <TabPanel>
+                  <div>{selectedStatus1()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus1()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus1()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus1()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus1()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus1()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus1()}</div>
+                </TabPanel>
+              </TabPanels>
+            ) : (
+              <VStack marginTop={105}>
+                <Image src="/pana.png" width={250} height={250} />
+                <Text paddingTop={6} fontSize={18}>
+                  Tidak Ada Transaksi
+                </Text>
+              </VStack>
+            )}
+          </>
         ) : (
-          <VStack marginTop={105}>
-            <Image
-              src="/empty-cart-png-transparent-png"
-              width={250}
-              height={250}
-            />
-            <Text paddingTop={6} fontSize={18}>
-              Tidak Ada Transaksi
-            </Text>
-          </VStack>
+          <>
+            {data.length ? (
+              <TabPanels>
+                <TabPanel>
+                  <div>{selectedStatus()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus()}</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>{selectedStatus()}</div>
+                </TabPanel>
+              </TabPanels>
+            ) : (
+              <VStack marginTop={105}>
+                <Image src="/pana.png" width={250} height={250} />
+                <Text paddingTop={6} fontSize={18}>
+                  Tidak Ada Transaksi
+                </Text>
+              </VStack>
+            )}
+          </>
         )}
       </Tabs>
-      <ReactPaginate
-        forcePage={page}
-        breakLabel="..."
-        nextLabel="next >"
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={2}
-        pageCount={Math.ceil(props.totalPage / 4)}
-        previousLabel="< previous"
-        renderOnZeroPageCount={null}
-        containerClassName={styles.pagination}
-        pageLinkClassName={styles.pagenum}
-        previousLinkClassName={styles.pagenum}
-        nextLinkClassName={styles.pagenum}
-        activeLinkClassName={styles.active}
-        disabledClassName={styles.disabled}
-      />
+      {!formState ? (
+        <ReactPaginate
+          forcePage={page}
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={2}
+          pageCount={Math.ceil(totalPage / 4)}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          containerClassName={styles.pagination}
+          pageLinkClassName={styles.pagenum}
+          previousLinkClassName={styles.pagenum}
+          nextLinkClassName={styles.pagenum}
+          activeLinkClassName={styles.active}
+          disabledClassName={styles.disabled}
+        />
+      ) : (
+        <ReactPaginate
+          forcePage={page}
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={2}
+          pageCount={Math.ceil(totalPage1 / 4)}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          containerClassName={styles.pagination}
+          pageLinkClassName={styles.pagenum}
+          previousLinkClassName={styles.pagenum}
+          nextLinkClassName={styles.pagenum}
+          activeLinkClassName={styles.active}
+          disabledClassName={styles.disabled}
+        />
+      )}
     </div>
   );
 }
@@ -231,6 +304,11 @@ export async function getServerSideProps(context) {
     const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
     // console.log(resGetUser.data.data);
     const restransactionUser = await axiosInstance.get(
+      `/transactions/historyTransactionNorm`,
+      config,
+      { params: context.query },
+    );
+    const restransactionUserFitlr = await axiosInstance.get(
       `/transactions/historyTransaction`,
       config,
       { params: context.query },
@@ -240,7 +318,8 @@ export async function getServerSideProps(context) {
       props: {
         user: resGetUser.data.data,
         transaction: restransactionUser.data.data.restransactionStatus,
-        totalPage: restransactionUser.data.data.totalPage,
+        totalPages: restransactionUser.data.data.totalPage1,
+        totalPages1: restransactionUserFitlr.data.data.totalPage,
       },
     };
   } catch (error) {

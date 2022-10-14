@@ -12,13 +12,13 @@ function ResendEmail(props) {
 
     const body = {
       email: props.user.email,
-      userid: props.user.userId,
+      userId: props.user.userId,
     };
+    console.log(body);
 
     const res = await axiosInstance.post('/users/verification', body);
 
     toast({
-      title: 'Kirim ulang email verifikasi',
       description: res.data.message,
       position: 'top',
       status: 'success',
@@ -36,7 +36,8 @@ function ResendEmail(props) {
         email anda
         <Spacer />
         <Button
-          isProcess={isResendProcess}
+          isLoading={isResendProcess}
+          loadingText="Mengirim"
           variant={'solid'}
           colorScheme="twitter"
           onClick={onResendEmailClick}

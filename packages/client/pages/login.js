@@ -133,7 +133,7 @@ function Login() {
                 </NextLink>
               </Stack>
               <NextLink href={'/register'}>
-                <Link color={'blue.500'}>New To Us?</Link>
+                <Link color={'blue.500'}>Register</Link>
               </NextLink>
               <Button
                 colorScheme={'twitter'}

@@ -4,6 +4,7 @@ const {
   product,
   detailProduct,
   productCategory,
+  logHistory,
   sequelize,
 } = require('../../../models');
 const { auth } = require('../../helpers/auth');
@@ -25,7 +26,6 @@ const patchProduct = async (req, res, next) => {
     const result = await sequelize.transaction(async (t) => {
       const resUpdateProduct = await product.update(
         {
-          productId,
           productName,
           desc,
           productImage,
@@ -65,31 +65,52 @@ const patchProduct = async (req, res, next) => {
   }
 };
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+const editProductStock = async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+    const { productId, updateStock, defaultStock, totalPrice } = req.body;
+
+    const addStock = Number(updateStock) + defaultStock;
+    console.log(addStock);
+
+    const result = await sequelize.transaction(async (t) => {
+      const resUpdateStock = await product.update(
+        { stock: addStock },
+        { where: { productId } },
+        { transaction: t },
+      );
+
+      await logHistory.create(
+        { userId, productId, quantity: updateStock, totalPrice, status: 'in' },
+        { transaction: t },
+      );
+
+      return resUpdateStock;
+    });
+
+    if (!result) {
+      throw { code: 400, message: 'Gagal update stok produk' };
+    }
+
+    res.send({
+      status: 'Berhasil',
+      message: 'Berhasil Update Stok Produk',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const updateStockRacikan = async (req, res, next) => {
-  const { productId, quantity } = req.body;
-  let stocks = Number(quantity);
+  const { productId, updateStock, totalPrice, defaultStock } = req.body;
+  let stocks = Number(updateStock);
+  const { userId } = req.user;
   const t = await sequelize.transaction();
   try {
     const getExistingProduct = await product.findOne({
       where: { productId },
       transaction: t,
     });
-    // console.log(getExistingProduct.dataValues.formula);
     const { formula, stock } = getExistingProduct.dataValues;
 
     const getInitialStock = await Promise.all(
@@ -192,7 +213,32 @@ const updateStockRacikan = async (req, res, next) => {
     const checkPengeluaranStock = getInitialStock.map(
       (data, index) => data - getNewStock[index],
     );
-    console.log(checkPengeluaranStock);
+
+    await Promise.all(
+      formula.map(async (data, index) => {
+        const newProductStock = await product.findOne({
+          where: { productName: data.productName },
+          transaction: t,
+        });
+
+        const { productId, price } = newProductStock.dataValues;
+
+        console.log(checkPengeluaranStock[index]);
+
+        if (checkPengeluaranStock[index]) {
+          await logHistory.create(
+            {
+              userId,
+              productId,
+              quantity: checkPengeluaranStock[index],
+              totalPrice: price * checkPengeluaranStock[index],
+              status: 'out',
+            },
+            { transaction: t },
+          );
+        }
+      }),
+    );
 
     const [updateRacikanStock] = await product.update(
       {
@@ -206,6 +252,17 @@ const updateStockRacikan = async (req, res, next) => {
 
     if (!updateRacikanStock)
       throw { code: 400, message: 'Gagal update product stock' };
+
+    await logHistory.create(
+      {
+        userId,
+        productId,
+        quantity: updateStock,
+        totalPrice,
+        status: 'in',
+      },
+      { transaction: t },
+    );
     await t.commit();
     res.send({
       status: 'Success',
@@ -218,6 +275,7 @@ const updateStockRacikan = async (req, res, next) => {
 };
 
 router.patch('/', auth, patchProduct);
-router.patch('/racikan', updateStockRacikan);
+router.patch('/stock', auth, editProductStock);
+router.patch('/racikan', auth, updateStockRacikan);
 
 module.exports = router;

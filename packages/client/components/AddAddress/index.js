@@ -73,7 +73,7 @@ function AddAddress(props) {
       });
 
       onClose();
-      setAddressDetail({});
+      setAddressDetail();
       fetchUserAddresses();
     } catch (error) {
       console.log({ error });

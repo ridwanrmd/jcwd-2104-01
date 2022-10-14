@@ -71,7 +71,20 @@ export default function AdminProduct(props) {
           <Text>{props.product.productName}</Text>
           <Text>Rp. {props.product.price.toLocaleString('id')}</Text>
           <Text>{`${props.product.unit} - stock ${props.product.stock}`}</Text>
-          <Text>Detail</Text>
+          {/* <Button
+            cursor="pointer"
+            onClick={() => router.push(`/inventory/${props.product.productId}`)}
+          >
+            Detail
+          </Button> */}
+          <Text
+            cursor="pointer"
+            onClick={() =>
+              router.push(`/admin/inventory/${props.product.productId}`)
+            }
+          >
+            Detail
+          </Text>
         </Flex>
         <Spacer />
         <Flex w="20%" justifyContent="space-evenly" alignItems={'center'}>

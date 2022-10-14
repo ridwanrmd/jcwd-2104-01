@@ -16,15 +16,44 @@ import {
   AccordionIcon,
   AccordionPanel,
   Show,
+  Link,
+  Hide,
+  useToast,
 } from '@chakra-ui/react';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { SearchIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 
-export default function SidebarProduct({ setPage, category }) {
+export default function SidebarProduct({ setPage, category, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState('');
   const router = useRouter();
+  const toast = useToast();
+
+  const protectPrescription = () => {
+    if (!user)
+      return toast({
+        description: 'Silahkan Login Terlebih Dahulu',
+        position: 'top',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    if (!user.isVerified) {
+      toast({
+        description: 'Silahkan Verifikasi Akun Anda Terlebih Dahulu',
+        position: 'top',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    } else {
+      redirect: {
+        destination: '/admin';
+      }
+    }
+  };
 
   const onClickLink = (e) => {
     router.push(
@@ -208,13 +237,41 @@ export default function SidebarProduct({ setPage, category }) {
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
-            <Button
-              leftIcon={<AddIcon />}
-              textColor="twitter.500"
-              variant="Link"
-            >
-              Unggah Resep
-            </Button>
+            {!user?.isVerified ? (
+              <Button
+                leftIcon={<AddIcon />}
+                variant={'outline'}
+                colorScheme="twitter"
+                marginEnd={'4'}
+                p="6"
+                alignSelf={'center'}
+                onClick={protectPrescription}
+                width="75%"
+              >
+                Unggah Resep
+              </Button>
+            ) : (
+              <NextLink href="/prescription">
+                <Link
+                  _hover={{
+                    textDecoration: 'none',
+                  }}
+                >
+                  <Hide below="md">
+                    <Button
+                      leftIcon={<AddIcon />}
+                      variant={'outline'}
+                      colorScheme="twitter"
+                      marginEnd={'4'}
+                      p="6"
+                      ml="12%"
+                    >
+                      Unggah Resep
+                    </Button>
+                  </Hide>
+                </Link>
+              </NextLink>
+            )}
           </Stack>
         </Show>
       </Flex>

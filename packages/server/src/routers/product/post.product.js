@@ -132,7 +132,32 @@ const postObatRacikan = async (req, res, next) => {
     const checkPengeluaranStock = getInitialStock.map(
       (data, index) => data - getNewStock[index],
     );
-    console.log(checkPengeluaranStock);
+
+    await Promise.all(
+      formula.map(async (data, index) => {
+        const newProductStock = await product.findOne({
+          where: { productName: data.productName },
+          transaction: t,
+        });
+
+        const { productId, price } = newProductStock.dataValues;
+
+        console.log(checkPengeluaranStock[index]);
+
+        if (checkPengeluaranStock[index]) {
+          await logHistory.create(
+            {
+              userId,
+              productId,
+              quantity: checkPengeluaranStock[index],
+              totalPrice: price * checkPengeluaranStock[index],
+              status: 'out',
+            },
+            { transaction: t },
+          );
+        }
+      }),
+    );
 
     const createNewProduct = await product.create(
       {
@@ -151,6 +176,17 @@ const postObatRacikan = async (req, res, next) => {
     if (!createNewProduct.dataValues)
       throw { code: 400, message: 'Gagal membuat obat racikan' };
 
+    await logHistory.create(
+      {
+        userId,
+        productId: createNewProduct.dataValues.productId,
+        quantity: createNewProduct.dataValues.stock,
+        totalPrice: harga * stocks,
+        status: 'in',
+      },
+      { transaction: t },
+    );
+
     const createProductCategories = await Promise.all(
       kategori.map(async (data) => {
         const createProductCategory = await productCategory.create(
@@ -163,8 +199,6 @@ const postObatRacikan = async (req, res, next) => {
         return createProductCategory;
       }),
     );
-
-    // console.log(createProductCategories);
 
     if (!createProductCategories.length)
       throw { code: 400, message: 'Gagal memasukkan product category' };
