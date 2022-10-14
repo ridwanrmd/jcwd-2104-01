@@ -302,7 +302,7 @@ const CreateNewPrescriptionTransaction = async (req, res, next) => {
 };
 
 const inputProductFromPrescriptionController = async (req, res, next) => {
-  const { products, userId } = req.body;
+  const { products, userId, prescriptionId } = req.body;
   const t = await sequelize.transaction();
 
   try {
@@ -372,7 +372,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
 
     await prescription.update(
       { status: 'processed' },
-      { where: { userId, status: 'waiting' }, transaction: t },
+      { where: { prescriptionId }, transaction: t },
     );
 
     await transaction.update(
