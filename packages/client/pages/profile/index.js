@@ -33,10 +33,6 @@ export default function Profile(props) {
     fetchUserAddresses();
   }, []);
 
-  // useEffect(() => {
-  //   setCurrentAddress(userAddresses[0]);
-  // }, []);
-
   const fetchUserAddresses = async () => {
     try {
       const session = await getSession();

@@ -11,6 +11,7 @@ const {
   detailTransaction,
   sequelize,
   prescription,
+  logHistory,
 } = require('../../../models');
 const { auth } = require('../../helpers/auth');
 
@@ -105,6 +106,14 @@ const createTransaction = async (req, res, next) => {
             },
             { where: { productId: data.dataValues.productId } },
           );
+          await logHistory.create({
+            userId,
+            productId: data.dataValues.productId,
+            quantity: data.dataValues.quantity,
+            totalPrice:
+              updateProduct.dataValues.price * data.dataValues.quantity,
+            status: 'in',
+          });
           await cart.destroy({
             where: { userId },
           });
@@ -119,6 +128,7 @@ const createTransaction = async (req, res, next) => {
       });
     });
     findCart.forEach(async (data) => {
+      // console.log(data);
       const updateProduct = await product.findOne({
         where: { productId: data.dataValues.productId },
       });
@@ -131,6 +141,16 @@ const createTransaction = async (req, res, next) => {
           where: { productId: data.dataValues.productId },
         },
       );
+      await logHistory.create({
+        userId,
+        productId: data.dataValues.productId,
+        quantity: data.dataValues.quantity,
+        totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
+        status: 'out',
+      });
+      await cart.destroy({
+        where: { userId },
+      });
     });
 
     res.send({

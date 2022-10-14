@@ -145,7 +145,13 @@ export default function AddRacikan(props) {
       onClose();
       router.push(path);
     } catch (error) {
-      return alert(error.response.data.message);
+      return toast({
+        description: error.response.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 

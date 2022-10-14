@@ -63,7 +63,13 @@ export default function Category(props) {
         try {
           await axiosInstance.post('/category/upload', data, config);
         } catch (error) {
-          return alert(error.response.data.message);
+          return toast({
+            title: error.response.data.message,
+            status: 'error',
+            position: 'top',
+            duration: 2000,
+            isClosable: true,
+          });
         }
       }
       try {
