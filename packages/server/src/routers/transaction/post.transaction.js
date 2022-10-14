@@ -142,14 +142,6 @@ const createTransaction = async (req, res, next) => {
           where: { productId: data.dataValues.productId },
         },
       );
-      await logHistory.create({
-        userId,
-        productId: data.dataValues.productId,
-        quantity: data.dataValues.quantity,
-        totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
-        status: 'out',
-        type: 'Penjualan',
-      });
       await cart.destroy({
         where: { userId },
       });
@@ -352,17 +344,6 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
             message: 'Gagal mengurangi stock product',
           };
 
-        await logHistory.create(
-          {
-            userId,
-            productId,
-            quantity: kuantiti,
-            totalPrice: price * kuantiti,
-            status: 'out',
-            type: 'Penjualan',
-          },
-          { transaction: t },
-        );
         const inputToDetailTransaction = await detailTransaction.create(
           {
             productId,
