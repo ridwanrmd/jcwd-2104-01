@@ -81,7 +81,14 @@ const editProductStock = async (req, res, next) => {
       );
 
       await logHistory.create(
-        { userId, productId, quantity: updateStock, totalPrice, status: 'in' },
+        {
+          userId,
+          productId,
+          quantity: updateStock,
+          totalPrice,
+          status: 'in',
+          type: 'Update stock',
+        },
         { transaction: t },
       );
 
@@ -233,6 +240,7 @@ const updateStockRacikan = async (req, res, next) => {
               quantity: checkPengeluaranStock[index],
               totalPrice: price * checkPengeluaranStock[index],
               status: 'out',
+              type: 'Unit conversion',
             },
             { transaction: t },
           );
@@ -260,6 +268,7 @@ const updateStockRacikan = async (req, res, next) => {
         quantity: updateStock,
         totalPrice,
         status: 'in',
+        type: 'Update stock',
       },
       { transaction: t },
     );

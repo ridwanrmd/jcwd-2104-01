@@ -113,6 +113,7 @@ const createTransaction = async (req, res, next) => {
             totalPrice:
               updateProduct.dataValues.price * data.dataValues.quantity,
             status: 'in',
+            type: 'Cancel order',
           });
           await cart.destroy({
             where: { userId },
@@ -120,14 +121,14 @@ const createTransaction = async (req, res, next) => {
         }
       });
     });
-    findCart.forEach(async (data) => {
+    findCart.map(async (data) => {
       await detailTransaction.create({
         quantity: data.dataValues.quantity,
         productId: data.dataValues.productId,
         transactionId: newTransaction.dataValues.transactionId,
       });
     });
-    findCart.forEach(async (data) => {
+    findCart.map(async (data) => {
       // console.log(data);
       const updateProduct = await product.findOne({
         where: { productId: data.dataValues.productId },
@@ -147,6 +148,7 @@ const createTransaction = async (req, res, next) => {
         quantity: data.dataValues.quantity,
         totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
         status: 'out',
+        type: 'Penjualan',
       });
       await cart.destroy({
         where: { userId },
@@ -206,7 +208,7 @@ const CancelTransaction = async (req, res, next) => {
     });
 
     let statusTR;
-    findTransaction.forEach(async (data) => {
+    findTransaction.map(async (data) => {
       statusTR = data.dataValues.transactionStatus;
       if (
         statusTR == 'Menunggu Pembayaran' ||
@@ -339,6 +341,18 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
             code: 400,
             message: 'Gagal mengurangi stock product',
           };
+
+        await logHistory.create(
+          {
+            userId,
+            productId,
+            quantity: kuantiti,
+            totalPrice: price * kuantiti,
+            status: 'out',
+            type: 'Penjualan',
+          },
+          { transaction: t },
+        );
         const inputToDetailTransaction = await detailTransaction.create(
           {
             productId,

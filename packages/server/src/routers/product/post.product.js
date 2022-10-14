@@ -152,6 +152,7 @@ const postObatRacikan = async (req, res, next) => {
               quantity: checkPengeluaranStock[index],
               totalPrice: price * checkPengeluaranStock[index],
               status: 'out',
+              type: 'Unit conversion',
             },
             { transaction: t },
           );
@@ -183,6 +184,7 @@ const postObatRacikan = async (req, res, next) => {
         quantity: createNewProduct.dataValues.stock,
         totalPrice: harga * stocks,
         status: 'in',
+        type: 'Unit conversion',
       },
       { transaction: t },
     );
