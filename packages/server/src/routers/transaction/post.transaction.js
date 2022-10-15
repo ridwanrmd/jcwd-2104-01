@@ -106,15 +106,6 @@ const createTransaction = async (req, res, next) => {
             },
             { where: { productId: data.dataValues.productId } },
           );
-          await logHistory.create({
-            userId,
-            productId: data.dataValues.productId,
-            quantity: data.dataValues.quantity,
-            totalPrice:
-              updateProduct.dataValues.price * data.dataValues.quantity,
-            status: 'in',
-            type: 'Cancel order',
-          });
           await cart.destroy({
             where: { userId },
           });
@@ -260,15 +251,6 @@ const CancelTransaction = async (req, res, next) => {
               where: { productId: updateProduct.dataValues.productId },
             },
           );
-          await logHistory.create({
-            userId,
-            productId: data.dataValues.productId,
-            quantity: data.dataValues.quantity,
-            totalPrice:
-              updateProduct.dataValues.price * data.dataValues.quantity,
-            status: 'in',
-            type: 'Cancel order',
-          });
         });
 
         res.send({
