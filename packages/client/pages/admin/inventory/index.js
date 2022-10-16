@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Flex,
+  Image,
   Input,
   InputGroup,
   InputRightElement,
@@ -11,6 +12,8 @@ import {
   Stack,
   Text,
   useDisclosure,
+  HStack,
+  VStack,
 } from '@chakra-ui/react';
 import React from 'react';
 import AdminProduct from '../../../components/AdminProduct';
@@ -232,7 +235,16 @@ export default function Inventory(props) {
                   <option value="productName DESC">Nama: Z ke A</option>
                 </Select>
               </Flex>
-              <Box h="55vh">{renderProduct()}</Box>
+              {props.totalPage ? (
+                <Box h="55vh">{renderProduct()}</Box>
+              ) : (
+                <Box h="55vh">
+                  <VStack marginTop="20">
+                    <Image src="/pana.svg" />
+                    <Text fontSize="xl">Product tidak ditemukan</Text>
+                  </VStack>
+                </Box>
+              )}
               <Flex justifyContent={'flex-end'}>
                 {!router.asPath.includes('isRacikan') ? (
                   <Button colorScheme={'twitter'} onClick={onOpen}>
