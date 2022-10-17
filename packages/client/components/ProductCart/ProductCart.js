@@ -123,10 +123,10 @@ const Cartlist = ({
               <Box justifyContent="space-between" width="100%">
                 <Box display="flex" justifyContent="space-between" width="100%">
                   <Box>
-                    <Text variant="caption-bold">
-                      {productName} {desc}
-                    </Text>
+                    <Text as={'b'}>{productName}</Text>
+                    <Text variant="caption-bold">{desc}</Text>
                   </Box>
+
                   <Box
                     display={['block', 'flex']}
                     alignItems="center"
@@ -145,7 +145,7 @@ const Cartlist = ({
                   justifyContent="space-between"
                   mt={2}
                 >
-                  <Text variant="caption">{unit}</Text>
+                  <Text variant="caption">Kemasan : {unit}</Text>
                 </Box>
               </Box>
             </Box>

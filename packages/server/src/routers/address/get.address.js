@@ -43,7 +43,29 @@ const getUserMainAddress = async (req, res, next) => {
   }
 };
 
+const getUserAddressTransaction = async (req, res, next) => {
+  try {
+    const { addressId } = req.query;
+
+    const { userId } = req.user;
+    const resGetUserAddressTransaction = await Address.findAll({
+      where: { userId, addressId },
+    });
+    // if (!resGetUserMainAddress)
+    //   throw { message: 'Alamat utama tidak ditemukan' };
+    console.log(resGetUserAddressTransaction);
+    res.send({
+      status: 'Success',
+      message: 'Success get user addresses',
+      data: resGetUserAddressTransaction,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 router.get('/userAddress', auth, getUserAddresses);
 router.get('/mainAddress', auth, getUserMainAddress);
+router.get('/addressTransaction', auth, getUserAddressTransaction);
 
 module.exports = router;

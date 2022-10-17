@@ -72,12 +72,26 @@ export default function Transaksi(props) {
 
   function confirmPayment() {
     return data?.map((x, i) => {
-      return <AdminProofPayment data={x} selected={selected} key={i} />;
+      return (
+        <AdminProofPayment
+          data={x}
+          selected={selected}
+          key={i}
+          fetchTransaction={fetchTransaction}
+        />
+      );
     });
   }
   function sendItem() {
     return data?.map((x, i) => {
-      return <AdminSendOrder data={x} selected={selected} key={i} />;
+      return (
+        <AdminSendOrder
+          data={x}
+          selected={selected}
+          key={i}
+          fetchTransaction={fetchTransaction}
+        />
+      );
     });
   }
 

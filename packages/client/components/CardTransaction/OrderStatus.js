@@ -3,9 +3,12 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { getSession } from 'next-auth/react';
 import axiosInstance from '../../src/config/api';
+import { useRouter } from 'next/router';
 
 const StatusTransaction = ({ data, statusTrans, user }) => {
-  const [addressUser, setAddressUser] = useState({});
+  const [addressUser, setAddressUser] = useState();
+
+  const router = useRouter();
   let dtId;
   let status;
   let createdAt;
@@ -13,8 +16,10 @@ const StatusTransaction = ({ data, statusTrans, user }) => {
   let key;
   let ongkir;
   let userId;
+  let addressId;
   data.forEach((v, i) => {
     key = i;
+    addressId = v.transaction.addressId;
     dtId = v.transaction.transactionId;
     status = v.transaction.transactionStatus;
     createdAt = v.transaction.createdAt;
@@ -22,14 +27,15 @@ const StatusTransaction = ({ data, statusTrans, user }) => {
     ongkir = v.transaction.biaya;
     userId = v.transaction.userId;
   });
+
   let NumOnkir = Number(ongkir);
   let NumPrice = Number(totalPrice);
   let grandTotal = NumOnkir + NumPrice;
 
   useEffect(() => {
-    fetchUserMainAddress();
+    fetchUserAddressTransaction();
   }, []);
-  const fetchUserMainAddress = async () => {
+  const fetchUserAddressTransaction = async () => {
     try {
       const session = await getSession();
       const { accessToken } = session.user;
@@ -112,8 +118,8 @@ const StatusTransaction = ({ data, statusTrans, user }) => {
             <Spacer />
             <Text textAlign={'end'} minW="170px">
               {' '}
-              {addressUser.address} {addressUser.city_name}{' '}
-              {addressUser.province}
+              {addressUser?.address} {addressUser?.city_name}{' '}
+              {addressUser?.province}
             </Text>
           </Flex>
           <Flex mt="2rem">
