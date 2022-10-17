@@ -258,7 +258,6 @@ const CancelTransaction = async (req, res, next) => {
           message: 'Cancel Transaction',
         });
       }
-      //kasih alert di FE kalau gabisa di Cancel
     });
   } catch (error) {
     next(error);
