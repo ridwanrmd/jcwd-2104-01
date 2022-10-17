@@ -11,12 +11,13 @@ import { api_origin } from '../../constraint';
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../src/config/api';
 
-const AdminProofConfirm = ({ data }) => {
+const AdminProofConfirm = ({ data, fetchTransaction }) => {
   const confirmPayment = async () => {
     try {
       const confrimOrder = await axiosInstance.post(
         `/report/confirmTransaction?transactionId=${data.transactionId}`,
       );
+      fetchTransaction();
     } catch (error) {
       console.log(error);
     }
@@ -26,6 +27,7 @@ const AdminProofConfirm = ({ data }) => {
       const rejectmOrder = await axiosInstance.post(
         `/report/declineTransaction?transactionId=${data.transactionId}`,
       );
+      fetchTransaction();
     } catch (error) {
       console.log(error);
     }

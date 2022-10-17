@@ -1,6 +1,7 @@
 import {
   Alert,
   Box,
+  useToast,
   Button,
   Flex,
   Stack,
@@ -20,10 +21,12 @@ function Transaction(props) {
   const { data: session } = useSession();
   const { getTransactData } = props.transaction.data;
   // console.log(getTransactData);
+  const toast = useToast();
 
   const [transactionList, setTransactionList] = useState([]);
   const [transactionListAdmin, setTransactionListAdmin] = useState([]);
   const [statusTrans, setStatusTrans] = useState([]);
+
   const router = useRouter();
   // console.log(transactionList);
   let status;
@@ -42,6 +45,15 @@ function Transaction(props) {
       );
       fetchTransactionList();
       // console.log(cancel);
+      if (status == 'Dibatalkan') {
+        return toast({
+          title: 'Anda perlu memasukan alamat terlebih dahulu',
+          status: 'error',
+          position: 'top',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       console.log(error);
     }

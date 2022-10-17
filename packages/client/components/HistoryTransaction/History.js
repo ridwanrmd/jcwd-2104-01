@@ -47,11 +47,15 @@ const TransactionHistory = ({ data, selected }) => {
         <Box w="180px">
           Shiping Price: Rp. {data.biaya.toLocaleString('id')}
         </Box>
-        <Link href={`/transaction/${data.transactionId}`}>
-          <Button colorScheme={'twitter'} variant="link">
-            Lihat Pesanan
-          </Button>
-        </Link>
+        {data.transactionStatus == 'Menunggu Konfirmasi Resep' ? null : (
+          <div>
+            <Link href={`/transaction/${data.transactionId}`}>
+              <Button colorScheme={'twitter'} variant="link">
+                Lihat Pesanan
+              </Button>
+            </Link>
+          </div>
+        )}
       </HStack>
     </div>
   );

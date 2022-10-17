@@ -67,6 +67,7 @@ const confirmTransaction = async (req, res, next) => {
       const updateProduct = await product.findOne({
         where: { productId: data.dataValues.productId },
       });
+      console.log(updateProduct);
 
       await product.update(
         {
@@ -83,7 +84,7 @@ const confirmTransaction = async (req, res, next) => {
         userId: data.dataValues.transaction.dataValues.userId,
         productId: data.dataValues.productId,
         quantity: data.dataValues.quantity,
-        totalPrice,
+        totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
         status: 'out',
       });
     });
