@@ -73,11 +73,11 @@ function ShippingAddress(props) {
         border="2px"
         borderColor="gray.300"
         borderRadius="md"
-        width={480}
+        width="97%"
         key={address.addressId}
       >
         <HStack py={1}>
-          <Box width={350} align="start">
+          <Box width="full" align="start">
             {address.isMain == 1 && (
               <Text
                 ms="2"
@@ -89,7 +89,7 @@ function ShippingAddress(props) {
               </Text>
             )}
             <Text
-              marginStart={2}
+              marginInline={2}
               fontSize={{ base: 'md', md: 'md' }}
               fontWeight="medium"
               lineHeight={'6'}
@@ -97,7 +97,7 @@ function ShippingAddress(props) {
               {address.address}
             </Text>
             <Text
-              marginStart={2}
+              marginInline={2}
               fontSize={{ base: 'md', md: 'md' }}
               fontWeight="medium"
               lineHeight={'6'}
@@ -136,7 +136,7 @@ function ShippingAddress(props) {
               )}
             </HStack>
           </Box>
-          <Box>
+          <Box pr={2}>
             <Button
               value={address}
               colorScheme="twitter"
@@ -163,7 +163,7 @@ function ShippingAddress(props) {
     ));
   };
   return (
-    <Modal isOpen={isOpen} size={'xl'} onClose={onClose}>
+    <Modal isOpen={isOpen} size={'2xl'} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Pilih Alamat Pengiriman</ModalHeader>
@@ -173,9 +173,10 @@ function ShippingAddress(props) {
             <Box
               border="1px solid #C2CED6"
               borderRadius="3px"
-              overflow="scroll"
+              overflowY="scroll"
               height="35vh"
               mb={6}
+              width="full"
             >
               {renderAddress()}
             </Box>

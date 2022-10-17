@@ -33,12 +33,13 @@ function Cart(props) {
   const [modalKurir, setModalKurir] = useState(false);
   const router = useRouter();
   const [modalAdd, setModalAdd] = useState();
-  console.log(getCart);
 
   const [userAddresses, setUserAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState();
   const [selectedShipper, setSelectedShipper] = useState();
   const [selectedShippingCost, setSelectedShippingCost] = useState();
+
+  const toast = useToast();
 
   let name = `${user.first_name} ${user.last_name}`;
   const recipient = name.toUpperCase();
@@ -391,7 +392,7 @@ function Cart(props) {
                     Total Price Product
                   </Text>
                   <Text variant="subtitle-bold" color="#737A8D">
-                    Rp. {priceProduct()}
+                    Rp. {priceProduct().toLocaleString('id')}
                   </Text>
                 </Box>
                 <Box
@@ -408,7 +409,7 @@ function Cart(props) {
                   </Text>
                   {selectedShippingCost && (
                     <Text variant="subtitle-bold" color="#737A8D">
-                      {`Rp ${Number(splitCost[1]).toLocaleString('id')}`}
+                      {`Rp. ${Number(splitCost[1]).toLocaleString('id')}`}
                     </Text>
                   )}
                 </Box>
@@ -419,7 +420,9 @@ function Cart(props) {
                   alignItems="center"
                 >
                   <Text variant="subtitle-bold">Grand Total</Text>
-                  <Text variant="subtitle-bold">Rp. {totalPrice()}</Text>
+                  <Text variant="subtitle-bold">
+                    Rp. {totalPrice().toLocaleString('id')}
+                  </Text>
                 </Box>
                 <Button
                   mt={3}
