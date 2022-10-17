@@ -208,8 +208,51 @@ function Cart(props) {
     return grandTotal;
   };
 
+  // const onClickBayar = async () => {
+  //   try {
+  //     const splitCost = selectedShippingCost.split(',');
+
+  //     const body = {
+  //       addressId: selectedAddress.addressId,
+  //       kurir: splitCost[0],
+  //       estimasi: splitCost[2],
+  //       biaya: splitCost[1],
+  //     };
+
+  //     const session = await getSession();
+  //     const { accessToken } = session.user;
+  //     const config = {
+  //       headers: { Authorization: `Bearer ${accessToken}` },
+  //     };
+
+  //     const res = await axiosInstance.post(
+  //       `/transactions/newTransaction`,
+  //       body,
+  //       config,
+  //     );
+
+  //     router.replace(`/transaction/${res.data.data.ID}`);
+  //   } catch (error) {
+  //     console.log(error);
+  //     return toast({
+  //       title: 'Anda perlu memasukan alamat terlebih dahulu',
+  //       status: 'error',
+  //       position: 'top',
+  //       duration: 2000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
   const onClickBayar = async () => {
     try {
+      if (!user.isVerified)
+        return toast({
+          title: 'Anda perlu melakukan verifikasi terlebih dahulu',
+          status: 'error',
+          position: 'top',
+          duration: 2000,
+          isClosable: true,
+        });
       const splitCost = selectedShippingCost.split(',');
 
       const body = {
