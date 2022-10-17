@@ -95,26 +95,57 @@ export default function Prescription(props) {
           </Hide>
         </Box>
         <Show below="md">
-          <IconButton
+          {/* <IconButton
             fontSize={'5xl'}
             variant="link"
             color="twitter.500"
             icon={<ArrowForwardIcon />}
-            onClick={() => {
-              alert('Testing doang gaes');
-            }}
-          />
+            // onClick={() => {
+            //   alert('Testing doang gaes');
+            // }}
+          /> */}
+          {!props.user?.isVerified ? (
+            <IconButton
+              fontSize={'5xl'}
+              variant="link"
+              color="twitter.500"
+              icon={<ArrowForwardIcon />}
+              onClick={protectPrescription}
+            >
+              Unggah Resep
+            </IconButton>
+          ) : (
+            <NextLink href="/prescription">
+              <Link
+                _hover={{
+                  textDecoration: 'none',
+                }}
+              >
+                <IconButton
+                  fontSize={'5xl'}
+                  variant="link"
+                  color="twitter.500"
+                  icon={<ArrowForwardIcon />}
+                  // onClick={() => {
+                  //   alert('Testing doang gaes');
+                  // }}
+                />
+              </Link>
+            </NextLink>
+          )}
         </Show>
         {!props.user?.isVerified ? (
-          <Button
-            variant={'outline'}
-            colorScheme="twitter"
-            marginEnd={'4'}
-            p="6"
-            onClick={protectPrescription}
-          >
-            Unggah Resep
-          </Button>
+          <Hide below="md">
+            <Button
+              variant={'outline'}
+              colorScheme="twitter"
+              marginEnd={'4'}
+              p="6"
+              onClick={protectPrescription}
+            >
+              Unggah Resep
+            </Button>
+          </Hide>
         ) : (
           <NextLink href="/prescription">
             <Link

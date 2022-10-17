@@ -159,6 +159,15 @@ export default function DetailStock(props) {
 
   const renderStockHistory = () => {
     return productHistories?.map((history) => {
+      let setTimeOut = new Date(history.createdAt);
+      setTimeOut.setDate(setTimeOut.getDate() + 1);
+      let today = new Date(history.createdAt);
+      let todays = today.getDate();
+      let tomorrows = setTimeOut.getDate();
+      let sekarang = new Date();
+      let sekarangs = sekarang.getDate();
+      console.log(`ini todays : ${todays}`);
+      console.log(`ini tomorows : ${tomorrows}`);
       return (
         <Tr key={history.historyId}>
           <Td pl="3.7%" fontSize={'15px'} borderRight={'1px'}>
@@ -174,12 +183,34 @@ export default function DetailStock(props) {
             {history.quantity}
           </Td>
           <Td fontSize={'15px'} borderRight={'1px'}>
-            Tambah Stok
+            {history.type}
           </Td>
           <Td fontSize={'15px'} borderRight={'1px'} pl="3.7%">
             {history.status}
           </Td>
-          <Td fontSize={'15px'} pl="3.3%">
+          {tomorrows > sekarangs ? (
+            <Td fontSize={'15px'} pl="3.3%">
+              {history.product.unit != 'Racikan' ? (
+                <Button
+                  isDisabled={disabled}
+                  size="sm"
+                  colorScheme="red"
+                  onClick={() => {
+                    onDeleteStockHistory(history.historyId);
+                  }}
+                >
+                  Hapus
+                </Button>
+              ) : (
+                <Button isDisabled={true} size="sm" colorScheme="red">
+                  Hapus
+                </Button>
+              )}
+            </Td>
+          ) : (
+            <Td fontSize={'15px'} pl="3.3%"></Td>
+          )}
+          {/* <Td fontSize={'15px'} pl="3.3%">
             {history.product.unit != 'Racikan' ? (
               <Button
                 isDisabled={disabled}
@@ -196,7 +227,7 @@ export default function DetailStock(props) {
                 Hapus
               </Button>
             )}
-          </Td>
+          </Td> */}
         </Tr>
       );
     });
@@ -204,6 +235,15 @@ export default function DetailStock(props) {
 
   const renderStockHistoryNoFilter = () => {
     return productHistoriesNoFilter?.map((history) => {
+      let setTimeOut = new Date(history.createdAt);
+      setTimeOut.setDate(setTimeOut.getDate() + 1);
+      let today = new Date(history.createdAt);
+      let todays = today.getDate();
+      let tomorrows = setTimeOut.getDate();
+      let sekarang = new Date();
+      let sekarangs = sekarang.getDate();
+      console.log(`ini todays : ${todays}`);
+      console.log(`ini tomorows : ${tomorrows}`);
       return (
         <Tr key={history.historyId}>
           <Td pl="3.7%" fontSize={'15px'} borderRight={'1px'}>
@@ -219,29 +259,33 @@ export default function DetailStock(props) {
             {history.quantity}
           </Td>
           <Td fontSize={'15px'} borderRight={'1px'}>
-            Tambah Stok
+            {history.type}
           </Td>
           <Td fontSize={'15px'} borderRight={'1px'} pl="3.7%">
             {history.status}
           </Td>
-          <Td fontSize={'15px'} pl="3.3%">
-            {history.product.unit != 'Racikan' ? (
-              <Button
-                isDisabled={disabled}
-                size="sm"
-                colorScheme="red"
-                onClick={() => {
-                  onDeleteStockHistory(history.historyId);
-                }}
-              >
-                Hapus
-              </Button>
-            ) : (
-              <Button disabled size="sm" colorScheme="red">
-                Hapus
-              </Button>
-            )}
-          </Td>
+          {tomorrows > sekarangs ? (
+            <Td fontSize={'15px'} pl="3.3%">
+              {history.product.unit != 'Racikan' ? (
+                <Button
+                  isDisabled={disabled}
+                  size="sm"
+                  colorScheme="red"
+                  onClick={() => {
+                    onDeleteStockHistory(history.historyId);
+                  }}
+                >
+                  Hapus
+                </Button>
+              ) : (
+                <Button isDisabled={true} size="sm" colorScheme="red">
+                  Hapus
+                </Button>
+              )}
+            </Td>
+          ) : (
+            <Td fontSize={'15px'} pl="3.3%"></Td>
+          )}
         </Tr>
       );
     });
@@ -446,6 +490,8 @@ export async function getServerSideProps(context) {
           headers: { Authorization: `Bearer ${accessToken}` },
         };
         const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+        if (!resGetUser.data.data.isAdmin)
+          return { redirect: { destination: '/' } };
 
         return {
           props: {

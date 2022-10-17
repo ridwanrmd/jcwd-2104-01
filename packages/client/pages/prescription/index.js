@@ -237,7 +237,7 @@ function Prescription(props) {
                     X
                   </Button>
                 </HStack>
-                {prescriptionImage?.size >= 201792 ? (
+                {prescriptionImage?.size >= 2017920 ? (
                   <Flex direction={'column'}>
                     <Text fontSize={'xs'} color="red">
                       Maksimal Ukuran Gambar adalah 2 Mb

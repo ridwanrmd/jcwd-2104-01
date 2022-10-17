@@ -34,9 +34,7 @@ export default function AdminResep({
         alignItems="center"
         justifyContent="space-between"
       >
-        <Box w="10%">
-          {/* <NextLink href={api_origin + data.prescriptionImage}> */}
-          {/* <Link> */}
+        <Box w="10%" h="10vh">
           <Image
             src={api_origin + data.prescriptionImage}
             alt="vitamin"
@@ -44,8 +42,6 @@ export default function AdminResep({
             w="full"
             p="2"
           />
-          {/* </Link> */}
-          {/* </NextLink> */}
         </Box>
         <Flex alignItems={'center'}>
           <Text>Status : {data.status}</Text>

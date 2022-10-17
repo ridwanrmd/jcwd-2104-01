@@ -252,11 +252,12 @@ export default function Profile(props) {
   return (
     <>
       <Navbar session={session} user={user} />
+
       <Box
         marginBlock="10"
         height={'83vh'}
-        width={'82vh'}
-        marginInline={{ base: '2', md: '35%' }}
+        width={{ base: '90vw', md: '30vw' }}
+        mx="auto"
         shadow={{ base: 'unset', md: 'md' }}
       >
         <Box marginInline={'6'}>

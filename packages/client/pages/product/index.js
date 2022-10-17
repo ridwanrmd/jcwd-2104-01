@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Text, Box, VStack, Image } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import axiosInstance from '../../src/config/api';
 import Navbar from '../../components/Navbar';
@@ -67,15 +67,25 @@ export default function Product(props) {
                 {`Obat ${router.query.category}`}
               </Text>
             )}
-            <Flex
-              flexWrap="wrap"
-              flexGrow={'1'}
-              flexShrink={'0'}
-              overflowY={{ base: 'unset', md: 'scroll' }}
-              h={{ base: 'unset', md: '80vh' }}
-            >
-              {renderCard()}
-            </Flex>
+
+            {props.totalPage ? (
+              <Flex
+                flexWrap="wrap"
+                flexGrow={'1'}
+                flexShrink={'0'}
+                overflowY={{ base: 'unset', md: 'scroll' }}
+                h={{ base: 'unset', md: '80vh' }}
+              >
+                {renderCard()}
+              </Flex>
+            ) : (
+              <Box h="70vh">
+                <VStack>
+                  <Image src="/pana.svg" />
+                  <Text fontSize="xl">Product tidak ditemukan</Text>
+                </VStack>
+              </Box>
+            )}
             <ReactPaginate
               forcePage={page}
               breakLabel="..."
