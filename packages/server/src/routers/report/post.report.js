@@ -76,8 +76,12 @@ const confirmTransaction = async (req, res, next) => {
     getDTData.rows.map(async (data) => {
       // console.log(data.dataValues.productId);
       // console.log(data.dataValues.transaction.dataValues.userId);
+      const updateProduct = await product.findOne({
+        where: { productId: data.dataValues.productId },
+      });
+      // console.log(data);
 
-      // console.log(totalPrice);
+      console.log(updateProduct.dataValues.price);
       await logHistory.create({
         userId: data.dataValues.transaction.dataValues.userId,
         productId: data.dataValues.productId,
