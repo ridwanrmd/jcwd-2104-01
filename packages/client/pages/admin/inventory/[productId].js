@@ -492,6 +492,8 @@ export async function getServerSideProps(context) {
           headers: { Authorization: `Bearer ${accessToken}` },
         };
         const resGetUser = await axiosInstance.get(`/users/${userId}`, config);
+        if (!resGetUser.data.data.isAdmin)
+          return { redirect: { destination: '/' } };
 
         return {
           props: {
