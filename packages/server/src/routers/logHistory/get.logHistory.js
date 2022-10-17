@@ -22,7 +22,7 @@ const getProductStockHistory = async (req, res, next) => {
           ? { [Op.between]: [formStart, formEnd] }
           : { [Op.ne]: null },
       },
-      attributes: ['createdAt', 'status', 'quantity', 'historyId'],
+      attributes: ['createdAt', 'status', 'quantity', 'historyId', 'type'],
       include: [
         {
           model: product,
@@ -59,7 +59,7 @@ const getProductStockHistoryNoFilter = async (req, res, next) => {
       where: {
         productId,
       },
-      attributes: ['createdAt', 'status', 'quantity', 'historyId'],
+      attributes: ['createdAt', 'status', 'quantity', 'historyId', 'type'],
       include: [
         {
           model: product,

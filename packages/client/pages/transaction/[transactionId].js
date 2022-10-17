@@ -34,11 +34,18 @@ function Transaction(props) {
   const buttDis2 = 'Menunggu Konfirmasi Pembayaran';
 
   const CancelOrder = async () => {
+    const session = await getSession();
+    const { accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
     try {
       const { transactionId } = router.query;
       // console.log(transactionId);
       const cancel = await axiosInstance.post(
         `/transactions/cancelTransaction/${transactionId}?transactionId=${transactionId}`,
+        {},
+        config,
       );
       fetchTransactionList();
       // console.log(cancel);
