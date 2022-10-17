@@ -34,7 +34,7 @@ export default function AdminResep({
         alignItems="center"
         justifyContent="space-between"
       >
-        <Box w="10%">
+        <Box w="10%" h="10vh">
           <Image
             src={api_origin + data.prescriptionImage}
             alt="vitamin"
