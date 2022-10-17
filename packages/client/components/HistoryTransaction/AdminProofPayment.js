@@ -10,6 +10,7 @@ import {
 import { api_origin } from '../../constraint';
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../src/config/api';
+import { getSession } from 'next-auth/react';
 
 const AdminProofConfirm = ({ data, fetchTransaction }) => {
   const confirmPayment = async () => {
@@ -23,9 +24,16 @@ const AdminProofConfirm = ({ data, fetchTransaction }) => {
     }
   };
   const recejectPayment = async () => {
+    const session = await getSession();
+    const { accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
     try {
       const rejectmOrder = await axiosInstance.post(
         `/report/declineTransaction?transactionId=${data.transactionId}`,
+        {},
+        config,
       );
       fetchTransaction();
     } catch (error) {

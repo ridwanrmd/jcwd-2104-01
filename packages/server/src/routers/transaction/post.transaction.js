@@ -106,28 +106,20 @@ const createTransaction = async (req, res, next) => {
             },
             { where: { productId: data.dataValues.productId } },
           );
-          await logHistory.create({
-            userId,
-            productId: data.dataValues.productId,
-            quantity: data.dataValues.quantity,
-            totalPrice:
-              updateProduct.dataValues.price * data.dataValues.quantity,
-            status: 'in',
-          });
           await cart.destroy({
             where: { userId },
           });
         }
       });
     });
-    findCart.forEach(async (data) => {
+    findCart.map(async (data) => {
       await detailTransaction.create({
         quantity: data.dataValues.quantity,
         productId: data.dataValues.productId,
         transactionId: newTransaction.dataValues.transactionId,
       });
     });
-    findCart.forEach(async (data) => {
+    findCart.map(async (data) => {
       // console.log(data);
       const updateProduct = await product.findOne({
         where: { productId: data.dataValues.productId },
@@ -141,13 +133,6 @@ const createTransaction = async (req, res, next) => {
           where: { productId: data.dataValues.productId },
         },
       );
-      await logHistory.create({
-        userId,
-        productId: data.dataValues.productId,
-        quantity: data.dataValues.quantity,
-        totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
-        status: 'out',
-      });
       await cart.destroy({
         where: { userId },
       });
@@ -201,12 +186,13 @@ const ConfrimDeliveryTransaction = async (req, res, next) => {
 const CancelTransaction = async (req, res, next) => {
   try {
     const { transactionId } = req.query;
+    const { userId } = req.user;
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
 
     let statusTR;
-    findTransaction.forEach(async (data) => {
+    findTransaction.map(async (data) => {
       statusTR = data.dataValues.transactionStatus;
       if (
         statusTR == 'Menunggu Pembayaran' ||
@@ -300,7 +286,7 @@ const CreateNewPrescriptionTransaction = async (req, res, next) => {
 };
 
 const inputProductFromPrescriptionController = async (req, res, next) => {
-  const { products, userId } = req.body;
+  const { products, userId, prescriptionId } = req.body;
   const t = await sequelize.transaction();
 
   try {
@@ -339,6 +325,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
             code: 400,
             message: 'Gagal mengurangi stock product',
           };
+
         const inputToDetailTransaction = await detailTransaction.create(
           {
             productId,
@@ -358,7 +345,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
 
     await prescription.update(
       { status: 'processed' },
-      { where: { userId, status: 'waiting' }, transaction: t },
+      { where: { prescriptionId }, transaction: t },
     );
 
     await transaction.update(
@@ -375,7 +362,7 @@ const inputProductFromPrescriptionController = async (req, res, next) => {
     next(error);
   }
 };
-router.post('/cancelTransaction/:transactionId', CancelTransaction);
+router.post('/cancelTransaction/:transactionId', auth, CancelTransaction);
 router.post('/confirmTransaction/:transactionId', ConfrimDeliveryTransaction);
 router.post('/newTransaction', auth, createTransaction);
 router.post('/newPrescription', auth, CreateNewPrescriptionTransaction);

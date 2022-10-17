@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
+      type: {
+        allowNull: true,
+        type: DataTypes.STRING(100),
+      },
       status: DataTypes.ENUM('in', 'out'),
     },
     {

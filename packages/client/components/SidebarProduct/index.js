@@ -363,13 +363,33 @@ export default function SidebarProduct({ setPage, category, user }) {
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
-            <Button
-              leftIcon={<AddIcon />}
-              textColor="twitter.500"
-              variant="Link"
-            >
-              Unggah Resep
-            </Button>
+
+            {!user?.isVerified ? (
+              <Button
+                leftIcon={<AddIcon />}
+                variant="Link"
+                textColor="twitter.500"
+                onClick={protectPrescription}
+              >
+                Unggah Resep
+              </Button>
+            ) : (
+              <NextLink href="/prescription">
+                <Link
+                  _hover={{
+                    textDecoration: 'none',
+                  }}
+                >
+                  <Button
+                    leftIcon={<AddIcon />}
+                    textColor="twitter.500"
+                    variant="Link"
+                  >
+                    Unggah Resep
+                  </Button>
+                </Link>
+              </NextLink>
+            )}
           </Stack>
         </Box>
       ) : null}

@@ -91,7 +91,11 @@ export default function AddProductPrescription(props) {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
 
-      const body = { products, userId: data.userId };
+      const body = {
+        products,
+        userId: data.userId,
+        prescriptionId: data.prescriptionId,
+      };
       const res = await axiosInstance.post(
         '/transactions/inputProductFromPrescription',
         body,

@@ -18,6 +18,17 @@ const confirmTransaction = async (req, res, next) => {
   try {
     const { transactionId } = req.query;
 
+    // console.log(transactionId);
+
+    // await logHistory.create({
+    //   userId,
+    //   productId: data.dataValues.productId,
+    //   quantity: data.dataValues.quantity,
+    //   totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
+    //   status: 'out',
+    //   type: 'Penjualan',
+    // });
+
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
@@ -61,23 +72,10 @@ const confirmTransaction = async (req, res, next) => {
     findTransaction.forEach((data) => {
       totalPrice = data.dataValues.total;
     });
+
     getDTData.rows.map(async (data) => {
       // console.log(data.dataValues.productId);
       // console.log(data.dataValues.transaction.dataValues.userId);
-      const updateProduct = await product.findOne({
-        where: { productId: data.dataValues.productId },
-      });
-      console.log(updateProduct);
-
-      await product.update(
-        {
-          stock: updateProduct.dataValues.stock - data.dataValues.quantity,
-        },
-        {
-          where: { productId: data.dataValues.productId },
-          // transaction: t,
-        },
-      );
 
       // console.log(totalPrice);
       await logHistory.create({
@@ -86,8 +84,10 @@ const confirmTransaction = async (req, res, next) => {
         quantity: data.dataValues.quantity,
         totalPrice: updateProduct.dataValues.price * data.dataValues.quantity,
         status: 'out',
+        type: 'Penjualan',
       });
     });
+
     const sendTransaction = await transaction.update(
       { transactionStatus: 'Diproses' },
       {
@@ -150,6 +150,8 @@ const cancelTransaction = async (req, res, next) => {
   try {
     const { transactionId } = req.query;
 
+    const { userId } = req.user;
+
     const findTransaction = await transaction.findAll({
       where: { transactionId },
     });
@@ -189,25 +191,10 @@ const cancelTransaction = async (req, res, next) => {
     });
 
     let totalPrice;
-    findTransaction.forEach((data) => {
+    findTransaction.map((data) => {
       totalPrice = data.dataValues.total;
     });
-    getDTData.rows.map(async (data) => {
-      // console.log(data.dataValues.productId);
-      const updateProduct = await product.findOne({
-        where: { productId: data.dataValues.productId },
-      });
 
-      await product.update(
-        {
-          stock: updateProduct.dataValues.stock + data.dataValues.quantity,
-        },
-        {
-          where: { productId: data.dataValues.productId },
-          // transaction: t,
-        },
-      );
-    });
     const sendTransaction = await transaction.update(
       { transactionStatus: 'Menunggu Pembayaran' },
       {
@@ -379,7 +366,7 @@ const CountTransactionReport = async (req, res, next) => {
   }
 };
 
-router.post('/declineTransaction', cancelTransaction);
+router.post('/declineTransaction', auth, cancelTransaction);
 router.post('/salesReportUser', CountTransactionReport);
 router.post('/salesItem', SalesItem);
 router.post('/salesTotal', ProfitReport);

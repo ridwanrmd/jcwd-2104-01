@@ -42,9 +42,10 @@ const editUserAddress = async (req, res, next) => {
 const updateMainAddress = async (req, res, next) => {
   try {
     const { addressId } = req.params;
+    const { userId } = req.user;
 
     const getAllAddress = await Address.findAll({
-      where: { isMain: true },
+      where: { isMain: true, userId },
     });
 
     if (getAllAddress.length) {
@@ -69,6 +70,6 @@ const updateMainAddress = async (req, res, next) => {
 };
 
 router.patch('/edit/:addressId', auth, editUserAddress);
-router.patch('/isMain/:addressId', updateMainAddress);
+router.patch('/isMain/:addressId', auth, updateMainAddress);
 
 module.exports = router;
