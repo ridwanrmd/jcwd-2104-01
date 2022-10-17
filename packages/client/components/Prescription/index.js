@@ -95,15 +95,6 @@ export default function Prescription(props) {
           </Hide>
         </Box>
         <Show below="md">
-          {/* <IconButton
-            fontSize={'5xl'}
-            variant="link"
-            color="twitter.500"
-            icon={<ArrowForwardIcon />}
-            // onClick={() => {
-            //   alert('Testing doang gaes');
-            // }}
-          /> */}
           {!props.user?.isVerified ? (
             <IconButton
               fontSize={'5xl'}
@@ -126,9 +117,6 @@ export default function Prescription(props) {
                   variant="link"
                   color="twitter.500"
                   icon={<ArrowForwardIcon />}
-                  // onClick={() => {
-                  //   alert('Testing doang gaes');
-                  // }}
                 />
               </Link>
             </NextLink>

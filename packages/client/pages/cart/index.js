@@ -33,6 +33,7 @@ function Cart(props) {
   const [modalKurir, setModalKurir] = useState(false);
   const router = useRouter();
   const [modalAdd, setModalAdd] = useState();
+  console.log(getCart);
 
   const [userAddresses, setUserAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState();
@@ -209,17 +210,20 @@ function Cart(props) {
   const onClickBayar = async () => {
     try {
       const splitCost = selectedShippingCost.split(',');
+
       const body = {
         addressId: selectedAddress.addressId,
         kurir: splitCost[0],
         estimasi: splitCost[2],
         biaya: splitCost[1],
       };
+
       const session = await getSession();
       const { accessToken } = session.user;
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
+
       const res = await axiosInstance.post(
         `/transactions/newTransaction`,
         body,
@@ -229,6 +233,13 @@ function Cart(props) {
       router.replace(`/transaction/${res.data.data.ID}`);
     } catch (error) {
       console.log(error);
+      return toast({
+        title: 'Anda perlu memasukan alamat terlebih dahulu',
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 

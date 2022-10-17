@@ -3,12 +3,14 @@ import { Button, Flex, Box, HStack, Link, VStack } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../src/config/api';
 
-const SendTransactionAdmin = ({ data, selected }) => {
+const SendTransactionAdmin = ({ data, selected, fetchTransaction }) => {
+  // console.log(data);
   const sendItem = async () => {
     try {
       const confrimOrder = await axiosInstance.post(
         `/report/sendTransaction?transactionId=${data.transactionId}`,
       );
+      fetchTransaction();
     } catch (error) {
       console.log(error);
     }
