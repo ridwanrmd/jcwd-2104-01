@@ -220,15 +220,33 @@ export default function Profile(props) {
         try {
           await axiosInstance.post('/users/upload', data, config);
         } catch (error) {
-          return alert(error.response.data.message);
+          return toast({
+            description: error.response.data.message,
+            position: 'top',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
         }
       }
 
       try {
         const res = await axiosInstance.patch('/users', updateProfile, config);
-        alert(res.data.message);
+        toast({
+          description: res.data.message,
+          position: 'top',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       } catch (error) {
-        return alert(error.response.data.message);
+        return toast({
+          description: error.response.data.message,
+          position: 'top',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
       }
 
       const resGetUser = await axiosInstance.get(
@@ -238,8 +256,13 @@ export default function Profile(props) {
       setUser(resGetUser.data.data);
       onClose();
     } catch (error) {
-      console.log({ error });
-      return alert(error.response.data.message);
+      return toast({
+        description: error.response.data.message,
+        position: 'top',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
   return (
