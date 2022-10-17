@@ -315,6 +315,7 @@ export default Prescription;
 export async function getServerSideProps(context) {
   try {
     const session = await getSession({ req: context.req });
+    if (!session) return { redirect: { destination: '/' } };
 
     const userId = session.user.userId;
     const accessToken = session.user.accessToken;

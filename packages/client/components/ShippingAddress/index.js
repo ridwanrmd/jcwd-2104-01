@@ -31,7 +31,6 @@ function ShippingAddress(props) {
   const [modalEdit, setModalEdit] = useState(false);
   const [modalAdd, setModalAdd] = useState(false);
   const [currentAddress, setCurrentAddress] = useState();
-  // console.log(userAddresses);
 
   const toast = useToast();
 
@@ -40,8 +39,19 @@ function ShippingAddress(props) {
   }, []);
 
   const onUpdateisMain = async (addressId) => {
+    const session = await getSession();
+    const { accessToken } = session.user;
+
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
+    // console.log(getSession());
     try {
-      const res = await axiosInstance.patch(`/addresses/isMain/${addressId}`);
+      const res = await axiosInstance.patch(
+        `/addresses/isMain/${addressId}`,
+        {},
+        config,
+      );
       toast({
         description: res.data.message,
         position: 'top',

@@ -35,7 +35,6 @@ export default function AddProductStock(props) {
       setDisabled(true);
       const session = await getSession();
       const { accessToken } = session.user;
-      console.log(updateStock);
 
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -69,7 +68,7 @@ export default function AddProductStock(props) {
       fetchProduct();
       setDisabled(false);
     } catch (error) {
-      console.log;
+      console.log(error);
     }
   };
 

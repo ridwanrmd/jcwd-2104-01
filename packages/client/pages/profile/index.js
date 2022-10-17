@@ -26,7 +26,6 @@ export default function Profile(props) {
   const [modalAdd, setModalAdd] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  console.log(currentAddress);
 
   const toast = useToast();
   useEffect(() => {
@@ -80,8 +79,24 @@ export default function Profile(props) {
   };
 
   const onUpdateisMain = async (addressId) => {
+    const session = await getSession();
+    const { accessToken } = session.user;
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    };
     try {
-      const res = await axiosInstance.patch(`/addresses/isMain/${addressId}`);
+      const res = await axiosInstance.patch(
+        `/addresses/isMain/${addressId}`,
+        {},
+        config,
+      );
+      toast({
+        description: res.data.message,
+        position: 'top',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
 
       fetchUserAddresses();
     } catch (error) {

@@ -144,12 +144,9 @@ export default function DetailStock(props) {
   };
 
   const onClickOrder = (e) => {
-    // console.log(e.target.value);
     let splitting = e.target.value.split(' ');
-    // console.log(splitting);
     setSorting(splitting[0]);
     setOrder(splitting[1]);
-    // setSorting(e.target.value);
   };
 
   const onHandleChange = (event) => {
@@ -346,6 +343,7 @@ export default function DetailStock(props) {
                   border={'1px'}
                   borderRadius="10px"
                   mx={'3%'}
+                  mb="4%"
                 >
                   <Center>
                     <Table>
