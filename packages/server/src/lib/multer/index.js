@@ -42,12 +42,12 @@ const uploadUser = multer({
     fileSize: 1048576, // Byte, 1 MB
   },
   fileFilter(req, file, cb) {
-    const allowedExtension = ['.png', '.jpg', '.gif'];
+    const allowedExtension = ['.png', '.jpg', '.gif', '.jfif'];
 
     const extname = path.extname(file.originalname);
 
     if (!allowedExtension.includes(extname)) {
-      const error = new Error('Please upload image file (jpg, png, gif)');
+      const error = new Error('Please upload image file (jpg, png, gif, jpeg)');
       return cb(error);
     }
 
@@ -162,12 +162,12 @@ const storageProduct = multer.diskStorage({
 const uploadProduct = multer({
   storage: storageProduct,
   fileFilter(req, file, cb) {
-    const allowedExtension = ['.png', '.jpg', '.svg'];
+    const allowedExtension = ['.png', '.jpg', '.svg', '.jfif'];
 
     const extname = path.extname(file.originalname);
 
     if (!allowedExtension.includes(extname)) {
-      const error = new Error('Please upload image file (jpg, png, svg)');
+      const error = new Error('Please upload image file (jpg, png, svg, jfif)');
       return cb(error);
     }
 
